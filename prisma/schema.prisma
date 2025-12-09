@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION MODEL
+// ============================================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // Hash bcrypt
+  name      String?
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
+// ============================================
+// PORTFOLIO CONTENT MODELS
+// ============================================
+
+model Project {
+  id           String    @id @default(cuid())
+  title        String
+  description  String    @db.Text
+  longDesc     String?   @db.Text
+  technologies String[]
+  imageUrl     String?
+  demoUrl      String?
+  githubUrl    String?
+  featured     Boolean   @default(false)
+  order        Int       @default(0)
+  startDate    DateTime?
+  endDate      DateTime?
+  organization String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([featured])
+  @@index([order])
+  @@map("projects")
+}
+
+model Experience {
+  id           String    @id @default(cuid())
+  title        String
+  company      String
+  companyUrl   String?
+  location     String
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean   @default(false)
+  description  String    @db.Text
+  achievements String[]
+  technologies String[]
+  order        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([current])
+  @@index([order])
+  @@map("experiences")
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  degree      String
+  institution String
+  location    String
+  field       String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+  description String?   @db.Text
+  gpa         String?
+  note        String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([current])
+  @@index([order])
+  @@map("education")
+}
+
+model Certification {
+  id            String    @id @default(cuid())
+  title         String
+  issuer        String
+  issueDate     DateTime?
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+  description   String?   @db.Text
+  skills        String[]
+  order         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([order])
+  @@map("certifications")
+}
+
+model Volunteer {
+  id           String    @id @default(cuid())
+  title        String
+  organization String
+  location     String?
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean   @default(false)
+  description  String    @db.Text
+  order        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([current])
+  @@index([order])
+  @@map("volunteer")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([read])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@map("site_settings")
+}

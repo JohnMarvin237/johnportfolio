@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { certificationUpdateSchema } from '@/lib/schemas/certification.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
-import { Prisma } from '@/app/generated/prisma';
+import { Prisma } from '@prisma/client';
 
 /**
  * GET /api/certifications/[id]

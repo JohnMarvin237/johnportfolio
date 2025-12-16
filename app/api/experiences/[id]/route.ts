@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { experienceUpdateSchema } from '@/lib/schemas/experience.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
-import { Prisma } from '@/app/generated/prisma';
+import { Prisma } from '@prisma/client';
 
 /**
  * GET /api/experiences/[id]

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "scripts": {
     "dev": "next dev --webpack",
@@ -14,6 +14,7 @@
     "db:studio": "npx dotenv -e .env -- npx prisma studio"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.0",
     "axios": "^1.13.2",
@@ -22,6 +23,7 @@
     "framer-motion": "^12.23.24",
     "jsonwebtoken": "^9.0.2",
     "next": "^16.0.8",
+    "next-auth": "^5.0.0-beta.30",
     "nodemailer": "^7.0.11",
     "prisma": "^6.19.0",
     "react": "19.2.0",
@@ -32,13 +34,14 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.23",
     "dotenv-cli": "^11.0.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",

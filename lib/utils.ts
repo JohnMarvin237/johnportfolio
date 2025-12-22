@@ -122,3 +122,42 @@ export function getInitials(name: string): string {
     .toUpperCase()
     .slice(0, 2);
 }
+
+/**
+ * Get the base URL for API calls
+ * In server components, returns the full URL
+ * In client components, returns relative URL
+ */
+export function getApiUrl(path: string): string {
+  // Remove leading slash if present
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+
+  // In server components, we need the full URL
+  if (typeof window === 'undefined') {
+    let baseUrl = 'http://localhost:3000'; // Default fallback
+
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+    } else if (process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    }
+
+    return `${baseUrl}/api${cleanPath}`;
+  }
+
+  // In client components, use relative URL
+  return `/api${cleanPath}`;
+}
+
+/**
+ * Get the public app URL
+ */
+export function getAppUrl(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  return process.env.NEXT_PUBLIC_APP_URL ||
+         process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+         'http://localhost:3000';
+}

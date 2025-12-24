@@ -19,7 +19,7 @@ export default async function AdminLayout({
 
   // Redirect if not authenticated
   if (!user) {
-    redirect('/admin/login');
+    redirect('/auth/login');
   }
 
   // Check if user is admin

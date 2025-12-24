@@ -114,7 +114,7 @@ export default function EducationAdminPage() {
       label: 'GPA',
       render: (edu) => (
         edu.gpa ? (
-          <span className="text-sm text-gray-900">{edu.gpa.toFixed(2)}</span>
+          <span className="text-sm text-gray-900">{Number(edu.gpa).toFixed(2)}</span>
         ) : (
           <span className="text-sm text-gray-400">-</span>
         )

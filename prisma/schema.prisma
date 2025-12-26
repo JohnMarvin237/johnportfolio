@@ -155,3 +155,48 @@ model SiteSettings {
   @@index([key])
   @@map("site_settings")
 }
+
+// ============================================
+// ANALYTICS MODELS
+// ============================================
+
+model PageView {
+  id         String   @id @default(cuid())
+  path       String
+  userAgent  String?  @db.Text
+  referer    String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([path])
+  @@index([createdAt])
+  @@map("page_views")
+}
+
+model Visitor {
+  id         String   @id @default(cuid())
+  sessionId  String   @unique
+  userAgent  String?  @db.Text
+  ip         String?
+  country    String?
+  city       String?
+  firstVisit DateTime @default(now())
+  lastVisit  DateTime @default(now())
+  pageCount  Int      @default(1)
+
+  @@index([sessionId])
+  @@index([firstVisit])
+  @@index([lastVisit])
+  @@map("visitors")
+}
+
+model ProjectView {
+  id        String   @id @default(cuid())
+  projectId String
+  sessionId String?
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("project_views")
+}

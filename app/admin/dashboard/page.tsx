@@ -8,6 +8,10 @@ import { prisma } from '@/lib/db/prisma';
 export const dynamic = 'force-dynamic';
 
 async function getDashboardStats() {
+  // Get today's date for analytics
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const [
     projectsCount,
     experiencesCount,
@@ -17,6 +21,11 @@ async function getDashboardStats() {
     messagesCount,
     unreadMessagesCount,
     featuredProjectsCount,
+    // Analytics stats
+    totalVisitors,
+    totalPageViews,
+    todayVisitors,
+    todayPageViews,
   ] = await Promise.all([
     prisma.project.count(),
     prisma.experience.count(),
@@ -26,6 +35,23 @@ async function getDashboardStats() {
     prisma.contactMessage.count(),
     prisma.contactMessage.count({ where: { read: false } }),
     prisma.project.count({ where: { featured: true } }),
+    // Analytics queries
+    prisma.visitor.count(),
+    prisma.pageView.count(),
+    prisma.visitor.count({
+      where: {
+        firstVisit: {
+          gte: today,
+        },
+      },
+    }),
+    prisma.pageView.count({
+      where: {
+        createdAt: {
+          gte: today,
+        },
+      },
+    }),
   ]);
 
   // Get recent messages
@@ -53,6 +79,20 @@ async function getDashboardStats() {
     },
   });
 
+  // Get top pages
+  const topPages = await prisma.pageView.groupBy({
+    by: ['path'],
+    _count: {
+      path: true,
+    },
+    orderBy: {
+      _count: {
+        path: 'desc',
+      },
+    },
+    take: 5,
+  });
+
   return {
     stats: {
       projectsCount,
@@ -63,14 +103,23 @@ async function getDashboardStats() {
       messagesCount,
       unreadMessagesCount,
       featuredProjectsCount,
+      // Analytics stats
+      totalVisitors,
+      totalPageViews,
+      todayVisitors,
+      todayPageViews,
     },
     recentMessages,
     recentProjects,
+    topPages: topPages.map(page => ({
+      path: page.path,
+      views: page._count.path,
+    })),
   };
 }
 
 export default async function DashboardPage() {
-  const { stats, recentMessages, recentProjects } = await getDashboardStats();
+  const { stats, recentMessages, recentProjects, topPages } = await getDashboardStats();
 
   return (
     <div>
@@ -79,6 +128,29 @@ export default async function DashboardPage() {
         <p className="mt-2 text-gray-600">
           Vue d'ensemble de votre portfolio
         </p>
+      </div>
+
+      {/* Analytics Stats - Primary Row */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 mb-8 text-white">
+        <h2 className="text-2xl font-bold mb-4">Statistiques de visite</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
+            <p className="text-white/80 text-sm mb-1">Visiteurs totaux</p>
+            <p className="text-3xl font-bold">{stats.totalVisitors}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
+            <p className="text-white/80 text-sm mb-1">Pages vues</p>
+            <p className="text-3xl font-bold">{stats.totalPageViews}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
+            <p className="text-white/80 text-sm mb-1">Visiteurs aujourd'hui</p>
+            <p className="text-3xl font-bold">{stats.todayVisitors}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
+            <p className="text-white/80 text-sm mb-1">Pages vues aujourd'hui</p>
+            <p className="text-3xl font-bold">{stats.todayPageViews}</p>
+          </div>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -149,7 +221,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Recent Messages */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -233,6 +305,38 @@ export default async function DashboardPage() {
               <p className="px-6 py-4 text-sm text-gray-500">Aucun projet</p>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Top Pages */}
+      <div className="bg-white rounded-lg shadow mb-8">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900">Pages les plus visitées</h2>
+        </div>
+        <div className="divide-y divide-gray-200">
+          {topPages.length > 0 ? (
+            topPages.map((page, index) => (
+              <div key={index} className="px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-500 w-8">#{index + 1}</span>
+                    <p className="text-sm font-medium text-gray-900">{page.path}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">{page.views} vues</span>
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{ width: `${Math.min((page.views / topPages[0].views) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="px-6 py-4 text-sm text-gray-500">Aucune donnée disponible</p>
+          )}
         </div>
       </div>
 

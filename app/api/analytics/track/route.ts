@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/app/generated/prisma';
+import { prisma } from '@/lib/db/prisma';
 import { headers } from 'next/headers';
 import crypto from 'crypto';
 

@@ -1,13 +1,18 @@
 // components/layout/Footer.tsx
 import React from 'react';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { getLocale } from 'next-intl/server';
 
 const currentYear = new Date().getFullYear();
 
 /**
  * Pied de page du site avec liens sociaux
  */
-export default function Footer() {
+export default async function Footer() {
+  const locale = await getLocale();
+  const t = await getTranslations('footer');
+  const tNav = await getTranslations('navigation');
   return (
     <footer className="bg-gray-900 text-gray-300 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

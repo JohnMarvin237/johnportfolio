@@ -1,10 +1,11 @@
 // app/api/projects/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { projectUpdateSchema } from '@/lib/schemas/project.schema';
+import { projectApiUpdateSchema, normalizeProjectData } from '@/lib/schemas/project-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
 import { Prisma } from '@/app/generated/prisma';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/projects/[id]

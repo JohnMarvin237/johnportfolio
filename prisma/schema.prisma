@@ -34,9 +34,17 @@ model User {
 
 model Project {
   id           String    @id @default(cuid())
-  title        String
-  description  String    @db.Text
+  // Legacy fields (to be removed later)
+  title        String?
+  description  String?   @db.Text
   longDesc     String?   @db.Text
+  // New multilingual fields
+  title_fr     String?
+  title_en     String?
+  description_fr  String?   @db.Text
+  description_en  String?   @db.Text
+  longDesc_fr     String?   @db.Text
+  longDesc_en     String?   @db.Text
   technologies String[]
   imageUrl     String?
   demoUrl      String?
@@ -56,15 +64,23 @@ model Project {
 
 model Experience {
   id           String    @id @default(cuid())
-  title        String
+  // Legacy fields (to be removed later)
+  title        String?
+  description  String?   @db.Text
+  achievements String[]
+  // New multilingual fields
+  title_fr     String?
+  title_en     String?
+  description_fr  String?   @db.Text
+  description_en  String?   @db.Text
+  achievements_fr String[]
+  achievements_en String[]
   company      String
   companyUrl   String?
   location     String
   startDate    DateTime
   endDate      DateTime?
   current      Boolean   @default(false)
-  description  String    @db.Text
-  achievements String[]
   technologies String[]
   order        Int       @default(0)
   createdAt    DateTime  @default(now())
@@ -77,16 +93,26 @@ model Experience {
 
 model Education {
   id          String    @id @default(cuid())
-  degree      String
+  // Legacy fields (to be removed later)
+  degree      String?
+  field       String?
+  description String?   @db.Text
+  note        String?
+  // New multilingual fields
+  degree_fr   String?
+  degree_en   String?
+  field_fr    String?
+  field_en    String?
+  description_fr String?   @db.Text
+  description_en String?   @db.Text
+  note_fr     String?
+  note_en     String?
   institution String
   location    String
-  field       String?
   startDate   DateTime
   endDate     DateTime?
   current     Boolean   @default(false)
-  description String?   @db.Text
   gpa         String?
-  note        String?
   order       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -98,13 +124,19 @@ model Education {
 
 model Certification {
   id            String    @id @default(cuid())
-  title         String
+  // Legacy fields (to be removed later)
+  title         String?
+  description   String?   @db.Text
+  // New multilingual fields
+  title_fr      String?
+  title_en      String?
+  description_fr String?   @db.Text
+  description_en String?   @db.Text
   issuer        String
   issueDate     DateTime?
   expiryDate    DateTime?
   credentialId  String?
   credentialUrl String?
-  description   String?   @db.Text
   skills        String[]
   order         Int       @default(0)
   createdAt     DateTime  @default(now())
@@ -116,13 +148,19 @@ model Certification {
 
 model Volunteer {
   id           String    @id @default(cuid())
-  title        String
+  // Legacy fields (to be removed later)
+  title        String?
+  description  String?   @db.Text
+  // New multilingual fields
+  title_fr     String?
+  title_en     String?
+  description_fr String?   @db.Text
+  description_en String?   @db.Text
   organization String
   location     String?
   startDate    DateTime
   endDate      DateTime?
   current      Boolean   @default(false)
-  description  String    @db.Text
   order        Int       @default(0)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

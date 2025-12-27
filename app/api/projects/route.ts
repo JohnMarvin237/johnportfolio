@@ -1,9 +1,10 @@
 // app/api/projects/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { projectSchema } from '@/lib/schemas/project.schema';
+import { projectApiSchema, normalizeProjectData } from '@/lib/schemas/project-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/projects
@@ -61,12 +62,18 @@ export async function POST(request: NextRequest) {
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = projectSchema.parse(body);
+    const validatedData = projectApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const project = await prisma.project.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeProjectData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const project = await withAutoBackup(
+      async () => await prisma.project.create({
+        data: normalizedData,
+      }),
+      'create project'
+    );
 
     return NextResponse.json(project, { status: 201 });
   } catch (error) {

@@ -1,70 +1,29 @@
-// proxy.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/auth/jwt';
+// middleware.ts
+import createMiddleware from 'next-intl/middleware';
+import {defaultLocale, locales} from './i18n/config';
 
-const AUTH_COOKIE_NAME = 'portfolio_auth_token';
+export default createMiddleware({
+  // A list of all locales that are supported
+  locales,
 
-// Routes that require authentication
-const protectedRoutes = ['/admin'];
-const publicRoutes = ['/admin/login'];
+  // Used when no locale matches
+  defaultLocale,
 
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // URLs that should not have locale prefixes
+  localeDetection: true,
 
-  // Check if the route is protected
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  // The default locale can have a prefix too
+  localePrefix: 'as-needed'
+});
 
-  if (isProtectedRoute && !isPublicRoute) {
-    // Get token from cookie or header
-    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value ||
-                  request.headers.get('authorization')?.replace('Bearer ', '');
-
-    if (!token) {
-      // Redirect to login if no token
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('from', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // Verify token
-    const payload = verifyToken(token);
-
-    if (!payload) {
-      // Invalid token, redirect to login
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('from', pathname);
-
-      const response = NextResponse.redirect(loginUrl);
-      // Clear invalid cookie
-      response.cookies.delete(AUTH_COOKIE_NAME);
-      return response;
-    }
-
-    // Check admin role for admin routes
-    if (pathname.startsWith('/admin') && payload.role !== 'admin') {
-      // Not admin, redirect to home
-      return NextResponse.redirect(new URL('/', request.url));
-    }
-  }
-
-  // Allow request to continue
-  return NextResponse.next();
-}
-
-// Configure which routes to run middleware on
 export const config = {
+  // Match only internationalized pathnames
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (authentication endpoints)
-     * - admin/login (login page)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api/auth|admin/login|_next/static|_next/image|favicon.ico|.*\\..*|public).*)',
-  ],
+    // Match all pathnames except for
+    // - … if they start with `/api`, `/_next` or `/_vercel`
+    // - … the ones containing a dot (e.g. `favicon.ico`)
+    '/((?!api|_next|_vercel|.*\\..*).*)',
+    // However, match all pathnames within `/users`, optionally with a locale prefix
+    '/([\\w-]+)?/users/(.+)'
+  ]
 };

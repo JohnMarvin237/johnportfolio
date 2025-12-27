@@ -2,37 +2,23 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { projectSchema } from '@/lib/schemas/project.schema';
+import { projectBilingualFormSchema, transformProjectFormData } from '@/lib/schemas/project-bilingual.schema';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
 import { getApiUrl } from '@/lib/utils';
 import PageHeader from '@/components/admin/PageHeader';
 import FormField from '@/components/admin/FormField';
+import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
-import { z } from 'zod';
 
-// Input schema for form (what the form fields expect)
-const formInputSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
-  longDesc: z.string().optional(),
-  technologies: z.string().min(1, "Au moins une technologie est requise"),
-  imageUrl: z.string().url().optional().or(z.literal('')),
-  demoUrl: z.string().url().optional().or(z.literal('')),
-  githubUrl: z.string().url().optional().or(z.literal('')),
-  featured: z.boolean().optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  organization: z.string().optional(),
-  order: z.union([z.string(), z.number()]).optional(),
-});
-
-type FormData = z.infer<typeof formInputSchema>;
+type FormData = z.infer<typeof projectBilingualFormSchema>;
 
 export default function NewProjectPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale as string || 'fr';
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const getAuthHeaders = useAuthHeaders();
@@ -42,7 +28,7 @@ export default function NewProjectPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(formInputSchema),
+    resolver: zodResolver(projectBilingualFormSchema),
     defaultValues: {
       featured: false,
       order: 0,
@@ -54,17 +40,16 @@ export default function NewProjectPage() {
       setIsSubmitting(true);
       setError('');
 
+      // Transform form data to API format
+      const apiData = transformProjectFormData(data);
+
       const response = await fetch(getApiUrl('/projects'), {
         method: 'POST',
         headers: {
           ...getAuthHeaders(),
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...data,
-          technologies: data.technologies.split(',').map(t => t.trim()).filter(Boolean),
-          order: data.order ? Number(data.order) : 0,
-        }),
+        body: JSON.stringify(apiData),
       });
 
       if (!response.ok) {
@@ -72,7 +57,7 @@ export default function NewProjectPage() {
         throw new Error(result.error || 'Erreur lors de la création');
       }
 
-      router.push('/admin/projects');
+      router.push(`/${locale}/admin/projects`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
@@ -95,34 +80,46 @@ export default function NewProjectPage() {
             </div>
           )}
 
+          <div className="rounded-md bg-blue-50 p-4">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> Le contenu en français est obligatoire. Le contenu en anglais est optionnel mais recommandé pour une meilleure visibilité internationale.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 gap-6">
-            <FormField
-              label="Titre"
+            <BilingualFormField
+              label="Titre du projet"
               name="title"
               required
               register={register}
-              error={errors.title?.message}
-              placeholder="Nom du projet"
+              errorFr={errors.title_fr?.message}
+              errorEn={errors.title_en?.message}
+              placeholderFr="Nom du projet en français"
+              placeholderEn="Project name in English"
             />
 
-            <FormField
+            <BilingualFormField
               label="Description courte"
               name="description"
               type="textarea"
               required
               register={register}
-              error={errors.description?.message}
-              placeholder="Description concise du projet"
+              errorFr={errors.description_fr?.message}
+              errorEn={errors.description_en?.message}
+              placeholderFr="Description concise du projet en français"
+              placeholderEn="Brief project description in English"
               rows={3}
             />
 
-            <FormField
+            <BilingualFormField
               label="Description détaillée"
               name="longDesc"
               type="textarea"
               register={register}
-              error={errors.longDesc?.message}
-              placeholder="Description complète du projet (optionnel)"
+              errorFr={errors.longDesc_fr?.message}
+              errorEn={errors.longDesc_en?.message}
+              placeholderFr="Description complète du projet en français (optionnel)"
+              placeholderEn="Complete project description in English (optional)"
               rows={5}
             />
 
@@ -153,12 +150,14 @@ export default function NewProjectPage() {
               />
             </div>
 
-            <FormField
+            <BilingualFormField
               label="Organisation"
               name="organization"
               register={register}
-              error={errors.organization?.message}
-              placeholder="Nom de l'entreprise ou personnel"
+              errorFr={errors.organization_fr?.message}
+              errorEn={errors.organization_en?.message}
+              placeholderFr="Nom de l'entreprise ou personnel"
+              placeholderEn="Company name or personal"
             />
 
             <FormField

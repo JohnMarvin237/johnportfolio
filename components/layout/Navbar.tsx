@@ -3,13 +3,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-
-const navLinks = [
-  { href: '/', label: 'Accueil' },
-  { href: '/projects', label: 'Projets' },
-  { href: '/experience', label: 'Expérience' },
-  { href: '/contact', label: 'Contact' },
-];
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 
 /**
  * Barre de navigation principale du site
@@ -17,6 +13,15 @@ const navLinks = [
  */
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const t = useTranslations('navigation');
+  const locale = useLocale();
+
+  const navLinks = [
+    { href: `/${locale}`, label: t('home') },
+    { href: `/${locale}/projects`, label: t('projects') },
+    { href: `/${locale}/experience`, label: t('experience') },
+    { href: `/${locale}/contact`, label: t('contact') },
+  ];
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -45,6 +50,9 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <div className="ml-4 pl-4 border-l border-gray-300">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Burger Menu Button (Mobile) */}
@@ -106,6 +114,9 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <div className="px-3 py-2 border-t border-gray-200 mt-2 pt-2">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       )}

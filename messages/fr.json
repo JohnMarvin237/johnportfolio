@@ -1,0 +1,183 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "projects": "Projets",
+    "experience": "Expérience",
+    "contact": "Contact",
+    "admin": "Admin",
+    "logout": "Déconnexion",
+    "viewSite": "Voir le site"
+  },
+  "hero": {
+    "greeting": "Bonjour, je suis",
+    "title": "Développeur Full-Stack",
+    "description": "Passionné par les technologies web modernes et l'intelligence artificielle",
+    "contactMe": "Me contacter",
+    "viewProjects": "Voir mes projets"
+  },
+  "projects": {
+    "title": "Mes Projets",
+    "description": "Découvrez mes réalisations récentes",
+    "viewDemo": "Voir la démo",
+    "viewCode": "Code source",
+    "technologies": "Technologies",
+    "featured": "En vedette",
+    "noProjects": "Aucun projet disponible",
+    "viewAll": "Voir tous les projets"
+  },
+  "experience": {
+    "title": "Expérience Professionnelle",
+    "description": "Mon parcours et mes expériences",
+    "current": "Actuel",
+    "achievements": "Réalisations",
+    "noExperience": "Aucune expérience disponible"
+  },
+  "education": {
+    "title": "Formation",
+    "description": "Mon parcours académique",
+    "degree": "Diplôme",
+    "current": "En cours",
+    "noEducation": "Aucune formation disponible"
+  },
+  "certifications": {
+    "title": "Certifications",
+    "description": "Mes certifications professionnelles",
+    "issuer": "Délivré par",
+    "issued": "Obtenu le",
+    "expires": "Expire le",
+    "viewCredential": "Voir la certification",
+    "noCertifications": "Aucune certification disponible"
+  },
+  "volunteer": {
+    "title": "Bénévolat",
+    "description": "Mon engagement communautaire",
+    "organization": "Organisation",
+    "current": "Actuel",
+    "noVolunteer": "Aucune expérience bénévole disponible"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Envoyez-moi un message",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom",
+    "email": "Email",
+    "emailPlaceholder": "votre@email.com",
+    "subject": "Sujet",
+    "subjectPlaceholder": "Sujet du message",
+    "message": "Message",
+    "messagePlaceholder": "Votre message...",
+    "send": "Envoyer",
+    "sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès!",
+    "error": "Erreur lors de l'envoi du message"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Vue d'ensemble de votre portfolio",
+      "analytics": "Statistiques de visite",
+      "totalVisitors": "Visiteurs totaux",
+      "pageViews": "Pages vues",
+      "todayVisitors": "Visiteurs aujourd'hui",
+      "todayPageViews": "Pages vues aujourd'hui",
+      "recentMessages": "Messages récents",
+      "recentProjects": "Projets récents",
+      "topPages": "Pages les plus visitées",
+      "views": "vues",
+      "new": "Nouveau",
+      "seeAll": "Voir tout",
+      "noData": "Aucune donnée disponible",
+      "quickActions": "Actions rapides",
+      "newProject": "Nouveau projet",
+      "newExperience": "Nouvelle expérience",
+      "newCertification": "Nouvelle certification",
+      "viewMessages": "Voir les messages"
+    },
+    "projects": {
+      "title": "Projets",
+      "description": "Gérez vos projets",
+      "addProject": "Ajouter un projet",
+      "editProject": "Modifier le projet",
+      "deleteProject": "Supprimer le projet",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce projet?"
+    },
+    "experiences": {
+      "title": "Expériences",
+      "description": "Gérez vos expériences professionnelles",
+      "addExperience": "Ajouter une expérience",
+      "editExperience": "Modifier l'expérience",
+      "deleteExperience": "Supprimer l'expérience",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette expérience?"
+    },
+    "education": {
+      "title": "Formation",
+      "description": "Gérez votre parcours académique",
+      "addEducation": "Ajouter une formation",
+      "editEducation": "Modifier la formation",
+      "deleteEducation": "Supprimer la formation",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette formation?",
+      "gpa": "Moyenne"
+    },
+    "certifications": {
+      "title": "Certifications",
+      "description": "Gérez vos certifications",
+      "addCertification": "Ajouter une certification",
+      "editCertification": "Modifier la certification",
+      "deleteCertification": "Supprimer la certification",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette certification?"
+    },
+    "volunteer": {
+      "title": "Bénévolat",
+      "description": "Gérez vos expériences de bénévolat",
+      "addVolunteer": "Ajouter une expérience",
+      "editVolunteer": "Modifier l'expérience",
+      "deleteVolunteer": "Supprimer l'expérience",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette expérience bénévole?",
+      "position": "Poste",
+      "location": "Lieu",
+      "period": "Période"
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Gérez vos messages",
+      "markAsRead": "Marquer comme lu",
+      "markAsUnread": "Marquer comme non lu",
+      "delete": "Supprimer",
+      "reply": "Répondre",
+      "noMessages": "Aucun message"
+    },
+    "login": {
+      "title": "Connexion Admin",
+      "description": "Connectez-vous pour gérer votre portfolio",
+      "email": "Email",
+      "password": "Mot de passe",
+      "login": "Se connecter",
+      "loggingIn": "Connexion...",
+      "error": "Email ou mot de passe incorrect"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "actions": "Actions",
+    "yes": "Oui",
+    "no": "Non",
+    "from": "De",
+    "to": "À",
+    "noResults": "Aucun résultat"
+  },
+  "footer": {
+    "rights": "Tous droits réservés",
+    "madeWith": "Fait avec",
+    "by": "par"
+  }
+}

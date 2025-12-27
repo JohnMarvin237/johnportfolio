@@ -1,16 +1,26 @@
-// app/page.tsx
+// app/[locale]/page.tsx
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ExperienceCard from '@/components/sections/ExperienceCard';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
 import { fetchMultiple } from '@/lib/utils/fetch-wrapper';
+import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 /**
  * Page d'accueil du portfolio
  * Affiche Hero, projets featured, et expérience actuelle
  */
-export default async function HomePage() {
+export default async function HomePage({
+  params
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params;
+  const t = await getTranslations('hero');
+  const tProjects = await getTranslations('projects');
+  const tExperience = await getTranslations('experience');
   // Récupérer les données depuis les APIs avec gestion d'erreurs
   const results = await fetchMultiple({
     projects: '/projects?featured=true&limit=3',
@@ -47,40 +57,39 @@ export default async function HomePage() {
 
             {/* Main Heading with Gradient */}
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
-              Bonjour, je suis John Marvin
+              {t('greeting')} John Marvin
             </h1>
 
             <p className="text-2xl md:text-3xl mb-4 text-gray-800 dark:text-gray-200 font-semibold">
-              Développeur Full-Stack & IA
+              {t('title')}
             </p>
 
             <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-600 dark:text-gray-400 leading-relaxed">
-              Passionné par les technologies web modernes et l'intelligence artificielle.
-              Je crée des applications performantes et innovantes.
+              {t('description')}
             </p>
 
             {/* CTA Buttons with Enhanced Hover Effects */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/projects">
+              <Link href={`/${locale}/projects`}>
                 <Button
                   variant="primary"
                   size="lg"
                   className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300"
                 >
-                  Voir mes projets
+                  {t('viewProjects')}
                   <svg className="w-5 h-5 ml-2 inline-block group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </Button>
               </Link>
 
-              <Link href="/contact">
+              <Link href={`/${locale}/contact`}>
                 <Button
                   variant="outline"
                   size="lg"
                   className="border-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 backdrop-blur-sm transition-all duration-300"
                 >
-                  Me contacter
+                  {t('contactMe')}
                 </Button>
               </Link>
             </div>
@@ -100,10 +109,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Projets Featured
+              {tProjects('title')}
             </h2>
             <p className="text-lg text-gray-600">
-              Découvrez mes projets les plus récents et innovants
+              {tProjects('description')}
             </p>
           </div>
 
@@ -116,13 +125,13 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-500">Aucun projet featured pour le moment.</p>
+            <p className="text-center text-gray-500">{tProjects('noProjects')}</p>
           )}
 
           <div className="text-center mt-12">
-            <Link href="/projects">
+            <Link href={`/${locale}/projects`}>
               <Button variant="outline" size="lg">
-                Voir tous les projets →
+                {tProjects('viewAll', { defaultValue: 'Voir tous les projets' })} →
               </Button>
             </Link>
           </div>
@@ -135,7 +144,7 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Expérience Actuelle
+                {tExperience('title')}
               </h2>
             </div>
 

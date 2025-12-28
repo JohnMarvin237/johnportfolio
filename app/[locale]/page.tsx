@@ -1,10 +1,10 @@
 // app/[locale]/page.tsx
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
-import ProjectCard from '@/components/sections/ProjectCard';
-import ExperienceCard from '@/components/sections/ExperienceCard';
+import ProjectCardMultilingual from '@/components/sections/ProjectCardMultilingual';
+import ExperienceCardMultilingual from '@/components/sections/ExperienceCardMultilingual';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
-import { fetchMultiple } from '@/lib/utils/fetch-wrapper';
+import { fetchMultipleWithFallback } from '@/lib/utils/fetch-wrapper-with-fallback';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
@@ -21,14 +21,22 @@ export default async function HomePage({
   const t = await getTranslations('hero');
   const tProjects = await getTranslations('projects');
   const tExperience = await getTranslations('experience');
-  // Récupérer les données depuis les APIs avec gestion d'erreurs
-  const results = await fetchMultiple({
+  // Récupérer les données depuis les APIs avec gestion d'erreurs et fallback JSON
+  const results = await fetchMultipleWithFallback({
     projects: '/projects?featured=true&limit=3',
     experiences: '/experiences?current=true&limit=1',
   }, { cache: 'no-store' });
 
   const featuredProjects = results.projects.data || [];
   const currentExperience = results.experiences.data || [];
+
+  // Log source of data (for debugging)
+  if (results.projects.source === 'backup') {
+    console.log('📁 Projects loaded from JSON backup');
+  }
+  if (results.experiences.source === 'backup') {
+    console.log('📁 Experiences loaded from JSON backup');
+  }
 
   return (
     <div className="w-full">
@@ -121,7 +129,7 @@ export default async function HomePage({
           ) : featuredProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredProjects.map((project: any) => (
-                <ProjectCard key={project.id} project={project} />
+                <ProjectCardMultilingual key={project.id} project={project} />
               ))}
             </div>
           ) : (
@@ -149,7 +157,7 @@ export default async function HomePage({
             </div>
 
             <div className="max-w-3xl mx-auto">
-              <ExperienceCard experience={currentExperience[0]} />
+              <ExperienceCardMultilingual experience={currentExperience[0]} />
             </div>
 
             <div className="text-center mt-12">

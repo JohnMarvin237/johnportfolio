@@ -1,9 +1,10 @@
 // app/api/experiences/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { experienceSchema } from '@/lib/schemas/experience.schema';
+import { experienceApiSchema, normalizeExperienceData } from '@/lib/schemas/experience-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/experiences
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/experiences
  * Créer une nouvelle expérience (admin seulement)
- * Body: ExperienceSchema (validé par Zod)
+ * Body: ExperienceApiSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -61,16 +62,22 @@ export async function POST(request: NextRequest) {
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = experienceSchema.parse(body);
+    const validatedData = experienceApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const experience = await prisma.experience.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeExperienceData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const experience = await withAutoBackup(
+      async () => await prisma.experience.create({
+        data: normalizedData,
+      }),
+      'create experience'
+    );
 
     return NextResponse.json(experience, { status: 201 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
-import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import LanguageSwitcherButtons from '@/components/ui/LanguageSwitcherButtons';
 
 /**
  * Barre de navigation principale du site
@@ -51,7 +51,7 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="ml-4 pl-4 border-l border-gray-300">
-              <LanguageSwitcher />
+              <LanguageSwitcherButtons />
             </div>
           </div>
 
@@ -115,7 +115,7 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="px-3 py-2 border-t border-gray-200 mt-2 pt-2">
-              <LanguageSwitcher />
+              <LanguageSwitcherButtons />
             </div>
           </div>
         </div>

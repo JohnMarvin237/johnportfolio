@@ -1,10 +1,11 @@
 // app/api/volunteer/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { volunteerUpdateSchema } from '@/lib/schemas/volunteer.schema';
+import { volunteerApiUpdateSchema, normalizeVolunteerData } from '@/lib/schemas/volunteer-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
 import { Prisma } from '@/app/generated/prisma';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/volunteer/[id]
@@ -57,17 +58,23 @@ export async function PUT(
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = volunteerUpdateSchema.parse(body);
+    const validatedData = volunteerApiUpdateSchema.parse(body);
 
-    // 3. Mettre à jour en base de données
-    const volunteer = await prisma.volunteer.update({
-      where: { id },
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeVolunteerData(validatedData as any);
+
+    // 4. Mettre à jour en base de données avec auto-backup
+    const volunteer = await withAutoBackup(
+      async () => await prisma.volunteer.update({
+        where: { id },
+        data: normalizedData,
+      }),
+      `update volunteer ${id}`
+    );
 
     return NextResponse.json(volunteer, { status: 200 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
@@ -112,10 +119,13 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // 2. Supprimer de la base de données
-    await prisma.volunteer.delete({
-      where: { id },
-    });
+    // 2. Supprimer de la base de données avec auto-backup
+    await withAutoBackup(
+      async () => await prisma.volunteer.delete({
+        where: { id },
+      }),
+      `delete volunteer ${id}`
+    );
 
     return NextResponse.json(
       { message: 'Expérience de bénévolat supprimée avec succès' },

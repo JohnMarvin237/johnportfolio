@@ -58,17 +58,23 @@ export async function PUT(
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = projectUpdateSchema.parse(body);
+    const validatedData = projectApiUpdateSchema.parse(body);
 
-    // 3. Mettre à jour en base de données
-    const project = await prisma.project.update({
-      where: { id },
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeProjectData(validatedData as any);
+
+    // 4. Mettre à jour en base de données avec auto-backup
+    const project = await withAutoBackup(
+      async () => await prisma.project.update({
+        where: { id },
+        data: normalizedData,
+      }),
+      `update project ${id}`
+    );
 
     return NextResponse.json(project, { status: 200 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
@@ -113,10 +119,13 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // 2. Supprimer de la base de données
-    await prisma.project.delete({
-      where: { id },
-    });
+    // 2. Supprimer de la base de données avec auto-backup
+    await withAutoBackup(
+      async () => await prisma.project.delete({
+        where: { id },
+      }),
+      `delete project ${id}`
+    );
 
     return NextResponse.json(
       { message: 'Projet supprimé avec succès' },

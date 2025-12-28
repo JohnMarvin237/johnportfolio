@@ -1,9 +1,10 @@
 // app/api/education/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { educationSchema } from '@/lib/schemas/education.schema';
+import { educationApiSchema, normalizeEducationData } from '@/lib/schemas/education-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/education
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/education
  * Créer une nouvelle formation (admin seulement)
- * Body: EducationSchema (validé par Zod)
+ * Body: EducationApiSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -61,16 +62,22 @@ export async function POST(request: NextRequest) {
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = educationSchema.parse(body);
+    const validatedData = educationApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const education = await prisma.education.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeEducationData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const education = await withAutoBackup(
+      async () => await prisma.education.create({
+        data: normalizedData,
+      }),
+      'create education'
+    );
 
     return NextResponse.json(education, { status: 201 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

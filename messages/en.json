@@ -23,7 +23,11 @@
     "technologies": "Technologies",
     "featured": "Featured",
     "noProjects": "No projects available",
-    "viewAll": "View All Projects"
+    "viewAll": "View All Projects",
+    "projectsCount": {
+      "single": "project",
+      "plural": "projects"
+    }
   },
   "experience": {
     "title": "Professional Experience",

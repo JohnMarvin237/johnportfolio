@@ -1,29 +1,30 @@
-// middleware.ts
 import createMiddleware from 'next-intl/middleware';
-import {defaultLocale, locales} from './i18n/config';
+import { locales, defaultLocale, localePrefix } from '@/i18n/config';
 
 export default createMiddleware({
-  // A list of all locales that are supported
+  // List of all supported locales
   locales,
 
-  // Used when no locale matches
+  // Default locale if no match
   defaultLocale,
 
-  // URLs that should not have locale prefixes
-  localeDetection: true,
+  // Prefix strategy
+  localePrefix,
 
-  // The default locale can have a prefix too
-  localePrefix: 'as-needed'
+  // Automatically detect locale from browser
+  localeDetection: true,
 });
 
 export const config = {
-  // Match only internationalized pathnames
+  // Match all pathnames except for
+  // - API routes
+  // - _next internals
+  // - _vercel internals
+  // - static files (e.g. favicon.ico, robots.txt, etc.)
   matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
+    // Match all pathnames except for the ones starting with:
     '/((?!api|_next|_vercel|.*\\..*).*)',
-    // However, match all pathnames within `/users`, optionally with a locale prefix
-    '/([\\w-]+)?/users/(.+)'
+    // Match root
+    '/'
   ]
 };

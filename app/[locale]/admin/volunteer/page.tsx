@@ -1,7 +1,8 @@
-// app/admin/volunteer/page.tsx
+// app/[locale]/admin/volunteer/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import PageHeader from '@/components/admin/PageHeader';
 import DataTable, { Column } from '@/components/admin/DataTable';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
@@ -22,6 +23,8 @@ interface Volunteer {
 }
 
 export default function VolunteerAdminPage() {
+  const params = useParams();
+  const locale = params?.locale as string || 'fr';
   const [volunteer, setVolunteer] = useState<Volunteer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -137,7 +140,7 @@ export default function VolunteerAdminPage() {
         actions={[
           {
             label: 'Ajouter une expérience',
-            href: '/admin/volunteer/new',
+            href: `/${locale}/admin/volunteer/new`,
             variant: 'primary',
           },
         ]}
@@ -146,7 +149,7 @@ export default function VolunteerAdminPage() {
       <DataTable
         data={volunteer}
         columns={columns}
-        onEdit={(vol) => window.location.href = `/admin/volunteer/${vol.id}/edit`}
+        onEdit={(vol) => window.location.href = `/${locale}/admin/volunteer/${vol.id}/edit`}
         onDelete={handleDelete}
       />
     </div>

@@ -1,7 +1,8 @@
-// app/admin/education/page.tsx
+// app/[locale]/admin/education/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import PageHeader from '@/components/admin/PageHeader';
 import DataTable, { Column } from '@/components/admin/DataTable';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
@@ -24,6 +25,8 @@ interface Education {
 }
 
 export default function EducationAdminPage() {
+  const params = useParams();
+  const locale = params?.locale as string || 'fr';
   const [education, setEducation] = useState<Education[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -149,7 +152,7 @@ export default function EducationAdminPage() {
         description="Gérer votre parcours académique"
         action={{
           label: 'Nouvelle formation',
-          href: '/admin/education/new',
+          href: `/${locale}/admin/education/new`,
           icon: (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -162,7 +165,7 @@ export default function EducationAdminPage() {
         data={education}
         columns={columns}
         onDelete={handleDelete}
-        editPath={(edu) => `/admin/education/${edu.id}/edit`}
+        editPath={(edu) => `/${locale}/admin/education/${edu.id}/edit`}
         emptyMessage="Aucune formation pour le moment"
       />
     </div>

@@ -1,7 +1,8 @@
-// app/admin/certifications/page.tsx
+// app/[locale]/admin/certifications/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import PageHeader from '@/components/admin/PageHeader';
 import DataTable, { Column } from '@/components/admin/DataTable';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
@@ -23,6 +24,8 @@ interface Certification {
 }
 
 export default function CertificationsAdminPage() {
+  const params = useParams();
+  const locale = params?.locale as string || 'fr';
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -196,7 +199,7 @@ export default function CertificationsAdminPage() {
         description="Gérer vos certifications professionnelles"
         action={{
           label: 'Nouvelle certification',
-          href: '/admin/certifications/new',
+          href: `/${locale}/admin/certifications/new`,
           icon: (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -209,7 +212,7 @@ export default function CertificationsAdminPage() {
         data={certifications}
         columns={columns}
         onDelete={handleDelete}
-        editPath={(cert) => `/admin/certifications/${cert.id}/edit`}
+        editPath={(cert) => `/${locale}/admin/certifications/${cert.id}/edit`}
         emptyMessage="Aucune certification pour le moment"
       />
     </div>

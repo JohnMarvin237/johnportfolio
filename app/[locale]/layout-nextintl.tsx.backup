@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { Geist, Geist_Mono } from "next/font/google";
-import { LocaleProvider } from "@/components/providers/LocaleProvider";
-import NavbarMultilingual from "@/components/layout/NavbarMultilingual";
-import FooterMultilingual from "@/components/layout/FooterMultilingual";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
-import { loadTranslations } from "@/lib/i18n";
+import { locales } from '@/i18n/config';
 import "../globals.css";
 
 const geistSans = Geist({
@@ -31,21 +33,27 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  // Load translations for the locale
-  const messages = await loadTranslations(locale as 'fr' | 'en');
+  // Validate that the incoming `locale` parameter is valid
+  if (!locales.includes(locale as any)) {
+    notFound();
+  }
+
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages({locale});
 
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
-        <LocaleProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>
-            <NavbarMultilingual />
+            <Navbar />
             <main className="min-h-screen">
               {children}
             </main>
-            <FooterMultilingual />
+            <Footer />
           </AnalyticsProvider>
-        </LocaleProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

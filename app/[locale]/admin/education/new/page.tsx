@@ -1,11 +1,11 @@
-// app/[locale]/admin/experiences/new/page.tsx
+// app/[locale]/admin/education/new/page.tsx
 'use client';
 
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { experienceBilingualFormSchema, transformExperienceFormData } from '@/lib/schemas/experience-bilingual.schema';
+import { educationBilingualFormSchema, transformEducationFormData } from '@/lib/schemas/education-bilingual.schema';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
 import { getApiUrl } from '@/lib/utils';
 import PageHeader from '@/components/admin/PageHeader';
@@ -14,9 +14,9 @@ import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof experienceBilingualFormSchema>;
+type FormData = z.infer<typeof educationBilingualFormSchema>;
 
-export default function NewExperiencePage() {
+export default function NewEducationPage() {
   const router = useRouter();
   const params = useParams();
   const locale = params?.locale as string || 'fr';
@@ -30,7 +30,7 @@ export default function NewExperiencePage() {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(experienceBilingualFormSchema),
+    resolver: zodResolver(educationBilingualFormSchema),
     defaultValues: {
       current: false,
       order: 0,
@@ -45,9 +45,9 @@ export default function NewExperiencePage() {
       setError('');
 
       // Transform form data to API format
-      const apiData = transformExperienceFormData(data);
+      const apiData = transformEducationFormData(data);
 
-      const response = await fetch(getApiUrl('/experiences'), {
+      const response = await fetch(getApiUrl('/education'), {
         method: 'POST',
         headers: {
           ...getAuthHeaders(),
@@ -61,7 +61,7 @@ export default function NewExperiencePage() {
         throw new Error(result.error || 'Erreur lors de la création');
       }
 
-      router.push(`/${locale}/admin/experiences`);
+      router.push(`/${locale}/admin/education`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
@@ -72,8 +72,8 @@ export default function NewExperiencePage() {
   return (
     <div>
       <PageHeader
-        title="Nouvelle expérience"
-        description="Ajouter une nouvelle expérience professionnelle"
+        title="Nouvelle formation"
+        description="Ajouter une nouvelle formation académique"
       />
 
       <div className="max-w-3xl bg-white rounded-lg shadow p-6">
@@ -92,45 +92,44 @@ export default function NewExperiencePage() {
 
           <div className="grid grid-cols-1 gap-6">
             <BilingualFormField
-              label="Titre du poste"
-              name="title"
+              label="Diplôme"
+              name="degree"
               required
               register={register}
-              errorFr={errors.title_fr?.message}
-              errorEn={errors.title_en?.message}
-              placeholderFr="Ex: Développeur Full-Stack"
-              placeholderEn="Ex: Full-Stack Developer"
+              errorFr={errors.degree_fr?.message}
+              errorEn={errors.degree_en?.message}
+              placeholderFr="Ex: Maîtrise en informatique"
+              placeholderEn="Ex: Master of Computer Science"
             />
 
             <BilingualFormField
-              label="Entreprise"
-              name="company"
+              label="Institution"
+              name="institution"
               required
               register={register}
-              errorFr={errors.company_fr?.message}
-              errorEn={errors.company_en?.message}
-              placeholderFr="Nom de l'entreprise"
-              placeholderEn="Company name"
+              errorFr={errors.institution_fr?.message}
+              errorEn={errors.institution_en?.message}
+              placeholderFr="Ex: Université d'Ottawa"
+              placeholderEn="Ex: University of Ottawa"
+            />
+
+            <BilingualFormField
+              label="Domaine d'étude"
+              name="field"
+              register={register}
+              errorFr={errors.field_fr?.message}
+              errorEn={errors.field_en?.message}
+              placeholderFr="Ex: Génie logiciel"
+              placeholderEn="Ex: Software Engineering"
             />
 
             <FormField
-              label="URL de l'entreprise"
-              name="companyUrl"
-              type="url"
-              register={register}
-              error={errors.companyUrl?.message}
-              placeholder="https://entreprise.com"
-            />
-
-            <BilingualFormField
               label="Lieu"
               name="location"
               required
               register={register}
-              errorFr={errors.location_fr?.message}
-              errorEn={errors.location_en?.message}
-              placeholderFr="Ex: Ottawa, ON"
-              placeholderEn="Ex: Ottawa, ON"
+              error={errors.location?.message}
+              placeholder="Ex: Ottawa, ON"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,7 +154,7 @@ export default function NewExperiencePage() {
             </div>
 
             <FormField
-              label="Poste actuel"
+              label="Formation en cours"
               name="current"
               type="checkbox"
               register={register}
@@ -163,39 +162,36 @@ export default function NewExperiencePage() {
             />
 
             <BilingualFormField
-              label="Description du poste"
+              label="Description"
               name="description"
               type="textarea"
-              required
               register={register}
               errorFr={errors.description_fr?.message}
               errorEn={errors.description_en?.message}
-              placeholderFr="Description du poste et des responsabilités"
-              placeholderEn="Job description and responsibilities"
+              placeholderFr="Description de la formation, cours principaux, projets, etc."
+              placeholderEn="Description of the program, main courses, projects, etc."
               rows={4}
             />
 
-            <BilingualFormField
-              label="Réalisations principales"
-              name="achievements"
-              type="textarea"
-              required
-              register={register}
-              errorFr={errors.achievements_fr?.message}
-              errorEn={errors.achievements_en?.message}
-              placeholderFr="Une réalisation par ligne:\n• Amélioration de la performance de 50%\n• Implémentation d'une nouvelle architecture"
-              placeholderEn="One achievement per line:\n• Improved performance by 50%\n• Implemented new architecture"
-              rows={6}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Moyenne (GPA)"
+                name="gpa"
+                register={register}
+                error={errors.gpa?.message}
+                placeholder="Ex: 3.8"
+              />
 
-            <FormField
-              label="Technologies"
-              name="technologies"
-              required
-              register={register}
-              error={errors.technologies?.message}
-              placeholder="React, Node.js, PostgreSQL (séparées par des virgules)"
-            />
+              <BilingualFormField
+                label="Note additionnelle"
+                name="note"
+                register={register}
+                errorFr={errors.note_fr?.message}
+                errorEn={errors.note_en?.message}
+                placeholderFr="Ex: Équivalent Maîtrise canadienne"
+                placeholderEn="Ex: Equivalent to Canadian Master's degree"
+              />
+            </div>
 
             <FormField
               label="Ordre d'affichage"
@@ -214,7 +210,7 @@ export default function NewExperiencePage() {
               disabled={isSubmitting}
               className="flex-1 md:flex-initial"
             >
-              {isSubmitting ? 'Création...' : 'Créer l\'expérience'}
+              {isSubmitting ? 'Création...' : 'Créer la formation'}
             </Button>
 
             <Button

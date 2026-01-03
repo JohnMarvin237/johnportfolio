@@ -1,11 +1,11 @@
-// app/[locale]/admin/experiences/[id]/edit/page.tsx
+// app/[locale]/admin/certifications/[id]/edit/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { experienceBilingualFormSchema, transformExperienceFormData, transformExperienceToFormData } from '@/lib/schemas/experience-bilingual.schema';
+import { certificationBilingualFormSchema, transformCertificationFormData, transformCertificationToFormData } from '@/lib/schemas/certification-bilingual.schema';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
 import { getApiUrl } from '@/lib/utils';
 import PageHeader from '@/components/admin/PageHeader';
@@ -16,9 +16,9 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof experienceBilingualFormSchema>;
+type FormData = z.infer<typeof certificationBilingualFormSchema>;
 
-export default function EditExperiencePage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+export default function EditCertificationPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,42 +29,40 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(experienceBilingualFormSchema),
+    resolver: zodResolver(certificationBilingualFormSchema),
   });
 
-  const watchCurrent = watch('current');
-  const [experienceId, setExperienceId] = useState<string | null>(null);
+  const [certificationId, setCertificationId] = useState<string | null>(null);
 
   useEffect(() => {
     params.then(p => {
-      setExperienceId(p.id);
+      setCertificationId(p.id);
       setLocale(p.locale || 'fr');
     });
   }, [params]);
 
   useEffect(() => {
-    if (experienceId) {
-      fetchExperience();
+    if (certificationId) {
+      fetchCertification();
     }
-  }, [experienceId]);
+  }, [certificationId]);
 
-  const fetchExperience = async () => {
+  const fetchCertification = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(getApiUrl(`/experiences/${experienceId}`), {
+      const response = await fetch(getApiUrl(`/certifications/${certificationId}`), {
         headers: getAuthHeaders(),
       });
 
       if (!response.ok) {
-        throw new Error('Expérience non trouvée');
+        throw new Error('Certification non trouvée');
       }
 
-      const experience = await response.json();
-      const formData = transformExperienceToFormData(experience);
+      const certification = await response.json();
+      const formData = transformCertificationToFormData(certification);
       reset(formData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
@@ -79,9 +77,9 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
       setError('');
 
       // Transform form data to API format
-      const apiData = transformExperienceFormData(data);
+      const apiData = transformCertificationFormData(data);
 
-      const response = await fetch(getApiUrl(`/experiences/${experienceId}`), {
+      const response = await fetch(getApiUrl(`/certifications/${certificationId}`), {
         method: 'PUT',
         headers: {
           ...getAuthHeaders(),
@@ -95,7 +93,7 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
         throw new Error(result.error || 'Erreur lors de la mise à jour');
       }
 
-      router.push(`/${locale}/admin/experiences`);
+      router.push(`/${locale}/admin/certifications`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
@@ -115,10 +113,10 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
     return (
       <div>
         <PageHeader
-          title="Modifier l'expérience"
-          description="Mettre à jour les informations de l'expérience"
+          title="Modifier la certification"
+          description="Mettre à jour les informations de la certification"
         />
-        <ErrorDisplay error={error} onRetry={fetchExperience} />
+        <ErrorDisplay error={error} onRetry={fetchCertification} />
       </div>
     );
   }
@@ -126,8 +124,8 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
   return (
     <div>
       <PageHeader
-        title="Modifier l'expérience"
-        description="Mettre à jour les informations de l'expérience"
+        title="Modifier la certification"
+        description="Mettre à jour les informations de la certification"
       />
 
       <div className="max-w-3xl bg-white rounded-lg shadow p-6">
@@ -146,109 +144,84 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
 
           <div className="grid grid-cols-1 gap-6">
             <BilingualFormField
-              label="Titre du poste"
+              label="Titre de la certification"
               name="title"
               required
               register={register}
               errorFr={errors.title_fr?.message}
               errorEn={errors.title_en?.message}
-              placeholderFr="Ex: Développeur Full-Stack"
-              placeholderEn="Ex: Full-Stack Developer"
+              placeholderFr="Ex: AWS Certified Solutions Architect"
+              placeholderEn="Ex: AWS Certified Solutions Architect"
             />
 
             <BilingualFormField
-              label="Entreprise"
-              name="company"
+              label="Organisme émetteur"
+              name="issuer"
               required
               register={register}
-              errorFr={errors.company_fr?.message}
-              errorEn={errors.company_en?.message}
-              placeholderFr="Nom de l'entreprise"
-              placeholderEn="Company name"
-            />
-
-            <FormField
-              label="URL de l'entreprise"
-              name="companyUrl"
-              type="url"
-              register={register}
-              error={errors.companyUrl?.message}
-              placeholder="https://entreprise.com"
-            />
-
-            <BilingualFormField
-              label="Lieu"
-              name="location"
-              required
-              register={register}
-              errorFr={errors.location_fr?.message}
-              errorEn={errors.location_en?.message}
-              placeholderFr="Ex: Ottawa, ON"
-              placeholderEn="Ex: Ottawa, ON"
+              errorFr={errors.issuer_fr?.message}
+              errorEn={errors.issuer_en?.message}
+              placeholderFr="Ex: Amazon Web Services"
+              placeholderEn="Ex: Amazon Web Services"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                label="Date de début"
-                name="startDate"
+                label="Date d'obtention"
+                name="issueDate"
                 type="date"
-                required
                 register={register}
-                error={errors.startDate?.message}
+                error={errors.issueDate?.message}
               />
 
-              {!watchCurrent && (
-                <FormField
-                  label="Date de fin"
-                  name="endDate"
-                  type="date"
-                  register={register}
-                  error={errors.endDate?.message}
-                />
-              )}
+              <FormField
+                label="Date d'expiration"
+                name="expiryDate"
+                type="date"
+                register={register}
+                error={errors.expiryDate?.message}
+              />
             </div>
 
-            <FormField
-              label="Poste actuel"
-              name="current"
-              type="checkbox"
-              register={register}
-              error={errors.current?.message}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="ID de certification"
+                name="credentialId"
+                register={register}
+                error={errors.credentialId?.message}
+                placeholder="Ex: ABC123DEF456"
+              />
+
+              <FormField
+                label="URL de vérification"
+                name="credentialUrl"
+                type="url"
+                register={register}
+                error={errors.credentialUrl?.message}
+                placeholder="https://certifications.example.com/verify/ABC123"
+              />
+            </div>
 
             <BilingualFormField
-              label="Description du poste"
+              label="Description"
               name="description"
               type="textarea"
-              required
               register={register}
               errorFr={errors.description_fr?.message}
               errorEn={errors.description_en?.message}
-              placeholderFr="Description du poste et des responsabilités"
-              placeholderEn="Job description and responsibilities"
+              placeholderFr="Description de la certification et des compétences validées"
+              placeholderEn="Description of the certification and validated skills"
               rows={4}
             />
 
             <BilingualFormField
-              label="Réalisations principales"
-              name="achievements"
-              type="textarea"
-              required
+              label="Compétences acquises"
+              name="skills"
               register={register}
-              errorFr={errors.achievements_fr?.message}
-              errorEn={errors.achievements_en?.message}
-              placeholderFr="Une réalisation par ligne:\n• Amélioration de la performance de 50%\n• Implémentation d'une nouvelle architecture"
-              placeholderEn="One achievement per line:\n• Improved performance by 50%\n• Implemented new architecture"
-              rows={6}
-            />
-
-            <FormField
-              label="Technologies"
-              name="technologies"
-              required
-              register={register}
-              error={errors.technologies?.message}
-              placeholder="React, Node.js, PostgreSQL (séparées par des virgules)"
+              errorFr={errors.skills_fr?.message}
+              errorEn={errors.skills_en?.message}
+              placeholderFr="Cloud Architecture, AWS, Solutions Design (séparées par des virgules)"
+              placeholderEn="Cloud Architecture, AWS, Solutions Design (separated by commas)"
             />
 
             <FormField

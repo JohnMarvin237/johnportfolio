@@ -1,77 +1,43 @@
-// app/[locale]/admin/experiences/[id]/edit/page.tsx
+// app/[locale]/admin/volunteer/new/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { experienceBilingualFormSchema, transformExperienceFormData, transformExperienceToFormData } from '@/lib/schemas/experience-bilingual.schema';
+import { volunteerBilingualFormSchema, transformVolunteerFormData } from '@/lib/schemas/volunteer-bilingual.schema';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
 import { getApiUrl } from '@/lib/utils';
 import PageHeader from '@/components/admin/PageHeader';
 import FormField from '@/components/admin/FormField';
 import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import ErrorDisplay from '@/components/ui/ErrorDisplay';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof experienceBilingualFormSchema>;
+type FormData = z.infer<typeof volunteerBilingualFormSchema>;
 
-export default function EditExperiencePage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+export default function NewVolunteerPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale as string || 'fr';
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [locale, setLocale] = useState('fr');
   const getAuthHeaders = useAuthHeaders();
 
   const {
     register,
     handleSubmit,
     watch,
-    reset,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(experienceBilingualFormSchema),
+    resolver: zodResolver(volunteerBilingualFormSchema),
+    defaultValues: {
+      current: false,
+      order: 0,
+    },
   });
 
   const watchCurrent = watch('current');
-  const [experienceId, setExperienceId] = useState<string | null>(null);
-
-  useEffect(() => {
-    params.then(p => {
-      setExperienceId(p.id);
-      setLocale(p.locale || 'fr');
-    });
-  }, [params]);
-
-  useEffect(() => {
-    if (experienceId) {
-      fetchExperience();
-    }
-  }, [experienceId]);
-
-  const fetchExperience = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(getApiUrl(`/experiences/${experienceId}`), {
-        headers: getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error('Expérience non trouvée');
-      }
-
-      const experience = await response.json();
-      const formData = transformExperienceToFormData(experience);
-      reset(formData);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -79,10 +45,10 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
       setError('');
 
       // Transform form data to API format
-      const apiData = transformExperienceFormData(data);
+      const apiData = transformVolunteerFormData(data);
 
-      const response = await fetch(getApiUrl(`/experiences/${experienceId}`), {
-        method: 'PUT',
+      const response = await fetch(getApiUrl('/volunteer'), {
+        method: 'POST',
         headers: {
           ...getAuthHeaders(),
           'Content-Type': 'application/json',
@@ -92,10 +58,10 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
 
       if (!response.ok) {
         const result = await response.json();
-        throw new Error(result.error || 'Erreur lors de la mise à jour');
+        throw new Error(result.error || 'Erreur lors de la création');
       }
 
-      router.push(`/${locale}/admin/experiences`);
+      router.push(`/${locale}/admin/volunteer`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
@@ -103,31 +69,11 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
-
-  if (error && isLoading === false && !isSubmitting) {
-    return (
-      <div>
-        <PageHeader
-          title="Modifier l'expérience"
-          description="Mettre à jour les informations de l'expérience"
-        />
-        <ErrorDisplay error={error} onRetry={fetchExperience} />
-      </div>
-    );
-  }
-
   return (
     <div>
       <PageHeader
-        title="Modifier l'expérience"
-        description="Mettre à jour les informations de l'expérience"
+        title="Nouvelle expérience bénévole"
+        description="Ajouter une nouvelle expérience de bénévolat"
       />
 
       <div className="max-w-3xl bg-white rounded-lg shadow p-6">
@@ -152,34 +98,24 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
               register={register}
               errorFr={errors.title_fr?.message}
               errorEn={errors.title_en?.message}
-              placeholderFr="Ex: Développeur Full-Stack"
-              placeholderEn="Ex: Full-Stack Developer"
+              placeholderFr="Ex: Bénévole en développement web"
+              placeholderEn="Ex: Web Development Volunteer"
             />
 
             <BilingualFormField
-              label="Entreprise"
-              name="company"
+              label="Organisation"
+              name="organization"
               required
               register={register}
-              errorFr={errors.company_fr?.message}
-              errorEn={errors.company_en?.message}
-              placeholderFr="Nom de l'entreprise"
-              placeholderEn="Company name"
-            />
-
-            <FormField
-              label="URL de l'entreprise"
-              name="companyUrl"
-              type="url"
-              register={register}
-              error={errors.companyUrl?.message}
-              placeholder="https://entreprise.com"
+              errorFr={errors.organization_fr?.message}
+              errorEn={errors.organization_en?.message}
+              placeholderFr="Nom de l'organisation"
+              placeholderEn="Organization name"
             />
 
             <BilingualFormField
               label="Lieu"
               name="location"
-              required
               register={register}
               errorFr={errors.location_fr?.message}
               errorEn={errors.location_en?.message}
@@ -209,7 +145,7 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
             </div>
 
             <FormField
-              label="Poste actuel"
+              label="Engagement en cours"
               name="current"
               type="checkbox"
               register={register}
@@ -217,38 +153,16 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
             />
 
             <BilingualFormField
-              label="Description du poste"
+              label="Description"
               name="description"
               type="textarea"
               required
               register={register}
               errorFr={errors.description_fr?.message}
               errorEn={errors.description_en?.message}
-              placeholderFr="Description du poste et des responsabilités"
-              placeholderEn="Job description and responsibilities"
-              rows={4}
-            />
-
-            <BilingualFormField
-              label="Réalisations principales"
-              name="achievements"
-              type="textarea"
-              required
-              register={register}
-              errorFr={errors.achievements_fr?.message}
-              errorEn={errors.achievements_en?.message}
-              placeholderFr="Une réalisation par ligne:\n• Amélioration de la performance de 50%\n• Implémentation d'une nouvelle architecture"
-              placeholderEn="One achievement per line:\n• Improved performance by 50%\n• Implemented new architecture"
+              placeholderFr="Décrivez votre rôle, vos responsabilités et l'impact de votre engagement"
+              placeholderEn="Describe your role, responsibilities, and the impact of your involvement"
               rows={6}
-            />
-
-            <FormField
-              label="Technologies"
-              name="technologies"
-              required
-              register={register}
-              error={errors.technologies?.message}
-              placeholder="React, Node.js, PostgreSQL (séparées par des virgules)"
             />
 
             <FormField
@@ -268,7 +182,7 @@ export default function EditExperiencePage({ params }: { params: Promise<{ id: s
               disabled={isSubmitting}
               className="flex-1 md:flex-initial"
             >
-              {isSubmitting ? 'Enregistrement...' : 'Enregistrer les modifications'}
+              {isSubmitting ? 'Création...' : 'Créer l\'expérience'}
             </Button>
 
             <Button

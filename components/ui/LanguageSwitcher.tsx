@@ -1,49 +1,43 @@
-// components/ui/LanguageSwitcher.tsx
 'use client';
 
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
-import { locales, languageNames } from '@/i18n/config';
-import { useTransition } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function LanguageSwitcher() {
-  const locale = useLocale();
-  const router = useRouter();
+interface LanguageSwitcherProps {
+  currentLocale: 'fr' | 'en';
+}
+
+export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const [pathWithoutLocale, setPathWithoutLocale] = useState('/');
 
-  const handleLanguageChange = (newLocale: string) => {
-    startTransition(() => {
-      // Get the current pathname without the locale
-      const currentPathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
-
-      // Navigate to the new locale path
-      router.push(`/${newLocale}${currentPathWithoutLocale}`);
-    });
-  };
+  useEffect(() => {
+    // Get the path without the locale
+    setPathWithoutLocale(pathname.slice(3) || '/');
+  }, [pathname]);
 
   return (
-    <div className="relative inline-block text-left">
-      <select
-        value={locale}
-        onChange={(e) => handleLanguageChange(e.target.value)}
-        disabled={isPending}
-        className="block w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+    <div className="flex items-center space-x-1">
+      <a
+        href={`/fr${pathWithoutLocale}`}
+        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+          ${currentLocale === 'fr'
+            ? 'bg-blue-600 text-white shadow-sm'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
       >
-        {locales.map((loc) => (
-          <option key={loc} value={loc}>
-            {languageNames[loc]}
-          </option>
-        ))}
-      </select>
-      {isPending && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-md">
-          <svg className="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </div>
-      )}
+        FR
+      </a>
+      <a
+        href={`/en${pathWithoutLocale}`}
+        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+          ${currentLocale === 'en'
+            ? 'bg-blue-600 text-white shadow-sm'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+      >
+        EN
+      </a>
     </div>
   );
 }

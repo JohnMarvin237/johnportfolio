@@ -1,7 +1,6 @@
-// app/[locale]/projects/page.tsx
+// app/[locale]/projects/page.tsx - Version simple sans next-intl
 import ProjectCardMultilingual from '@/components/sections/ProjectCardMultilingual';
 import { fetchWithFallback } from '@/lib/utils/fetch-wrapper-with-fallback';
-import { getTranslations } from 'next-intl/server';
 
 /**
  * Page listant tous les projets
@@ -12,7 +11,20 @@ export default async function ProjectsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params;
-  const t = await getTranslations('projects');
+  const isFrench = locale === 'fr';
+
+  // Textes multilingues simples
+  const content = {
+    title: isFrench ? "Mes Projets" : "My Projects",
+    description: isFrench
+      ? "Découvrez mes réalisations et projets techniques"
+      : "Discover my achievements and technical projects",
+    projectsCount: {
+      single: isFrench ? "projet" : "project",
+      plural: isFrench ? "projets" : "projects"
+    },
+    noProjects: isFrench ? "Aucun projet disponible" : "No projects available"
+  };
 
   // Récupérer tous les projets depuis l'API avec fallback JSON
   const result = await fetchWithFallback('/projects', {
@@ -32,14 +44,14 @@ export default async function ProjectsPage({
         {/* En-tête */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            {t('title')}
+            {content.title}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {t('description')}
+            {content.description}
           </p>
           <div className="mt-6 flex items-center justify-center gap-4">
             <span className="px-4 py-2 bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 rounded-full font-medium">
-              {projects.length} {projects.length > 1 ? t('projectsCount.plural', { count: projects.length }) : t('projectsCount.single', { count: 1 })}
+              {projects.length} {projects.length > 1 ? content.projectsCount.plural : content.projectsCount.single}
             </span>
           </div>
         </div>
@@ -53,7 +65,7 @@ export default async function ProjectsPage({
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">{t('noProjects')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">{content.noProjects}</p>
           </div>
         )}
       </div>

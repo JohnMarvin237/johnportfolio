@@ -4,7 +4,7 @@
 import React from 'react';
 import Card, { CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
 import Button from '../ui/Button';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 export interface ProjectMultilingual {
   id: string;
@@ -45,7 +45,12 @@ export interface ProjectCardMultilingualProps {
  */
 export default function ProjectCardMultilingual({ project }: ProjectCardMultilingualProps) {
   const locale = useLocale();
-  const t = useTranslations('projects');
+
+  // Traductions simples
+  const translations = {
+    featured: locale === 'fr' ? 'En vedette' : 'Featured',
+    viewDemo: locale === 'fr' ? 'Voir la démo' : 'View Demo'
+  };
 
   // Get the appropriate language content
   const title = locale === 'fr'
@@ -89,7 +94,7 @@ export default function ProjectCardMultilingual({ project }: ProjectCardMultilin
           </CardTitle>
           {featured && (
             <span className="px-3 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 rounded-full border border-blue-200 dark:border-blue-400/30 shadow-sm">
-              {t('featured')}
+              {translations.featured}
             </span>
           )}
         </div>
@@ -124,7 +129,7 @@ export default function ProjectCardMultilingual({ project }: ProjectCardMultilin
               onClick={() => window.open(demoUrl, '_blank')}
               className="flex-1"
             >
-              {t('viewDemo')}
+              {translations.viewDemo}
             </Button>
           )}
           {githubUrl && (

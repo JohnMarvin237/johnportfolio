@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Card, { CardHeader, CardTitle, CardContent } from '../ui/Card';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 export interface ExperienceMultilingual {
   id: string;
@@ -77,7 +77,12 @@ function formatDateRange(
  */
 export default function ExperienceCardMultilingual({ experience }: ExperienceCardMultilingualProps) {
   const locale = useLocale();
-  const t = useTranslations('experience');
+
+  // Traductions simples
+  const translations = {
+    current: locale === 'fr' ? 'Actuel' : 'Current',
+    achievements: locale === 'fr' ? 'Réalisations' : 'Achievements'
+  };
 
   // Get the appropriate language content
   const title = locale === 'fr'
@@ -137,7 +142,7 @@ export default function ExperienceCardMultilingual({ experience }: ExperienceCar
           </div>
           {current && (
             <span className="px-2 py-1 text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/20 rounded-full">
-              {t('current')}
+              {translations.current}
             </span>
           )}
         </div>
@@ -153,7 +158,7 @@ export default function ExperienceCardMultilingual({ experience }: ExperienceCar
         {achievements.length > 0 && (
           <div className="mb-4">
             <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              {t('achievements')}:
+              {translations.achievements}:
             </h4>
             <ul className="list-disc list-inside space-y-1">
               {achievements.map((achievement, index) => (

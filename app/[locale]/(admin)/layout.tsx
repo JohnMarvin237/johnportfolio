@@ -1,4 +1,4 @@
-// app/admin/layout.tsx
+// app/[locale]/(admin)/layout.tsx
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/auth-helpers';
 import { AuthProvider } from '@/lib/hooks/useAuth';
@@ -19,12 +19,12 @@ export default async function AdminLayout({
 
   // Redirect if not authenticated
   if (!user) {
-    redirect('/auth/login');
+    redirect('/fr/auth/login');
   }
 
   // Check if user is admin
   if (user.role !== 'admin') {
-    redirect('/');
+    redirect('/fr');
   }
 
   return (

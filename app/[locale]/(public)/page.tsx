@@ -114,11 +114,15 @@ export default async function HomePage({
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             {content.ctaTitle}
           </h2>
-          <p className="text-xl mb-8 text-blue-50">
+          <p className="text-xl mb-8 text-blue-100">
             {content.ctaDescription}
           </p>
           <Link href={`/${locale}/contact`}>
-            <Button variant="primary" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="!bg-white !text-blue-600 hover:!bg-blue-50 !shadow-lg hover:!shadow-xl"
+            >
               {content.contactMe}
             </Button>
           </Link>

@@ -24,7 +24,7 @@ export default function FooterMultilingual() {
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} John Portfolio. {content.rights}.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             {content.builtWith} Next.js {content.and} ❤️
           </p>
         </div>

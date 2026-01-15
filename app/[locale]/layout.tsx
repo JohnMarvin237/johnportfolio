@@ -39,11 +39,7 @@ export default async function LocaleLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
         <LocaleProvider locale={locale} messages={messages}>
           <AnalyticsProvider>
-            <NavbarMultilingual />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <FooterMultilingual />
+            {children}
           </AnalyticsProvider>
         </LocaleProvider>
       </body>

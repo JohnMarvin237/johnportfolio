@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface NavItem {
   label: string;
@@ -14,10 +15,10 @@ interface NavItem {
   count?: number;
 }
 
-const navItems: NavItem[] = [
+const getNavItems = (locale: string): NavItem[] => [
   {
     label: 'Dashboard',
-    href: '/admin/dashboard',
+    href: `/${locale}/admin/dashboard`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -26,7 +27,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Projets',
-    href: '/admin/projects',
+    href: `/${locale}/admin/projects`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -35,7 +36,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Expériences',
-    href: '/admin/experiences',
+    href: `/${locale}/admin/experiences`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -44,7 +45,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Formation',
-    href: '/admin/education',
+    href: `/${locale}/admin/education`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -56,7 +57,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Certifications',
-    href: '/admin/certifications',
+    href: `/${locale}/admin/certifications`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -65,7 +66,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Bénévolat',
-    href: '/admin/volunteer',
+    href: `/${locale}/admin/volunteer`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -74,7 +75,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Messages',
-    href: '/admin/messages',
+    href: `/${locale}/admin/messages`,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -87,11 +88,12 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const locale = useLocale();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
-    router.push('/');
+    router.push(`/${locale}`);
   };
 
   return (
@@ -124,7 +126,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-            <Link href="/admin/dashboard" className="text-xl font-bold">
+            <Link href={`/${locale}/admin/dashboard`} className="text-xl font-bold">
               Admin Dashboard
             </Link>
             <button
@@ -145,7 +147,7 @@ export default function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-            {navItems.map((item) => {
+            {getNavItems(locale).map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
@@ -175,7 +177,7 @@ export default function Sidebar() {
           {/* Footer actions */}
           <div className="px-4 py-4 border-t border-gray-800">
             <Link
-              href="/"
+              href={`/${locale}`}
               target="_blank"
               className="flex items-center gap-3 px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors"
             >

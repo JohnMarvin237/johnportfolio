@@ -30,9 +30,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const inputId = id || `input-${label?.toLowerCase().replace(/\s+/g, '-')}`;
 
-    const baseStyles = 'w-full px-4 py-2 border rounded-lg transition-colors duration-200';
-    const normalStyles = 'border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200';
-    const errorStyles = 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200';
+    const baseStyles = 'w-full px-4 py-2 border rounded-lg transition-colors duration-200 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800';
+    const normalStyles = 'border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800';
+    const errorStyles = 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-800';
 
     return (
       <div className="w-full">

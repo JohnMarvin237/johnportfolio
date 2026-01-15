@@ -49,6 +49,8 @@ export default function BilingualFormField({
             className={cn(
               'mt-1 block w-full rounded-md border-gray-300 shadow-sm',
               'focus:border-blue-500 focus:ring-blue-500 sm:text-sm',
+              'text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800',
+              'dark:border-gray-600 dark:focus:border-blue-400',
               error && 'border-red-300',
               className
             )}
@@ -65,6 +67,8 @@ export default function BilingualFormField({
             className={cn(
               'mt-1 block w-full rounded-md border-gray-300 shadow-sm',
               'focus:border-blue-500 focus:ring-blue-500 sm:text-sm',
+              'text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800',
+              'dark:border-gray-600 dark:focus:border-blue-400',
               error && 'border-red-300',
               className
             )}

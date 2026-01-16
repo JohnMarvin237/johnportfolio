@@ -9,9 +9,20 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "test": "echo 'No tests configured yet'",
+    "test:integration": "echo 'No integration tests configured yet'",
+    "test:e2e": "echo 'No e2e tests configured yet'",
+    "test:e2e:prod": "echo 'No production e2e tests configured yet'",
     "db:seed": "npx dotenv -e .env -- npx prisma db seed",
     "db:reset": "npx dotenv -e .env -- npx prisma migrate reset",
-    "db:studio": "npx dotenv -e .env -- npx prisma studio"
+    "db:studio": "npx dotenv -e .env -- npx prisma studio",
+    "db:migrate": "npx prisma migrate dev",
+    "db:migrate:deploy": "npx prisma migrate deploy",
+    "db:generate": "npx prisma generate",
+    "vercel:build": "prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

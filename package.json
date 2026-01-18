@@ -9,8 +9,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "echo 'No tests configured yet'",
     "test:integration": "echo 'No integration tests configured yet'",
     "test:e2e": "echo 'No e2e tests configured yet'",
@@ -45,6 +45,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -52,7 +53,11 @@
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.3",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"

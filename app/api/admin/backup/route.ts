@@ -1,17 +1,40 @@
 // app/api/admin/backup/route.ts
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/config';
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyToken } from '@/lib/auth/jwt';
+import { prisma } from '@/lib/db/prisma';
 import { JsonBackupService } from '@/lib/backup/json-backup';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'admin') {
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Non authentifié' },
+        { status: 401 }
+      );
+    }
+
+    const payload = verifyToken(token);
+
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Token invalide ou expiré' },
+        { status: 401 }
+      );
+    }
+
+    // Verify admin role
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { role: true }
+    });
+
+    if (!user || user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Non autorisé' },
-        { status: 401 }
+        { status: 403 }
       );
     }
 
@@ -35,14 +58,37 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'admin') {
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Non authentifié' },
+        { status: 401 }
+      );
+    }
+
+    const payload = verifyToken(token);
+
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Token invalide ou expiré' },
+        { status: 401 }
+      );
+    }
+
+    // Verify admin role
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { role: true }
+    });
+
+    if (!user || user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Non autorisé' },
-        { status: 401 }
+        { status: 403 }
       );
     }
 

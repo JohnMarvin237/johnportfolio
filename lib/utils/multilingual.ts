@@ -41,7 +41,7 @@ export function getLocalizedObject<T extends Record<string, any>>(
   fields: string[],
   locale: 'fr' | 'en'
 ): T {
-  const localizedItem = { ...item };
+  const localizedItem = { ...item } as any;
 
   fields.forEach(field => {
     const value = getLocalizedField(item, field, locale);
@@ -50,7 +50,7 @@ export function getLocalizedObject<T extends Record<string, any>>(
     }
   });
 
-  return localizedItem;
+  return localizedItem as T;
 }
 
 /**

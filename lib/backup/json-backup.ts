@@ -93,10 +93,22 @@ export class JsonBackupService {
    */
   static async getDataWithFallback(dataType: keyof Omit<BackupData, 'timestamp' | 'version'>) {
     try {
+      // Map plural to singular for Prisma
+      const prismaModelMap: Record<string, any> = {
+        'projects': prisma.project,
+        'experiences': prisma.experience,
+        'education': prisma.education,
+        'certifications': prisma.certification,
+        'volunteer': prisma.volunteer,
+      };
+
       // Try to get from database first
-      const dbData = await prisma[dataType].findMany({ orderBy: { order: 'asc' } });
-      if (dbData && dbData.length > 0) {
-        return { data: dbData, source: 'database' };
+      const model = prismaModelMap[dataType];
+      if (model) {
+        const dbData = await model.findMany({ orderBy: { order: 'asc' } });
+        if (dbData && dbData.length > 0) {
+          return { data: dbData, source: 'database' };
+        }
       }
     } catch (error) {
       console.warn(`Database read failed for ${dataType}, falling back to JSON:`, error);

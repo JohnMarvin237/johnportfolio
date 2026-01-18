@@ -12,8 +12,14 @@ import PageHeader from '@/components/admin/PageHeader';
 import FormField from '@/components/admin/FormField';
 import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
+import { z } from 'zod';
 
-type FormData = z.infer<typeof projectBilingualFormSchema>;
+// Create a modified schema that ensures featured is always boolean
+const newFormSchema = projectBilingualFormSchema.extend({
+  featured: z.boolean()
+});
+
+type FormData = z.infer<typeof newFormSchema>;
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -28,7 +34,7 @@ export default function NewProjectPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(projectBilingualFormSchema),
+    resolver: zodResolver(newFormSchema),
     defaultValues: {
       featured: false,
       order: 0,

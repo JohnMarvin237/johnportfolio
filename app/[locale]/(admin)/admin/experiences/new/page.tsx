@@ -14,7 +14,12 @@ import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof experienceBilingualFormSchema>;
+// Create a modified schema that ensures current is always boolean
+const newFormSchema = experienceBilingualFormSchema.extend({
+  current: z.boolean()
+});
+
+type FormData = z.infer<typeof newFormSchema>;
 
 export default function NewExperiencePage() {
   const router = useRouter();
@@ -30,7 +35,7 @@ export default function NewExperiencePage() {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(experienceBilingualFormSchema),
+    resolver: zodResolver(newFormSchema),
     defaultValues: {
       current: false,
       order: 0,

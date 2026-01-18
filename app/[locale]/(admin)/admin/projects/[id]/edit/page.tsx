@@ -14,8 +14,14 @@ import BilingualFormField from '@/components/admin/BilingualFormField';
 import Button from '@/components/ui/Button';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
+import { z } from 'zod';
 
-type FormData = z.infer<typeof projectBilingualFormSchema>;
+// Create a modified schema that ensures featured is always boolean
+const editFormSchema = projectBilingualFormSchema.extend({
+  featured: z.boolean()
+});
+
+type FormData = z.infer<typeof editFormSchema>;
 
 export default function EditProjectPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const router = useRouter();
@@ -30,7 +36,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
     reset,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(projectBilingualFormSchema),
+    resolver: zodResolver(editFormSchema),
   });
 
   const [projectId, setProjectId] = useState<string | null>(null);

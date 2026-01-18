@@ -34,7 +34,7 @@ async function getBackupFileStats() {
   } catch (error) {
     return {
       exists: false,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
@@ -78,7 +78,7 @@ async function testBackupSystem() {
 
     // 5. Test fallback mechanism
     console.log('\n5️⃣  Testing data retrieval with fallback...');
-    const projectsWithFallback = await JsonBackupService.getDataWithFallback('project');
+    const projectsWithFallback = await JsonBackupService.getDataWithFallback('projects');
     console.log(`   - Projects retrieved: ${projectsWithFallback.data.length} (source: ${projectsWithFallback.source})`);
 
     // 6. Check timestamped backups

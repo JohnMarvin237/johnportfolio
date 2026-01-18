@@ -137,20 +137,17 @@ export default function VolunteerAdminPage() {
       <PageHeader
         title="Bénévolat"
         description="Gérez vos expériences de bénévolat"
-        actions={[
-          {
-            label: 'Ajouter une expérience',
-            href: `/${locale}/admin/volunteer/new`,
-            variant: 'primary',
-          },
-        ]}
+        action={{
+          label: 'Ajouter une expérience',
+          href: `/${locale}/admin/volunteer/new`,
+        }}
       />
 
       <DataTable
         data={volunteer}
         columns={columns}
         onEdit={(vol) => window.location.href = `/${locale}/admin/volunteer/${vol.id}/edit`}
-        onDelete={handleDelete}
+        onDelete={(vol) => handleDelete(vol.id)}
       />
     </div>
   );

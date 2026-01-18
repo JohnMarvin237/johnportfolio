@@ -29,7 +29,7 @@ export const educationBilingualFormSchema = z.object({
     message: "Date de début invalide",
   }),
   endDate: z.string().optional().nullable(),
-  current: z.boolean().optional().default(false),
+  current: z.boolean().default(false),
   gpa: z.string().optional().nullable(),
   order: z.union([z.string(), z.number()]).optional(),
 });

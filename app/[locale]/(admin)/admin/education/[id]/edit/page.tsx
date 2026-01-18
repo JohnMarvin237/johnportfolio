@@ -16,7 +16,12 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
 import { z } from 'zod';
 
-type FormData = z.infer<typeof educationBilingualFormSchema>;
+// Create a modified schema that ensures current is always boolean
+const editFormSchema = educationBilingualFormSchema.extend({
+  current: z.boolean()
+});
+
+type FormData = z.infer<typeof editFormSchema>;
 
 export default function EditEducationPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const router = useRouter();
@@ -33,7 +38,10 @@ export default function EditEducationPage({ params }: { params: Promise<{ id: st
     reset,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(educationBilingualFormSchema),
+    resolver: zodResolver(editFormSchema),
+    defaultValues: {
+      current: false,
+    },
   });
 
   const watchCurrent = watch('current');

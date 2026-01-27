@@ -136,17 +136,17 @@ export default function ExperienceCardMultilingual({ experience }: ExperienceCar
                 </svg>
               </a>
             ) : (
-              <p className="text-gray-600 dark:text-gray-400 font-medium mt-1">{company}</p>
+              <p className="text-gray-600 dark:text-gray-100 font-medium mt-1">{company}</p>
             )}
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{location}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{location}</p>
           </div>
           {current && (
-            <span className="px-2 py-1 text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/20 rounded-full">
+            <span className="px-2 py-1 text-xs font-semibold text-green-600 dark:text-green-300 bg-green-100 dark:bg-green-500/15 rounded-full">
               {translations.current}
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
           {formatDateRange(startDate, endDate, current, locale)}
         </p>
       </CardHeader>
@@ -176,7 +176,7 @@ export default function ExperienceCardMultilingual({ experience }: ExperienceCar
             {technologies.map((tech, index) => (
               <span
                 key={index}
-                className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 rounded-full"
+                className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-full"
               >
                 {tech}
               </span>

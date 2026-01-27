@@ -77,7 +77,7 @@ export default function ProjectCardMultilingual({ project }: ProjectCardMultilin
     <Card hover className="h-full flex flex-col group overflow-hidden">
       {/* Image du projet avec overlay gradient */}
       {imageUrl && (
-        <div className="relative w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 overflow-hidden -m-6 mb-4">
+        <div className="relative w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 overflow-hidden -m-6 mb-4">
           <img
             src={imageUrl}
             alt={title}
@@ -93,7 +93,7 @@ export default function ProjectCardMultilingual({ project }: ProjectCardMultilin
             {title}
           </CardTitle>
           {featured && (
-            <span className="px-3 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 rounded-full border border-blue-200 dark:border-blue-400/30 shadow-sm">
+            <span className="px-3 py-1 text-xs font-semibold text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-500/15 rounded-full border border-blue-200 dark:border-blue-400/20 shadow-sm">
               {translations.featured}
             </span>
           )}
@@ -111,7 +111,7 @@ export default function ProjectCardMultilingual({ project }: ProjectCardMultilin
           {technologies.map((tech, index) => (
             <span
               key={index}
-              className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 rounded-full hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white transition-all duration-300 cursor-default"
+              className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white transition-all duration-300 cursor-default"
             >
               {tech}
             </span>

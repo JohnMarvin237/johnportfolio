@@ -21,7 +21,7 @@ export default function Card({
   hover = false,
   padding = 'md',
 }: CardProps) {
-  const baseStyles = 'bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg';
+  const baseStyles = 'bg-white dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] shadow-lg';
 
   const hoverStyles = hover
     ? 'transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:-translate-y-1'

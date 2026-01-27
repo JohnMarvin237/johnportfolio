@@ -34,11 +34,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --background-alt: #1F2937;
-    --foreground: #F9FAFB;
-    --foreground-muted: #94A3B8;
-    --shadow-glow: 0 0 30px rgba(96, 165, 250, 0.4);
+    --background: #0f1419;
+    --background-alt: #1a1f29;
+    --foreground: #e6edf3;
+    --foreground-muted: #8b949e;
+    --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.3);
   }
 }
 
@@ -159,7 +159,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .glass {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(22, 27, 34, 0.85);
+    border: 1px solid rgba(48, 54, 61, 0.5);
   }
 }

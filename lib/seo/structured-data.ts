@@ -135,22 +135,22 @@ export function generatePageSchema(
 // Fonction pour générer les données structurées d'un projet
 export function generateProjectSchema(
   project: {
-    title: string;
-    description: string;
+    title?: string | null;
+    description?: string | null;
     technologies: string[];
-    imageUrl?: string;
-    demoUrl?: string;
-    githubUrl?: string;
-    startDate?: Date;
+    imageUrl?: string | null;
+    demoUrl?: string | null;
+    githubUrl?: string | null;
+    startDate?: Date | null;
   },
   locale: string
 ): Project {
   return {
     '@type': 'CreativeWork',
-    name: project.title,
-    description: project.description,
-    url: project.demoUrl || project.githubUrl,
-    image: project.imageUrl,
+    name: project.title || 'Untitled Project',
+    description: project.description || '',
+    url: (project.demoUrl ?? project.githubUrl) || undefined,
+    image: project.imageUrl || undefined,
     creator: personSchema,
     dateCreated: project.startDate?.toISOString(),
     keywords: project.technologies,

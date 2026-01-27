@@ -183,7 +183,6 @@ export default async function ProjectsPage({
                       <StructuredData data={projectSchema} />
                       <ProjectCardMultilingual
                         project={project}
-                        featured={true}
                       />
                     </article>
                   );

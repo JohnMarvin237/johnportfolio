@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { projectApiUpdateSchema, normalizeProjectData } from '@/lib/schemas/project-api.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
-import { Prisma } from '@/app/generated/prisma';
+import { Prisma } from '@prisma/client';
 import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**

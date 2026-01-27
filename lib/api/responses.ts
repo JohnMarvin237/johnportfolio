@@ -1,7 +1,7 @@
 // lib/api/responses.ts
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
-import { Prisma } from '@/app/generated/prisma';
+import { Prisma } from '@prisma/client';
 
 /**
  * Success response helper

@@ -57,3 +57,4 @@ prisma/migrations/
 logs
 *.lo
 CLAUDE.md
+.env*.local

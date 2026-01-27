@@ -8,25 +8,20 @@ export async function withAutoBackup<T>(
   operation: () => Promise<T>,
   operationName?: string
 ): Promise<T> {
-  try {
-    // Execute the database operation
-    const result = await operation();
+  // Execute the database operation
+  const result = await operation();
 
-    // Run backup in the background (non-blocking)
-    JsonBackupService.exportToJson()
-      .then(() => {
-        console.log(`✅ Auto-backup completed after: ${operationName || 'database operation'}`);
-      })
-      .catch((error) => {
-        console.error('❌ Auto-backup failed:', error);
-        // Don't throw - we don't want backup failures to break the main operation
-      });
+  // Run backup in the background (non-blocking)
+  JsonBackupService.exportToJson()
+    .then(() => {
+      console.log(`✅ Auto-backup completed after: ${operationName || 'database operation'}`);
+    })
+    .catch((error) => {
+      console.error('❌ Auto-backup failed:', error);
+      // Don't throw - we don't want backup failures to break the main operation
+    });
 
-    return result;
-  } catch (error) {
-    // If the main operation fails, don't run backup
-    throw error;
-  }
+  return result;
 }
 
 /**

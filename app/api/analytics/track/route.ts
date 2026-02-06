@@ -21,6 +21,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const normalizedPath = normalizePath(path);
+
     // Récupérer les headers
     const headersList = await headers();
     const userAgent = headersList.get('user-agent') || '';
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
       // Enregistrer la vue de page
       await tx.pageView.create({
         data: {
-          path,
+          path: normalizedPath,
           userAgent,
           referer,
           ip,
@@ -64,8 +66,8 @@ export async function POST(request: NextRequest) {
       });
 
       // Si c'est une page de projet, enregistrer aussi dans ProjectView
-      if (path.startsWith('/projects/') && path.split('/').length === 3) {
-        const projectId = path.split('/')[2];
+      if (normalizedPath.startsWith('/projects/') && normalizedPath.split('/').length === 3) {
+        const projectId = normalizedPath.split('/')[2];
         await tx.projectView.create({
           data: {
             projectId,
@@ -81,6 +83,18 @@ export async function POST(request: NextRequest) {
     // On retourne toujours un succès pour ne pas bloquer l'utilisateur
     return NextResponse.json({ success: true });
   }
+}
+
+function normalizePath(pathname: string): string {
+  if (!pathname) return '/';
+
+  const localeMatch = pathname.match(/^\/(fr|en)(\/|$)/);
+  if (localeMatch) {
+    const stripped = pathname.replace(/^\/(fr|en)/, '');
+    return stripped === '' ? '/' : stripped;
+  }
+
+  return pathname;
 }
 
 // Endpoint GET pour récupérer les statistiques

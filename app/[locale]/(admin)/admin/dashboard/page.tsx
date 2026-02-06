@@ -1,5 +1,5 @@
 // app/admin/dashboard/page.tsx
-import StatsCard from '@/components/admin/StatsCard';
+import DashboardStats from '@/components/admin/DashboardStats';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { prisma } from '@/lib/db/prisma';
@@ -8,52 +8,6 @@ import { prisma } from '@/lib/db/prisma';
 export const dynamic = 'force-dynamic';
 
 async function getDashboardStats() {
-  // Get today's date for analytics
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const [
-    projectsCount,
-    experiencesCount,
-    educationCount,
-    certificationsCount,
-    volunteerCount,
-    messagesCount,
-    unreadMessagesCount,
-    featuredProjectsCount,
-    // Analytics stats
-    totalVisitors,
-    totalPageViews,
-    todayVisitors,
-    todayPageViews,
-  ] = await Promise.all([
-    prisma.project.count(),
-    prisma.experience.count(),
-    prisma.education.count(),
-    prisma.certification.count(),
-    prisma.volunteer.count(),
-    prisma.contactMessage.count(),
-    prisma.contactMessage.count({ where: { read: false } }),
-    prisma.project.count({ where: { featured: true } }),
-    // Analytics queries
-    prisma.visitor.count(),
-    prisma.pageView.count(),
-    prisma.visitor.count({
-      where: {
-        firstVisit: {
-          gte: today,
-        },
-      },
-    }),
-    prisma.pageView.count({
-      where: {
-        createdAt: {
-          gte: today,
-        },
-      },
-    }),
-  ]);
-
   // Get recent messages
   const recentMessages = await prisma.contactMessage.findMany({
     take: 5,
@@ -94,21 +48,6 @@ async function getDashboardStats() {
   });
 
   return {
-    stats: {
-      projectsCount,
-      experiencesCount,
-      educationCount,
-      certificationsCount,
-      volunteerCount,
-      messagesCount,
-      unreadMessagesCount,
-      featuredProjectsCount,
-      // Analytics stats
-      totalVisitors,
-      totalPageViews,
-      todayVisitors,
-      todayPageViews,
-    },
     recentMessages,
     recentProjects,
     topPages: topPages.map(page => ({
@@ -119,7 +58,7 @@ async function getDashboardStats() {
 }
 
 export default async function DashboardPage() {
-  const { stats, recentMessages, recentProjects, topPages } = await getDashboardStats();
+  const { recentMessages, recentProjects, topPages } = await getDashboardStats();
 
   return (
     <div>
@@ -130,95 +69,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Analytics Stats - Primary Row */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 mb-8 text-white">
-        <h2 className="text-2xl font-bold mb-4">Statistiques de visite</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-            <p className="text-white/80 text-sm mb-1">Visiteurs totaux</p>
-            <p className="text-3xl font-bold">{stats.totalVisitors}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-            <p className="text-white/80 text-sm mb-1">Pages vues</p>
-            <p className="text-3xl font-bold">{stats.totalPageViews}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-            <p className="text-white/80 text-sm mb-1">Visiteurs aujourd'hui</p>
-            <p className="text-3xl font-bold">{stats.todayVisitors}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-            <p className="text-white/80 text-sm mb-1">Pages vues aujourd'hui</p>
-            <p className="text-3xl font-bold">{stats.todayPageViews}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatsCard
-          title="Projets"
-          value={stats.projectsCount}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          }
-        />
-
-        <StatsCard
-          title="Expériences"
-          value={stats.experiencesCount}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          }
-        />
-
-        <StatsCard
-          title="Messages"
-          value={stats.messagesCount}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          }
-          trend={
-            stats.unreadMessagesCount > 0
-              ? { value: `${stats.unreadMessagesCount} non lu${stats.unreadMessagesCount > 1 ? 's' : ''}`, isPositive: true }
-              : undefined
-          }
-        />
-
-        <StatsCard
-          title="Certifications"
-          value={stats.certificationsCount}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-            </svg>
-          }
-        />
-      </div>
-
-      {/* Secondary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <StatsCard
-          title="Formations"
-          value={stats.educationCount}
-          className="md:col-span-1"
-        />
-        <StatsCard
-          title="Bénévolat"
-          value={stats.volunteerCount}
-          className="md:col-span-1"
-        />
-        <StatsCard
-          title="Projets Featured"
-          value={stats.featuredProjectsCount}
-          className="md:col-span-1"
-        />
-      </div>
+      <DashboardStats />
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">

@@ -7,8 +7,10 @@ export function useAnalytics() {
   const pathname = usePathname();
 
   useEffect(() => {
+    const normalizedPath = normalizePath(pathname);
+
     // Ne pas tracker les pages admin
-    if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
+    if (normalizedPath.startsWith('/admin') || normalizedPath.startsWith('/auth')) {
       return;
     }
 
@@ -21,7 +23,7 @@ export function useAnalytics() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            path: pathname,
+            path: normalizedPath,
           }),
         });
       } catch (error) {
@@ -32,6 +34,18 @@ export function useAnalytics() {
 
     trackPageView();
   }, [pathname]);
+}
+
+function normalizePath(pathname: string): string {
+  if (!pathname) return '/';
+
+  const localeMatch = pathname.match(/^\/(fr|en)(\/|$)/);
+  if (localeMatch) {
+    const stripped = pathname.replace(/^\/(fr|en)/, '');
+    return stripped === '' ? '/' : stripped;
+  }
+
+  return pathname;
 }
 
 // Hook pour récupérer les analytics

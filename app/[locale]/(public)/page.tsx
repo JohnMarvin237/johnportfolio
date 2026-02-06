@@ -76,7 +76,7 @@ export default async function HomePage({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 transition-all duration-300"
+                  className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-900/20 transition-all duration-300"
                 >
                   {content.contactMe}
                 </Button>
@@ -87,13 +87,13 @@ export default async function HomePage({
       </section>
 
       {/* Projects Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {content.projectsTitle}
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               {content.projectsDescription}
             </p>
           </div>

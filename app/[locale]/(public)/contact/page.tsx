@@ -55,7 +55,7 @@ export default function ContactPage() {
                 </div>
                 <a
                   href="mailto:john@example.com"
-                  className="text-blue-600 hover:text-blue-700 transition-colors"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                 >
                   john@example.com
                 </a>
@@ -82,9 +82,9 @@ export default function ContactPage() {
                       d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
                     />
                   </svg>
-                  <h3 className="font-semibold text-gray-900">Localisation</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Localisation</h3>
                 </div>
-                <p className="text-gray-700">Ottawa-Gatineau, Canada</p>
+                <p className="text-gray-700 dark:text-gray-300">Ottawa-Gatineau, Canada</p>
               </div>
 
               {/* Réseaux sociaux */}
@@ -103,14 +103,14 @@ export default function ContactPage() {
                       d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
                     />
                   </svg>
-                  <h3 className="font-semibold text-gray-900">Réseaux sociaux</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Réseaux sociaux</h3>
                 </div>
                 <div className="flex gap-4">
                   <a
                     href="https://github.com/john"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     aria-label="GitHub"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ export default function ContactPage() {
                     href="https://linkedin.com/in/john"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     aria-label="LinkedIn"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -137,8 +137,8 @@ export default function ContactPage() {
             </div>
 
             {/* Temps de réponse */}
-            <div className="mt-6 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
+            <div className="mt-6 p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-300">
                 <span className="font-semibold">Temps de réponse:</span> Je réponds généralement sous 24-48 heures.
               </p>
             </div>

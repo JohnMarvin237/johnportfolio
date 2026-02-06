@@ -1,8 +1,8 @@
 // lib/schemas/experience-api.schema.ts
 import { z } from 'zod';
 
-// API input schema that accepts both legacy and multilingual fields
-export const experienceApiSchema = z.object({
+// Base schema (no refinements)
+const experienceApiBaseSchema = z.object({
   // Legacy fields (optional to maintain backward compatibility)
   title: z.string().optional(),
   description: z.string().optional(),
@@ -46,7 +46,10 @@ export const experienceApiSchema = z.object({
   order: z.number()
     .int()
     .default(0),
-}).refine(
+});
+
+// API input schema that accepts both legacy and multilingual fields
+export const experienceApiSchema = experienceApiBaseSchema.refine(
   data => {
     // Either French fields OR legacy fields must be present
     const hasFrenchFields = data.title_fr && data.description_fr && data.achievements_fr;
@@ -62,19 +65,7 @@ export const experienceApiSchema = z.object({
 export type ExperienceApiInput = z.infer<typeof experienceApiSchema>;
 
 // For updates (all fields optional)
-export const experienceApiUpdateSchema = experienceApiSchema
-  .omit({
-    company: true,
-    technologies: true,
-    current: true,
-    order: true
-  })
-  .extend({
-    company: z.string().min(2).max(100).optional(),
-    technologies: z.array(z.string()).optional(),
-    current: z.boolean().optional(),
-    order: z.number().int().optional(),
-  });
+export const experienceApiUpdateSchema = experienceApiBaseSchema.partial();
 
 // Transform function to ensure data consistency
 export function normalizeExperienceData(data: ExperienceApiInput) {

@@ -1,8 +1,8 @@
 // lib/schemas/project-api.schema.ts
 import { z } from 'zod';
 
-// API input schema that accepts both legacy and multilingual fields
-export const projectApiSchema = z.object({
+// Base schema (no refinements)
+const projectApiBaseSchema = z.object({
   // Legacy fields (optional to maintain backward compatibility)
   title: z.string().optional(),
   description: z.string().optional(),
@@ -52,7 +52,10 @@ export const projectApiSchema = z.object({
   endDate: z.coerce.date()
     .optional()
     .nullable(),
-}).refine(
+});
+
+// API input schema that accepts both legacy and multilingual fields
+export const projectApiSchema = projectApiBaseSchema.refine(
   data => {
     // Either French fields OR legacy fields must be present
     const hasFrenchFields = data.title_fr && data.description_fr;
@@ -68,17 +71,7 @@ export const projectApiSchema = z.object({
 export type ProjectApiInput = z.infer<typeof projectApiSchema>;
 
 // For updates (all fields optional)
-export const projectApiUpdateSchema = projectApiSchema
-  .omit({
-    technologies: true,
-    featured: true,
-    order: true
-  })
-  .extend({
-    technologies: z.array(z.string()).optional(),
-    featured: z.boolean().optional(),
-    order: z.number().int().optional(),
-  });
+export const projectApiUpdateSchema = projectApiBaseSchema.partial();
 
 // Transform function to ensure data consistency
 export function normalizeProjectData(data: ProjectApiInput) {

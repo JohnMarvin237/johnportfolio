@@ -1,8 +1,8 @@
 // lib/schemas/education-api.schema.ts
 import { z } from 'zod';
 
-// API input schema that accepts both legacy and multilingual fields
-export const educationApiSchema = z.object({
+// Base schema (no refinements)
+const educationApiBaseSchema = z.object({
   // Legacy fields (optional to maintain backward compatibility)
   degree: z.string().optional(),
   field: z.string().optional().nullable(),
@@ -40,7 +40,10 @@ export const educationApiSchema = z.object({
   order: z.number()
     .int()
     .default(0),
-}).refine(
+});
+
+// API input schema that accepts both legacy and multilingual fields
+export const educationApiSchema = educationApiBaseSchema.refine(
   data => {
     // Either French fields OR legacy fields must be present
     const hasFrenchFields = data.degree_fr;
@@ -56,19 +59,7 @@ export const educationApiSchema = z.object({
 export type EducationApiInput = z.infer<typeof educationApiSchema>;
 
 // For updates (all fields optional)
-export const educationApiUpdateSchema = educationApiSchema
-  .omit({
-    institution: true,
-    location: true,
-    current: true,
-    order: true
-  })
-  .extend({
-    institution: z.string().min(2).max(100).optional(),
-    location: z.string().min(2).max(100).optional(),
-    current: z.boolean().optional(),
-    order: z.number().int().optional(),
-  });
+export const educationApiUpdateSchema = educationApiBaseSchema.partial();
 
 // Transform function to ensure data consistency
 export function normalizeEducationData(data: EducationApiInput) {

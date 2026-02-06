@@ -1,8 +1,8 @@
 // lib/schemas/volunteer-api.schema.ts
 import { z } from 'zod';
 
-// API input schema that accepts both legacy and multilingual fields
-export const volunteerApiSchema = z.object({
+// Base schema (no refinements)
+const volunteerApiBaseSchema = z.object({
   // Legacy fields (optional to maintain backward compatibility)
   title: z.string().optional(),
   description: z.string().optional(),
@@ -34,7 +34,10 @@ export const volunteerApiSchema = z.object({
   order: z.number()
     .int()
     .default(0),
-}).refine(
+});
+
+// API input schema that accepts both legacy and multilingual fields
+export const volunteerApiSchema = volunteerApiBaseSchema.refine(
   data => {
     // Either French fields OR legacy fields must be present
     const hasFrenchFields = data.title_fr && data.description_fr;
@@ -50,17 +53,7 @@ export const volunteerApiSchema = z.object({
 export type VolunteerApiInput = z.infer<typeof volunteerApiSchema>;
 
 // For updates (all fields optional)
-export const volunteerApiUpdateSchema = volunteerApiSchema
-  .omit({
-    organization: true,
-    current: true,
-    order: true
-  })
-  .extend({
-    organization: z.string().min(2).max(100).optional(),
-    current: z.boolean().optional(),
-    order: z.number().int().optional(),
-  });
+export const volunteerApiUpdateSchema = volunteerApiBaseSchema.partial();
 
 // Transform function to ensure data consistency
 export function normalizeVolunteerData(data: VolunteerApiInput) {

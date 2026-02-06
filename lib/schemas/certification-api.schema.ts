@@ -1,8 +1,8 @@
 // lib/schemas/certification-api.schema.ts
 import { z } from 'zod';
 
-// API input schema that accepts both legacy and multilingual fields
-export const certificationApiSchema = z.object({
+// Base schema (no refinements)
+const certificationApiBaseSchema = z.object({
   // Legacy fields (optional to maintain backward compatibility)
   title: z.string().optional(),
   description: z.string().optional().nullable(),
@@ -41,7 +41,10 @@ export const certificationApiSchema = z.object({
   order: z.number()
     .int()
     .default(0),
-}).refine(
+});
+
+// API input schema that accepts both legacy and multilingual fields
+export const certificationApiSchema = certificationApiBaseSchema.refine(
   data => {
     // Either French fields OR legacy fields must be present
     const hasFrenchFields = data.title_fr;
@@ -57,17 +60,7 @@ export const certificationApiSchema = z.object({
 export type CertificationApiInput = z.infer<typeof certificationApiSchema>;
 
 // For updates (all fields optional)
-export const certificationApiUpdateSchema = certificationApiSchema
-  .omit({
-    issuer: true,
-    skills: true,
-    order: true
-  })
-  .extend({
-    issuer: z.string().min(2).max(100).optional(),
-    skills: z.array(z.string()).optional(),
-    order: z.number().int().optional(),
-  });
+export const certificationApiUpdateSchema = certificationApiBaseSchema.partial();
 
 // Transform function to ensure data consistency
 export function normalizeCertificationData(data: CertificationApiInput) {

@@ -36,7 +36,7 @@ export default async function LocaleLayout({
   const messages = await loadTranslations(locale as 'fr' | 'en');
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>

@@ -15,6 +15,12 @@ interface NavItem {
   count?: number;
 }
 
+interface SidebarUser {
+  name?: string | null;
+  email?: string | null;
+  role?: string | null;
+}
+
 const getNavItems = (locale: string): NavItem[] => [
   {
     label: 'Dashboard',
@@ -84,12 +90,19 @@ const getNavItems = (locale: string): NavItem[] => [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ initialUser }: { initialUser?: SidebarUser }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
   const locale = useLocale();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const displayName =
+    (user?.name && user.name.trim()) ||
+    user?.email ||
+    (initialUser?.name && initialUser.name.trim()) ||
+    initialUser?.email ||
+    'Admin';
 
   const handleLogout = async () => {
     await logout();
@@ -142,7 +155,7 @@ export default function Sidebar() {
           {/* User info */}
           <div className="px-6 py-4 border-b border-gray-800">
             <p className="text-sm text-gray-400">Connecté en tant que</p>
-            <p className="font-semibold">{user?.name || user?.email}</p>
+            <p className="font-semibold">{displayName}</p>
           </div>
 
           {/* Navigation */}

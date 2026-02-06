@@ -5,6 +5,11 @@ export default function ThemeScript() {
       dangerouslySetInnerHTML={{
         __html: `
           (function() {
+            var path = window.location.pathname || '';
+            if (/^\/(fr|en)?\/?(admin|auth)(\/|$)/.test(path)) {
+              return;
+            }
+
             function getInitialTheme() {
               const savedTheme = localStorage.getItem('theme');
               if (savedTheme) {

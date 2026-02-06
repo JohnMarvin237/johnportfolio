@@ -1,6 +1,7 @@
 // app/[locale]/(admin)/layout.tsx
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/auth-helpers';
+import { prisma } from '@/lib/db/prisma';
 import { AuthProvider } from '@/lib/hooks/useAuth';
 import Sidebar from '@/components/admin/Sidebar';
 
@@ -27,12 +28,21 @@ export default async function AdminLayout({
     redirect('/fr');
   }
 
+  const userDetails = await prisma.user.findUnique({
+    where: { id: user.userId },
+    select: {
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+
   return (
     <AuthProvider>
       <div className="min-h-screen bg-gray-100">
         <div className="flex h-screen">
           {/* Sidebar */}
-          <Sidebar />
+          <Sidebar initialUser={userDetails || undefined} />
 
           {/* Main content */}
           <main className="flex-1 overflow-y-auto">

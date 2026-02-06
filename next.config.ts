@@ -51,14 +51,6 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_APP_DESCRIPTION: "Développeur Full-Stack & IA",
   },
 
-  /** Webpack custom (autorisé maintenant) */
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      config.optimization.usedExports = true;
-    }
-    return config;
-  },
-
   /** Experimental */
   experimental: {
     serverActions: {

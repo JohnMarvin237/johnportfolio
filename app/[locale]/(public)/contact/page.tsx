@@ -6,14 +6,14 @@ import ContactForm from '@/components/sections/ContactForm';
  */
 export default function ContactPage() {
   return (
-    <div className="w-full py-16 bg-gray-50">
+    <div className="w-full py-16 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Contactez-moi
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Vous avez un projet, une question ou simplement envie de discuter ?
             N'hésitez pas à me contacter via le formulaire ci-dessous.
           </p>
@@ -23,15 +23,15 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Formulaire - 2/3 de la largeur */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
               <ContactForm />
             </div>
           </div>
 
           {/* Informations de contact - 1/3 de la largeur */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Informations
               </h2>
 
@@ -51,7 +51,7 @@ export default function ContactPage() {
                       d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
                     />
                   </svg>
-                  <h3 className="font-semibold text-gray-900">Email</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Email</h3>
                 </div>
                 <a
                   href="mailto:john@example.com"

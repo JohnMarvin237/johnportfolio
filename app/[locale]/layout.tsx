@@ -5,6 +5,7 @@ import NavbarMultilingual from "@/components/layout/NavbarMultilingual";
 import FooterMultilingual from "@/components/layout/FooterMultilingual";
 import AnalyticsProvider from "@/components/providers/AnalyticsProvider";
 import { loadTranslations } from "@/lib/i18n";
+import ThemeScript from "../theme-script";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -36,7 +37,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
+      <head>
+        <ThemeScript />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
         <LocaleProvider locale={locale} messages={messages}>
           <AnalyticsProvider>
             {children}

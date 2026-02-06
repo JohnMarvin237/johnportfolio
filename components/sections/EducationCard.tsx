@@ -73,37 +73,37 @@ export default function EducationCard({ education }: EducationCardProps) {
           <div className="flex-grow">
             <CardTitle>{degree}</CardTitle>
             {field && (
-              <p className="text-gray-600 font-medium mt-1">{field}</p>
+              <p className="text-gray-600 dark:text-gray-300 font-medium mt-1">{field}</p>
             )}
-            <p className="text-gray-600 font-medium mt-1">{institution}</p>
-            <p className="text-sm text-gray-500 mt-1">{location}</p>
+            <p className="text-gray-600 dark:text-gray-300 font-medium mt-1">{institution}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{location}</p>
           </div>
           {current && (
-            <span className="px-2 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
+            <span className="px-2 py-1 text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 rounded-full">
               En cours
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
           {formatDateRange(startDate, endDate, current)}
         </p>
       </CardHeader>
 
       <CardContent>
         {description && (
-          <p className="text-gray-700 leading-relaxed mb-3">{description}</p>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">{description}</p>
         )}
 
         {gpa && (
           <div className="mb-2">
-            <span className="text-sm font-semibold text-gray-900">GPA: </span>
-            <span className="text-sm text-gray-700">{gpa}</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">GPA: </span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">{gpa}</span>
           </div>
         )}
 
         {note && (
-          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
+          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+            <p className="text-sm text-blue-800 dark:text-blue-300">
               <span className="font-semibold">Note: </span>
               {note}
             </p>

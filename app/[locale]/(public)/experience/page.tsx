@@ -24,17 +24,17 @@ export default async function ExperiencePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Mon Parcours
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Découvrez mon expérience professionnelle, ma formation et mes certifications.
           </p>
         </div>
 
         {/* Section Expériences */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             Expérience Professionnelle
           </h2>
           {experiences.length > 0 ? (
@@ -44,13 +44,13 @@ export default async function ExperiencePage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucune expérience pour le moment.</p>
+            <p className="text-gray-500 dark:text-gray-400">Aucune expérience pour le moment.</p>
           )}
         </section>
 
         {/* Section Formation */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             Formation Académique
           </h2>
           {education.length > 0 ? (
@@ -60,13 +60,13 @@ export default async function ExperiencePage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucune formation pour le moment.</p>
+            <p className="text-gray-500 dark:text-gray-400">Aucune formation pour le moment.</p>
           )}
         </section>
 
         {/* Section Certifications */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             Certifications
           </h2>
           {certifications.length > 0 ? (
@@ -76,7 +76,7 @@ export default async function ExperiencePage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucune certification pour le moment.</p>
+            <p className="text-gray-500 dark:text-gray-400">Aucune certification pour le moment.</p>
           )}
         </section>
       </div>

@@ -66,21 +66,21 @@ export default function CertificationCard({ certification }: CertificationCardPr
     <Card hover className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <p className="text-gray-600 font-medium mt-1">{issuer}</p>
+        <p className="text-gray-600 dark:text-gray-300 font-medium mt-1">{issuer}</p>
 
-        <div className="flex items-center gap-3 mt-2 text-sm text-gray-500">
+        <div className="flex items-center gap-3 mt-2 text-sm text-gray-500 dark:text-gray-400">
           {issueDate && (
             <span>Délivrée: {formatDate(issueDate)}</span>
           )}
           {expiryDate && (
-            <span className={expired ? 'text-red-600' : ''}>
+            <span className={expired ? 'text-red-600 dark:text-red-400' : ''}>
               {expired ? 'Expirée' : 'Expire'}: {formatDate(expiryDate)}
             </span>
           )}
         </div>
 
         {credentialId && (
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             ID: {credentialId}
           </p>
         )}
@@ -88,20 +88,20 @@ export default function CertificationCard({ certification }: CertificationCardPr
 
       <CardContent className="flex-grow">
         {description && (
-          <p className="text-gray-700 leading-relaxed mb-4">{description}</p>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{description}</p>
         )}
 
         {/* Compétences */}
         {skills.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-2">
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
               Compétences acquises:
             </h4>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full"
+                  className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full"
                 >
                   {skill}
                 </span>

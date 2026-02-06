@@ -104,31 +104,31 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
                 </svg>
               </a>
             ) : (
-              <p className="text-gray-600 font-medium mt-1">{company}</p>
+              <p className="text-gray-600 dark:text-gray-300 font-medium mt-1">{company}</p>
             )}
-            <p className="text-sm text-gray-500 mt-1">{location}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{location}</p>
           </div>
           {current && (
-            <span className="px-2 py-1 text-xs font-semibold text-green-600 bg-green-100 rounded-full">
+            <span className="px-2 py-1 text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 rounded-full">
               En cours
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
           {formatDateRange(startDate, endDate, current)}
         </p>
       </CardHeader>
 
       <CardContent>
-        <p className="text-gray-700 leading-relaxed mb-4">{description}</p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{description}</p>
 
         {/* Réalisations */}
         {achievements.length > 0 && (
           <div className="mb-4">
-            <h4 className="font-semibold text-gray-900 mb-2">Réalisations:</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Réalisations:</h4>
             <ul className="list-disc list-inside space-y-1">
               {achievements.map((achievement, index) => (
-                <li key={index} className="text-gray-700 text-sm">
+                <li key={index} className="text-gray-700 dark:text-gray-300 text-sm">
                   {achievement}
                 </li>
               ))}
@@ -142,7 +142,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
             {technologies.map((tech, index) => (
               <span
                 key={index}
-                className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full"
+                className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full"
               >
                 {tech}
               </span>

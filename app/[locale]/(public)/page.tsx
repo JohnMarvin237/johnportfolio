@@ -33,16 +33,16 @@ export default async function HomePage({
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center">
             {/* Status Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 shadow-lg mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 shadow-lg mb-6">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {isFrench ? "Disponible pour de nouvelles opportunités" : "Available for opportunities"}
               </span>
             </div>
@@ -52,11 +52,11 @@ export default async function HomePage({
               {content.greeting} John Marvin
             </h1>
 
-            <p className="text-2xl md:text-3xl mb-4 text-gray-800 font-semibold">
+            <p className="text-2xl md:text-3xl mb-4 text-gray-800 dark:text-gray-200 font-semibold">
               {content.title}
             </p>
 
-            <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-600 leading-relaxed">
+            <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-600 dark:text-gray-400 leading-relaxed">
               {content.description}
             </p>
 

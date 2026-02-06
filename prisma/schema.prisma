@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================
-// AUTHENTICATION MODEL
-// ============================================
-
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  password  String // Hash bcrypt
+  password  String
   name      String?
   role      String   @default("admin")
   createdAt DateTime @default(now())
@@ -27,34 +20,28 @@ model User {
   @@map("users")
 }
 
-// ============================================
-// PORTFOLIO CONTENT MODELS
-// ============================================
-
 model Project {
-  id           String    @id @default(cuid())
-  // Legacy fields (to be removed later)
-  title        String?
-  description  String?   @db.Text
-  longDesc     String?   @db.Text
-  // New multilingual fields
-  title_fr     String?
-  title_en     String?
-  description_fr  String?   @db.Text
-  description_en  String?   @db.Text
-  longDesc_fr     String?   @db.Text
-  longDesc_en     String?   @db.Text
-  technologies String[]
-  imageUrl     String?
-  demoUrl      String?
-  githubUrl    String?
-  featured     Boolean   @default(false)
-  order        Int       @default(0)
-  startDate    DateTime?
-  endDate      DateTime?
-  organization String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  title          String?
+  description    String?
+  longDesc       String?
+  technologies   String[]
+  imageUrl       String?
+  demoUrl        String?
+  githubUrl      String?
+  featured       Boolean   @default(false)
+  order          Int       @default(0)
+  startDate      DateTime?
+  endDate        DateTime?
+  organization   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  description_en String?
+  description_fr String?
+  longDesc_en    String?
+  longDesc_fr    String?
+  title_en       String?
+  title_fr       String?
 
   @@index([featured])
   @@index([order])
@@ -62,28 +49,26 @@ model Project {
 }
 
 model Experience {
-  id           String    @id @default(cuid())
-  // Legacy fields (to be removed later)
-  title        String?
-  description  String?   @db.Text
-  achievements String[]
-  // New multilingual fields
-  title_fr     String?
-  title_en     String?
-  description_fr  String?   @db.Text
-  description_en  String?   @db.Text
-  achievements_fr String[]
+  id              String    @id @default(cuid())
+  title           String?
+  company         String
+  companyUrl      String?
+  location        String
+  startDate       DateTime
+  endDate         DateTime?
+  current         Boolean   @default(false)
+  description     String?
+  achievements    String[]
+  technologies    String[]
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   achievements_en String[]
-  company      String
-  companyUrl   String?
-  location     String
-  startDate    DateTime
-  endDate      DateTime?
-  current      Boolean   @default(false)
-  technologies String[]
-  order        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  achievements_fr String[]
+  description_en  String?
+  description_fr  String?
+  title_en        String?
+  title_fr        String?
 
   @@index([current])
   @@index([order])
@@ -91,30 +76,28 @@ model Experience {
 }
 
 model Education {
-  id          String    @id @default(cuid())
-  // Legacy fields (to be removed later)
-  degree      String?
-  field       String?
-  description String?   @db.Text
-  note        String?
-  // New multilingual fields
-  degree_fr   String?
-  degree_en   String?
-  field_fr    String?
-  field_en    String?
-  description_fr String?   @db.Text
-  description_en String?   @db.Text
-  note_fr     String?
-  note_en     String?
-  institution String
-  location    String
-  startDate   DateTime
-  endDate     DateTime?
-  current     Boolean   @default(false)
-  gpa         String?
-  order       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  degree         String?
+  institution    String
+  location       String
+  field          String?
+  startDate      DateTime
+  endDate        DateTime?
+  current        Boolean   @default(false)
+  description    String?
+  gpa            String?
+  note           String?
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  degree_en      String?
+  degree_fr      String?
+  description_en String?
+  description_fr String?
+  field_en       String?
+  field_fr       String?
+  note_en        String?
+  note_fr        String?
 
   @@index([current])
   @@index([order])
@@ -122,47 +105,43 @@ model Education {
 }
 
 model Certification {
-  id            String    @id @default(cuid())
-  // Legacy fields (to be removed later)
-  title         String?
-  description   String?   @db.Text
-  // New multilingual fields
-  title_fr      String?
-  title_en      String?
-  description_fr String?   @db.Text
-  description_en String?   @db.Text
-  issuer        String
-  issueDate     DateTime?
-  expiryDate    DateTime?
-  credentialId  String?
-  credentialUrl String?
-  skills        String[]
-  order         Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  title          String?
+  issuer         String
+  issueDate      DateTime?
+  expiryDate     DateTime?
+  credentialId   String?
+  credentialUrl  String?
+  description    String?
+  skills         String[]
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  description_en String?
+  description_fr String?
+  title_en       String?
+  title_fr       String?
 
   @@index([order])
   @@map("certifications")
 }
 
 model Volunteer {
-  id           String    @id @default(cuid())
-  // Legacy fields (to be removed later)
-  title        String?
-  description  String?   @db.Text
-  // New multilingual fields
-  title_fr     String?
-  title_en     String?
-  description_fr String?   @db.Text
-  description_en String?   @db.Text
-  organization String
-  location     String?
-  startDate    DateTime
-  endDate      DateTime?
-  current      Boolean   @default(false)
-  order        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  title          String?
+  organization   String
+  location       String?
+  startDate      DateTime
+  endDate        DateTime?
+  current        Boolean   @default(false)
+  description    String?
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  description_en String?
+  description_fr String?
+  title_en       String?
+  title_fr       String?
 
   @@index([current])
   @@index([order])
@@ -174,7 +153,7 @@ model ContactMessage {
   name      String
   email     String
   subject   String?
-  message   String   @db.Text
+  message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
@@ -186,24 +165,20 @@ model ContactMessage {
 model SiteSettings {
   id        String   @id @default(cuid())
   key       String   @unique
-  value     String   @db.Text
+  value     String
   updatedAt DateTime @updatedAt
 
   @@index([key])
   @@map("site_settings")
 }
 
-// ============================================
-// ANALYTICS MODELS
-// ============================================
-
 model PageView {
-  id         String   @id @default(cuid())
-  path       String
-  userAgent  String?  @db.Text
-  referer    String?
-  ip         String?
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  path      String
+  userAgent String?
+  referer   String?
+  ip        String?
+  createdAt DateTime @default(now())
 
   @@index([path])
   @@index([createdAt])
@@ -213,7 +188,7 @@ model PageView {
 model Visitor {
   id         String   @id @default(cuid())
   sessionId  String   @unique
-  userAgent  String?  @db.Text
+  userAgent  String?
   ip         String?
   country    String?
   city       String?

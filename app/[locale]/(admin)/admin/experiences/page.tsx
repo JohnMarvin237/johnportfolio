@@ -3,9 +3,9 @@
 
 import { useState, useEffect } from 'react';
 import PageHeader from '@/components/admin/PageHeader';
-import DataTable, { Column } from '@/components/admin/DataTable';
+import DraggableExperienceTable from '@/components/admin/DraggableExperienceTable';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
-import { getApiUrl, formatDateRange } from '@/lib/utils';
+import { getApiUrl } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
 
@@ -21,6 +21,7 @@ interface Experience {
   description: string;
   achievements: string[];
   technologies: string[];
+  order: number;
   createdAt: string;
 }
 
@@ -73,68 +74,6 @@ export default function ExperiencesAdminPage() {
     }
   };
 
-  const columns: Column<Experience>[] = [
-    {
-      key: 'title',
-      label: 'Poste',
-      render: (exp) => (
-        <div>
-          <p className="font-medium text-gray-900">{exp.title}</p>
-          <p className="text-sm text-gray-500">{exp.company}</p>
-        </div>
-      ),
-    },
-    {
-      key: 'location',
-      label: 'Lieu',
-    },
-    {
-      key: 'period',
-      label: 'Période',
-      render: (exp) => (
-        <div>
-          <p className="text-sm text-gray-900">
-            {formatDateRange(exp.startDate, exp.endDate)}
-          </p>
-          {exp.current && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-              Actuel
-            </span>
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'achievements',
-      label: 'Réalisations',
-      render: (exp) => (
-        <p className="text-sm text-gray-500">
-          {exp.achievements.length} réalisation{exp.achievements.length > 1 ? 's' : ''}
-        </p>
-      ),
-    },
-    {
-      key: 'technologies',
-      label: 'Technologies',
-      render: (exp) => (
-        <div className="flex flex-wrap gap-1">
-          {exp.technologies.slice(0, 3).map((tech, index) => (
-            <span
-              key={index}
-              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
-            >
-              {tech}
-            </span>
-          ))}
-          {exp.technologies.length > 3 && (
-            <span className="text-xs text-gray-500">
-              +{exp.technologies.length - 3}
-            </span>
-          )}
-        </div>
-      ),
-    },
-  ];
 
   if (loading) {
     return (
@@ -172,13 +111,18 @@ export default function ExperiencesAdminPage() {
         }}
       />
 
-      <DataTable
-        data={experiences}
-        columns={columns}
-        onDelete={handleDelete}
-        editPath={(exp) => `/admin/experiences/${exp.id}/edit`}
-        emptyMessage="Aucune expérience pour le moment"
-      />
+      {experiences.length === 0 ? (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+            Aucune expérience pour le moment
+          </div>
+        </div>
+      ) : (
+        <DraggableExperienceTable
+          initialData={experiences}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 }

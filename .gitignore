@@ -52,7 +52,7 @@ next-env.d.ts
 
 Thumbs.db
 
-prisma/migrations/
+# prisma/migrations/  # ✅ Les migrations DOIVENT être committées pour Vercel !
 
 logs
 *.lo

@@ -1,6 +1,8 @@
 // app/[locale]/page.tsx - Version simple sans next-intl
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import FeaturedProjects from '@/components/sections/FeaturedProjects';
+import { fetchWithFallback } from '@/lib/utils/fetch-wrapper-with-fallback';
 
 export default async function HomePage({
   params
@@ -9,6 +11,12 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const isFrench = locale === 'fr';
+
+  // Récupérer les projets en vedette
+  const projectsResult = await fetchWithFallback('/projects?featured=true&limit=2', {
+    cache: 'no-store',
+  });
+  const featuredProjects = projectsResult.data || [];
 
   // Textes multilingues simples
   const content = {
@@ -97,6 +105,11 @@ export default async function HomePage({
               {content.projectsDescription}
             </p>
           </div>
+
+          {/* Projets en vedette */}
+          {featuredProjects.length > 0 && (
+            <FeaturedProjects projects={featuredProjects} />
+          )}
 
           <div className="text-center">
             <Link href={`/${locale}/projects`}>

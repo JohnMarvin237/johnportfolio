@@ -1,4 +1,4 @@
-// app/api/experiences/reorder/route.ts
+// app/api/education/reorder/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { requireAdmin } from '@/lib/auth/middleware';
@@ -24,10 +24,10 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const updates = reorderSchema.parse(body);
 
-    // Mettre à jour l'ordre de chaque expérience dans une transaction
+    // Mettre à jour l'ordre de chaque formation dans une transaction
     await prisma.$transaction(
       updates.map((update) =>
-        prisma.experience.update({
+        prisma.education.update({
           where: { id: update.id },
           data: { order: update.order },
         })
@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    console.error('Erreur lors de la réorganisation des expériences:', error);
+    console.error('Erreur lors de la réorganisation des formations:', error);
     return NextResponse.json(
       { error: 'Erreur lors de la mise à jour de l\'ordre' },
       { status: 500 }

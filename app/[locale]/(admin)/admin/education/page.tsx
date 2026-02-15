@@ -4,9 +4,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import PageHeader from '@/components/admin/PageHeader';
-import DataTable, { Column } from '@/components/admin/DataTable';
+import DraggableEducationTable from '@/components/admin/DraggableEducationTable';
 import { useAuthHeaders } from '@/lib/hooks/useAuth';
-import { getApiUrl, formatDateRange } from '@/lib/utils';
+import { getApiUrl } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorDisplay from '@/components/ui/ErrorDisplay';
 
@@ -21,6 +21,7 @@ interface Education {
   current: boolean;
   gpa?: number;
   description?: string;
+  order: number;
   createdAt: string;
 }
 
@@ -75,55 +76,6 @@ export default function EducationAdminPage() {
     }
   };
 
-  const columns: Column<Education>[] = [
-    {
-      key: 'degree',
-      label: 'Diplôme',
-      render: (edu) => (
-        <div>
-          <p className="font-medium text-gray-900">{edu.degree}</p>
-          <p className="text-sm text-gray-500">{edu.field}</p>
-        </div>
-      ),
-    },
-    {
-      key: 'institution',
-      label: 'Institution',
-      render: (edu) => (
-        <div>
-          <p className="text-sm font-medium text-gray-900">{edu.institution}</p>
-          <p className="text-sm text-gray-500">{edu.location}</p>
-        </div>
-      ),
-    },
-    {
-      key: 'period',
-      label: 'Période',
-      render: (edu) => (
-        <div>
-          <p className="text-sm text-gray-900">
-            {formatDateRange(edu.startDate, edu.endDate)}
-          </p>
-          {edu.current && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-              En cours
-            </span>
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'gpa',
-      label: 'GPA',
-      render: (edu) => (
-        edu.gpa ? (
-          <span className="text-sm text-gray-900">{Number(edu.gpa).toFixed(2)}</span>
-        ) : (
-          <span className="text-sm text-gray-400">-</span>
-        )
-      ),
-    },
-  ];
 
   if (loading) {
     return (
@@ -161,13 +113,18 @@ export default function EducationAdminPage() {
         }}
       />
 
-      <DataTable
-        data={education}
-        columns={columns}
-        onDelete={handleDelete}
-        editPath={(edu) => `/${locale}/admin/education/${edu.id}/edit`}
-        emptyMessage="Aucune formation pour le moment"
-      />
+      {education.length === 0 ? (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+            Aucune formation pour le moment
+          </div>
+        </div>
+      ) : (
+        <DraggableEducationTable
+          initialData={education}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 }

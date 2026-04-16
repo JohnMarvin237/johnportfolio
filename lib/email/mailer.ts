@@ -40,6 +40,15 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
   }
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 /**
  * Send contact form notification to admin
  */
@@ -53,10 +62,10 @@ export async function sendContactNotification(data: {
 
   const html = `
     <h2>Nouveau message de contact</h2>
-    <p><strong>De:</strong> ${data.name} (${data.email})</p>
-    ${data.subject ? `<p><strong>Sujet:</strong> ${data.subject}</p>` : ''}
+    <p><strong>De:</strong> ${escapeHtml(data.name)} (${escapeHtml(data.email)})</p>
+    ${data.subject ? `<p><strong>Sujet:</strong> ${escapeHtml(data.subject)}</p>` : ''}
     <p><strong>Message:</strong></p>
-    <p>${data.message.replace(/\n/g, '<br>')}</p>
+    <p>${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
     <hr>
     <p><small>Envoyé depuis votre portfolio</small></p>
   `;

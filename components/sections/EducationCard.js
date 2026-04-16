@@ -1,4 +1,5 @@
 import Card from '../ui/Card'
+import { formatDate } from '@/lib/utils'
 
 /**
  * Carte d'affichage d'une formation
@@ -30,14 +31,7 @@ export default function EducationCard({ education }) {
     note
   } = education
 
-  // Formatter les dates
-  const formatDate = (date) => {
-    if (!date) return ''
-    const dateObj = new Date(date)
-    return dateObj.getFullYear()
-  }
-
-  const dateRange = `${formatDate(startDate)} - ${current ? 'En cours' : formatDate(endDate)}`
+  const dateRange = `${formatDate(startDate, 'fr-CA', 'year')} - ${current ? 'En cours' : formatDate(endDate, 'fr-CA', 'year')}`
 
   return (
     <Card className="h-full">

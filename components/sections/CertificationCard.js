@@ -1,4 +1,5 @@
 import Card from '../ui/Card'
+import { formatDate } from '@/lib/utils'
 
 /**
  * Carte d'affichage d'une certification
@@ -27,13 +28,6 @@ export default function CertificationCard({ certification }) {
     description,
     skills = []
   } = certification
-
-  // Formatter les dates
-  const formatDate = (date) => {
-    if (!date) return ''
-    const dateObj = new Date(date)
-    return dateObj.toLocaleDateString('fr-CA', { year: 'numeric', month: 'short' })
-  }
 
   // Vérifier si la certification est expirée
   const isExpired = expiryDate && new Date(expiryDate) < new Date()
@@ -70,10 +64,10 @@ export default function CertificationCard({ certification }) {
 
       {/* Dates */}
       <div className="text-sm text-gray-500 mb-3">
-        <p>Délivrée le {formatDate(issueDate)}</p>
+        <p>Délivrée le {formatDate(issueDate, 'fr-CA', 'short')}</p>
         {expiryDate && (
           <p>
-            {isExpired ? 'Expirée le' : 'Expire le'} {formatDate(expiryDate)}
+            {isExpired ? 'Expirée le' : 'Expire le'} {formatDate(expiryDate, 'fr-CA', 'short')}
           </p>
         )}
       </div>

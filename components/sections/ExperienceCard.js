@@ -14,6 +14,8 @@
  * @param {string[]} props.experience.achievements
  * @param {string[]} props.experience.technologies
  */
+import { formatDate } from '@/lib/utils'
+
 export default function ExperienceCard({ experience }) {
   if (!experience) return null
 
@@ -30,14 +32,7 @@ export default function ExperienceCard({ experience }) {
     technologies = []
   } = experience
 
-  // Formatter les dates
-  const formatDate = (date) => {
-    if (!date) return ''
-    const dateObj = new Date(date)
-    return dateObj.toLocaleDateString('fr-CA', { year: 'numeric', month: 'short' })
-  }
-
-  const dateRange = `${formatDate(startDate)} - ${current ? 'Présent' : formatDate(endDate)}`
+  const dateRange = `${formatDate(startDate, 'fr-CA', 'short')} - ${current ? 'Présent' : formatDate(endDate, 'fr-CA', 'short')}`
 
   return (
     <div className="relative pl-8 pb-8">

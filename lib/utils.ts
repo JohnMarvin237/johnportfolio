@@ -12,15 +12,24 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Format date for display
+ * @param format - 'long' (janvier 2024), 'short' (janv. 2024), 'year' (2024)
  */
-export function formatDate(date: Date | string | null | undefined, locale = 'fr-CA'): string {
+export function formatDate(
+  date: Date | string | null | undefined,
+  locale = 'fr-CA',
+  format: 'long' | 'short' | 'year' = 'long'
+): string {
   if (!date) return 'Présent';
 
   const d = typeof date === 'string' ? new Date(date) : date;
 
+  if (format === 'year') {
+    return String(d.getFullYear());
+  }
+
   return d.toLocaleDateString(locale, {
     year: 'numeric',
-    month: 'long',
+    month: format,
   });
 }
 

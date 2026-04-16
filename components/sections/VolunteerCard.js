@@ -11,6 +11,8 @@
  * @param {string} props.volunteer.description
  * @param {string} props.volunteer.location
  */
+import { formatDate } from '@/lib/utils'
+
 export default function VolunteerCard({ volunteer }) {
   if (!volunteer) return null
 
@@ -24,14 +26,7 @@ export default function VolunteerCard({ volunteer }) {
     location
   } = volunteer
 
-  // Formatter les dates
-  const formatDate = (date) => {
-    if (!date) return ''
-    const dateObj = new Date(date)
-    return dateObj.toLocaleDateString('fr-CA', { year: 'numeric', month: 'short' })
-  }
-
-  const dateRange = `${formatDate(startDate)} - ${current ? 'Présent' : formatDate(endDate)}`
+  const dateRange = `${formatDate(startDate, 'fr-CA', 'short')} - ${current ? 'Présent' : formatDate(endDate, 'fr-CA', 'short')}`
 
   return (
     <div className="bg-gradient-to-r from-accent-50 to-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">

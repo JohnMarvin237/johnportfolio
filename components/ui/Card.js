@@ -16,10 +16,8 @@ export default function Card({
 
   const hoverStyles = hover ? 'hover:shadow-lg hover:scale-[1.02] cursor-pointer' : ''
 
-  const Component = onClick ? 'div' : 'div'
-
   return (
-    <Component
+    <div
       onClick={onClick}
       className={`${baseStyles} ${hoverStyles} ${className}`}
       role={onClick ? 'button' : undefined}
@@ -32,6 +30,6 @@ export default function Card({
       } : undefined}
     >
       {children}
-    </Component>
+    </div>
   )
 }

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { educationUpdateSchema } from '@/lib/schemas/education.schema';
 import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@/app/generated/prisma';
 
 /**
  * GET /api/education/[id]

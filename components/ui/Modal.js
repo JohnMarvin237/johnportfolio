@@ -77,15 +77,15 @@ export default function Modal({
           ref={modalRef}
           className={`
             relative w-full ${sizes[size]}
-            transform overflow-hidden rounded-lg bg-white
+            transform overflow-hidden rounded-lg bg-white dark:bg-gray-800
             shadow-xl transition-all
           `}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="border-b border-gray-200 px-6 py-4">
+          <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
             <div className="flex items-center justify-between">
-              <h3 id="modal-title" className="text-lg font-medium text-gray-900">
+              <h3 id="modal-title" className="text-lg font-medium text-gray-900 dark:text-white">
                 {title}
               </h3>
               <button

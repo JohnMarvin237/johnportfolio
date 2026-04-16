@@ -2,6 +2,7 @@ import Hero from '@/components/sections/Hero'
 import ProjectCard from '@/components/sections/ProjectCard'
 import ExperienceCard from '@/components/sections/ExperienceCard'
 import Button from '@/components/ui/Button'
+import T from '@/components/ui/T'
 import Link from 'next/link'
 import { prisma } from '@/lib/db/prisma'
 
@@ -43,20 +44,18 @@ export default async function HomePage() {
       {/* Section Hero */}
       <Hero
         name="John"
-        title="Développeur Full-Stack & Expert IA"
-        description="Passionné par la création d'applications web modernes et l'intégration de solutions d'intelligence artificielle pour résoudre des problèmes complexes."
         imageUrl="/images/profile/john.jpg"
       />
 
       {/* Section Projets Featured */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Projets en vedette
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <T k="home.featuredTitle" />
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Découvrez quelques-uns de mes projets les plus récents et innovants
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+              <T k="home.featuredDesc" />
             </p>
           </div>
 
@@ -67,7 +66,7 @@ export default async function HomePage() {
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-500">Aucun projet en vedette pour le moment.</p>
+                <p className="text-gray-500 dark:text-gray-400"><T k="home.noFeatured" /></p>
               </div>
             )}
           </div>
@@ -75,22 +74,22 @@ export default async function HomePage() {
           <div className="mt-12 text-center">
             <Link href="/projects">
               <Button size="lg" variant="outline">
-                Voir tous les projets
+                <T k="home.viewAllProjects" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Section Expériences récentes */}
-      <section className="py-20 bg-white">
+      {/* Section Experiences recentes */}
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Expérience professionnelle
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <T k="home.experienceTitle" />
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Mon parcours professionnel et mes réalisations récentes
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+              <T k="home.experienceDesc" />
             </p>
           </div>
 
@@ -101,7 +100,7 @@ export default async function HomePage() {
               ))
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Aucune expérience disponible pour le moment.</p>
+                <p className="text-gray-500 dark:text-gray-400"><T k="home.noExperience" /></p>
               </div>
             )}
           </div>
@@ -109,7 +108,7 @@ export default async function HomePage() {
           <div className="mt-12 text-center">
             <Link href="/experience">
               <Button size="lg" variant="outline">
-                Voir toute l'expérience
+                <T k="home.viewAllExperience" />
               </Button>
             </Link>
           </div>
@@ -121,15 +120,15 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white">
-              Prêt à travailler ensemble ?
+              <T k="home.ctaTitle" />
             </h2>
             <p className="mt-4 text-xl text-primary-100">
-              Je suis toujours ouvert aux nouvelles opportunités et collaborations
+              <T k="home.ctaDesc" />
             </p>
             <div className="mt-8">
               <Link href="/contact">
                 <Button size="lg" variant="secondary">
-                  Me contacter
+                  <T k="home.ctaButton" />
                 </Button>
               </Link>
             </div>

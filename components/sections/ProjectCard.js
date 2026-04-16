@@ -1,20 +1,8 @@
 import Card from '../ui/Card'
 import Button from '../ui/Button'
+import T from '../ui/T'
 import Link from 'next/link'
 
-/**
- * Carte d'affichage d'un projet
- * @param {Object} props
- * @param {Object} props.project - Données du projet
- * @param {string} props.project.id
- * @param {string} props.project.title
- * @param {string} props.project.description
- * @param {string[]} props.project.technologies
- * @param {string} props.project.imageUrl
- * @param {string} props.project.demoUrl
- * @param {string} props.project.githubUrl
- * @param {boolean} props.project.featured
- */
 export default function ProjectCard({ project }) {
   if (!project) return null
 
@@ -31,7 +19,7 @@ export default function ProjectCard({ project }) {
 
   return (
     <Card hover className="h-full flex flex-col">
-      {/* Image du projet */}
+      {/* Project image */}
       {imageUrl && (
         <div className="relative -m-6 mb-4 h-48 overflow-hidden rounded-t-lg">
           <img
@@ -41,18 +29,18 @@ export default function ProjectCard({ project }) {
           />
           {featured && (
             <div className="absolute top-2 right-2 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              Featured
+              <T k="projects.featuredBadge" />
             </div>
           )}
         </div>
       )}
 
-      {/* Contenu */}
+      {/* Content */}
       <div className="flex-grow">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           {title}
         </h3>
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
           {description}
         </p>
 
@@ -62,7 +50,7 @@ export default function ProjectCard({ project }) {
             {technologies.map((tech, index) => (
               <span
                 key={index}
-                className="px-3 py-1 text-sm bg-primary-100 text-primary-700 rounded-full"
+                className="px-3 py-1 text-sm bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 rounded-full"
               >
                 {tech}
               </span>
@@ -81,7 +69,7 @@ export default function ProjectCard({ project }) {
             className="flex-1"
           >
             <Button variant="primary" size="sm" className="w-full">
-              Voir la démo
+              <T k="projects.viewDemo" />
             </Button>
           </a>
         )}
@@ -93,14 +81,14 @@ export default function ProjectCard({ project }) {
             className="flex-1"
           >
             <Button variant="outline" size="sm" className="w-full">
-              Code source
+              <T k="projects.sourceCode" />
             </Button>
           </a>
         )}
         {!demoUrl && !githubUrl && (
           <Link href={`/projects/${id}`} className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
-              En savoir plus
+              <T k="projects.learnMore" />
             </Button>
           </Link>
         )}

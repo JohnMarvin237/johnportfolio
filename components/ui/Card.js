@@ -12,7 +12,7 @@ export default function Card({
   hover = false,
   onClick
 }) {
-  const baseStyles = 'bg-white rounded-lg shadow-md p-6 transition-all duration-200'
+  const baseStyles = 'bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 p-6 transition-all duration-200'
 
   const hoverStyles = hover ? 'hover:shadow-lg hover:scale-[1.02] cursor-pointer' : ''
 

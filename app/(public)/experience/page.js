@@ -2,6 +2,7 @@ import ExperienceCard from '@/components/sections/ExperienceCard'
 import EducationCard from '@/components/sections/EducationCard'
 import CertificationCard from '@/components/sections/CertificationCard'
 import VolunteerCard from '@/components/sections/VolunteerCard'
+import T from '@/components/ui/T'
 import { prisma } from '@/lib/db/prisma'
 
 async function getExperienceData() {
@@ -43,31 +44,30 @@ async function getExperienceData() {
 }
 
 export const metadata = {
-  title: 'Expérience - John Portfolio',
-  description: 'Mon parcours professionnel, formations et certifications',
+  title: 'Experience - John Portfolio',
+  description: 'My professional journey, education, and certifications',
 }
 
 export default async function ExperiencePage() {
   const { experiences, education, certifications, volunteer } = await getExperienceData()
 
   return (
-    <div className="py-12 bg-white min-h-screen">
+    <div className="py-12 bg-white dark:bg-gray-900 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* En-tête */}
+        {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Mon Parcours
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            <T k="experience.title" />
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-            Découvrez mon parcours professionnel, mes formations et mes certifications.
-            Chaque étape a contribué à façonner mes compétences actuelles.
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <T k="experience.subtitle" />
           </p>
         </div>
 
-        {/* Expériences professionnelles */}
+        {/* Work Experience */}
         <section className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">
-            Expérience professionnelle
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
+            <T k="experience.workTitle" />
           </h2>
           {experiences.length > 0 ? (
             <div className="max-w-3xl">
@@ -78,14 +78,14 @@ export default async function ExperiencePage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucune expérience professionnelle ajoutée.</p>
+            <p className="text-gray-500 dark:text-gray-400"><T k="experience.noWork" /></p>
           )}
         </section>
 
-        {/* Formation */}
+        {/* Education */}
         <section className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">
-            Formation
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
+            <T k="experience.educationTitle" />
           </h2>
           {education.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -94,15 +94,15 @@ export default async function ExperiencePage() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Aucune formation ajoutée.</p>
+            <p className="text-gray-500 dark:text-gray-400"><T k="experience.noEducation" /></p>
           )}
         </section>
 
         {/* Certifications */}
         {certifications.length > 0 && (
           <section className="mt-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-10">
-              Certifications
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
+              <T k="experience.certTitle" />
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {certifications.map((cert) => (
@@ -112,11 +112,11 @@ export default async function ExperiencePage() {
           </section>
         )}
 
-        {/* Bénévolat */}
+        {/* Volunteer */}
         {volunteer.length > 0 && (
           <section className="mt-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-10">
-              Engagement bénévole
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
+              <T k="experience.volunteerTitle" />
             </h2>
             <div className="space-y-6 max-w-3xl">
               {volunteer.map((vol) => (
@@ -126,51 +126,48 @@ export default async function ExperiencePage() {
           </section>
         )}
 
-        {/* Section Compétences techniques */}
+        {/* Technical Skills */}
         <section className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 mb-10">
-            Compétences techniques
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
+            <T k="experience.skillsTitle" />
           </h2>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Frontend */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Frontend
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <T k="experience.frontend" />
               </h3>
               <div className="space-y-2">
-                <p className="text-gray-600">React.js / Next.js</p>
-                <p className="text-gray-600">Angular</p>
-                <p className="text-gray-600">TypeScript / JavaScript</p>
-                <p className="text-gray-600">HTML5 / CSS3 / Tailwind CSS</p>
-                <p className="text-gray-600">Redux / Context API</p>
+                <p className="text-gray-600 dark:text-gray-400">React.js / Next.js</p>
+                <p className="text-gray-600 dark:text-gray-400">Angular</p>
+                <p className="text-gray-600 dark:text-gray-400">TypeScript / JavaScript</p>
+                <p className="text-gray-600 dark:text-gray-400">HTML5 / CSS3 / Tailwind CSS</p>
+                <p className="text-gray-600 dark:text-gray-400">Redux / Context API</p>
               </div>
             </div>
 
-            {/* Backend */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Backend
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <T k="experience.backend" />
               </h3>
               <div className="space-y-2">
-                <p className="text-gray-600">Node.js / Express.js</p>
-                <p className="text-gray-600">Python / Django / FastAPI</p>
-                <p className="text-gray-600">PostgreSQL / MySQL / MongoDB</p>
-                <p className="text-gray-600">GraphQL / REST APIs</p>
-                <p className="text-gray-600">Prisma ORM</p>
+                <p className="text-gray-600 dark:text-gray-400">Node.js / Express.js</p>
+                <p className="text-gray-600 dark:text-gray-400">Python / Django / FastAPI</p>
+                <p className="text-gray-600 dark:text-gray-400">PostgreSQL / MySQL / MongoDB</p>
+                <p className="text-gray-600 dark:text-gray-400">GraphQL / REST APIs</p>
+                <p className="text-gray-600 dark:text-gray-400">Prisma ORM</p>
               </div>
             </div>
 
-            {/* DevOps & IA */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                DevOps & IA
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <T k="experience.devopsAi" />
               </h3>
               <div className="space-y-2">
-                <p className="text-gray-600">Docker / Kubernetes</p>
-                <p className="text-gray-600">AWS / Azure / GCP</p>
-                <p className="text-gray-600">CI/CD / GitHub Actions</p>
-                <p className="text-gray-600">TensorFlow / PyTorch</p>
-                <p className="text-gray-600">Computer Vision / NLP</p>
+                <p className="text-gray-600 dark:text-gray-400">Docker / Kubernetes</p>
+                <p className="text-gray-600 dark:text-gray-400">AWS / Azure / GCP</p>
+                <p className="text-gray-600 dark:text-gray-400">CI/CD / GitHub Actions</p>
+                <p className="text-gray-600 dark:text-gray-400">TensorFlow / PyTorch</p>
+                <p className="text-gray-600 dark:text-gray-400">Computer Vision / NLP</p>
               </div>
             </div>
           </div>

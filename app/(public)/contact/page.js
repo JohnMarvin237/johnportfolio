@@ -1,32 +1,32 @@
 import ContactForm from '@/components/sections/ContactForm'
+import T from '@/components/ui/T'
 
 export const metadata = {
   title: 'Contact - John Portfolio',
-  description: 'Contactez-moi pour discuter de vos projets ou opportunités de collaboration',
+  description: 'Contact me to discuss your projects or collaboration opportunities',
 }
 
 export default function ContactPage() {
   return (
-    <div className="py-12 bg-gray-50 min-h-screen">
+    <div className="py-12 bg-gray-50 dark:bg-gray-800 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* En-tête */}
+        {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Contactez-moi
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            <T k="contact.title" />
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Je suis toujours intéressé par de nouvelles opportunités et collaborations.
-            N'hésitez pas à me contacter pour discuter de vos projets !
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <T k="contact.subtitle" />
           </p>
         </div>
 
         <div className="mt-12 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Informations de contact */}
+            {/* Contact information */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  Informations de contact
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-900/20 p-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                  <T k="contact.infoTitle" />
                 </h2>
 
                 <div className="space-y-6">
@@ -36,46 +36,46 @@ export default function ContactPage() {
                       <svg className="h-5 w-5 text-primary-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      <h3 className="text-sm font-medium text-gray-900">Email</h3>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white"><T k="contact.email" /></h3>
                     </div>
-                    <p className="text-gray-600 ml-7">contact@johnportfolio.com</p>
+                    <p className="text-gray-600 dark:text-gray-400 ml-7">contact@johnportfolio.com</p>
                   </div>
 
-                  {/* Localisation */}
+                  {/* Location */}
                   <div>
                     <div className="flex items-center mb-2">
                       <svg className="h-5 w-5 text-primary-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <h3 className="text-sm font-medium text-gray-900">Localisation</h3>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white"><T k="contact.location" /></h3>
                     </div>
-                    <p className="text-gray-600 ml-7">Ottawa-Gatineau, Canada</p>
+                    <p className="text-gray-600 dark:text-gray-400 ml-7"><T k="contact.locationValue" /></p>
                   </div>
 
-                  {/* Disponibilité */}
+                  {/* Availability */}
                   <div>
                     <div className="flex items-center mb-2">
                       <svg className="h-5 w-5 text-primary-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <h3 className="text-sm font-medium text-gray-900">Disponibilité</h3>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white"><T k="contact.availability" /></h3>
                     </div>
-                    <p className="text-gray-600 ml-7">Ouvert aux opportunités</p>
+                    <p className="text-gray-600 dark:text-gray-400 ml-7"><T k="contact.availabilityValue" /></p>
                   </div>
                 </div>
 
-                {/* Réseaux sociaux */}
+                {/* Social links */}
                 <div className="mt-8">
-                  <h3 className="text-sm font-medium text-gray-900 mb-4">
-                    Retrouvez-moi sur
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">
+                    <T k="contact.findMe" />
                   </h3>
                   <div className="flex space-x-4">
                     <a
                       href="https://github.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                       aria-label="GitHub"
                     >
                       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@ export default function ContactPage() {
                       href="https://linkedin.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                       aria-label="LinkedIn"
                     >
                       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -96,30 +96,30 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* FAQ rapide */}
-                <div className="mt-8 pt-8 border-t border-gray-200">
-                  <h3 className="text-sm font-medium text-gray-900 mb-4">
-                    Questions fréquentes
+                {/* FAQ */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">
+                    <T k="contact.faq" />
                   </h3>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Temps de réponse</p>
-                      <p className="text-sm text-gray-600">Généralement sous 24-48h</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300"><T k="contact.responseTime" /></p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400"><T k="contact.responseTimeValue" /></p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Types de projets</p>
-                      <p className="text-sm text-gray-600">Applications web, API, IA/ML</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300"><T k="contact.projectTypes" /></p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400"><T k="contact.projectTypesValue" /></p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Formulaire de contact */}
+            {/* Contact form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  Envoyez-moi un message
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-900/20 p-8">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                  <T k="contact.sendMessage" />
                 </h2>
                 <ContactForm />
               </div>

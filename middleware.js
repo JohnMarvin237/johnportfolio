@@ -5,7 +5,7 @@ export default NextAuth(authConfig).auth
 
 export const config = {
   matcher: [
-    // Protéger toutes les routes admin
-    '/admin/:path*',
+    // Protect admin routes EXCEPT the login page
+    '/admin/((?!login).*)',
   ],
 }

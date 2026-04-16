@@ -33,7 +33,7 @@ export default function CertificationCard({ certification }) {
   const isExpired = expiryDate && new Date(expiryDate) < new Date()
 
   return (
-    <Card className={`h-full ${isExpired ? 'opacity-75' : ''}`}>
+    <Card className={`h-full relative ${isExpired ? 'opacity-75' : ''}`}>
       {/* Badge d'expiration */}
       {isExpired && (
         <div className="absolute top-4 right-4">

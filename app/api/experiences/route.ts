@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { experienceSchema } from '@/lib/schemas/experience.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
 
 /**
@@ -54,9 +54,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // 2. Parser et valider le body

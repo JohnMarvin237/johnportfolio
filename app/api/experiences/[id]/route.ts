@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { experienceUpdateSchema } from '@/lib/schemas/experience.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
 
@@ -48,9 +48,9 @@ export async function PUT(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;
@@ -105,9 +105,9 @@ export async function DELETE(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;

@@ -7,7 +7,7 @@ export const volunteerSchema = z.object({
     .max(150),
 
   organization: z.string()
-    .min(2, 'L\'organisation doit contenir au moins 2 caractères')
+    .min(2, "L'organisation doit contenir au moins 2 caractères")
     .max(150),
 
   location: z.string()
@@ -31,6 +31,12 @@ export const volunteerSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // i18n fields
+  title_fr: z.string().max(150).optional().nullable(),
+  title_en: z.string().max(150).optional().nullable(),
+  description_fr: z.string().max(2000).optional().nullable(),
+  description_en: z.string().max(2000).optional().nullable(),
 });
 
 export type VolunteerInput = z.infer<typeof volunteerSchema>;

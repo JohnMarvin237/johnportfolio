@@ -113,6 +113,40 @@ export function delay(ms: number): Promise<void> {
 }
 
 /**
+ * Pick the localized value of a field from a DB record.
+ * Falls back to the main field value if the localized variant is empty.
+ * e.g. getLocalized(project, 'title', 'en') → project.title_en || project.title
+ */
+export function getLocalized(
+  item: Record<string, unknown>,
+  field: string,
+  locale: 'fr' | 'en',
+  fallback = ''
+): string {
+  const langKey = `${field}_${locale}`;
+  const localizedValue = item[langKey] as string | null | undefined;
+  if (localizedValue && localizedValue.trim()) return localizedValue;
+  const mainValue = item[field] as string | null | undefined;
+  return mainValue || fallback;
+}
+
+/**
+ * Pick the localized array of a field from a DB record.
+ * Falls back to the main field array if the localized variant is empty.
+ * e.g. getLocalizedArray(experience, 'achievements', 'en') → experience.achievements_en || experience.achievements
+ */
+export function getLocalizedArray(
+  item: Record<string, unknown>,
+  field: string,
+  locale: 'fr' | 'en'
+): string[] {
+  const langKey = `${field}_${locale}`;
+  const localized = item[langKey] as string[] | null | undefined;
+  if (localized && localized.length > 0) return localized;
+  return (item[field] as string[]) || [];
+}
+
+/**
  * Check if email is valid
  */
 export function isValidEmail(email: string): boolean {

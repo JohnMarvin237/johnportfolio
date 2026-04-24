@@ -20,7 +20,7 @@ export const projectSchema = z.object({
     .max(20, 'Maximum 20 technologies'),
 
   imageUrl: z.string()
-    .url('URL d\'image invalide')
+    .url("URL d'image invalide")
     .optional()
     .nullable(),
 
@@ -38,7 +38,7 @@ export const projectSchema = z.object({
     .default(false),
 
   order: z.number()
-    .int('L\'ordre doit être un nombre entier')
+    .int("L'ordre doit être un nombre entier")
     .default(0),
 
   startDate: z.coerce.date()
@@ -53,6 +53,14 @@ export const projectSchema = z.object({
     .max(100)
     .optional()
     .nullable(),
+
+  // i18n fields
+  title_fr: z.string().max(200).optional().nullable(),
+  title_en: z.string().max(200).optional().nullable(),
+  description_fr: z.string().max(500).optional().nullable(),
+  description_en: z.string().max(500).optional().nullable(),
+  longDesc_fr: z.string().max(5000).optional().nullable(),
+  longDesc_en: z.string().max(5000).optional().nullable(),
 });
 
 export type ProjectInput = z.infer<typeof projectSchema>;

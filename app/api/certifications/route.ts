@@ -16,8 +16,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limitParam = searchParams.get('limit');
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const certifications = await prisma.certification.findMany({
       take,

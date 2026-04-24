@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
       where.current = currentParam === 'true';
     }
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const volunteer = await prisma.volunteer.findMany({
       where,

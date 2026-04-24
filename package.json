@@ -6,6 +6,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",

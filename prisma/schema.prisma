@@ -48,6 +48,14 @@ model Project {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
+  // i18n fields
+  title_fr       String?   @db.Text
+  title_en       String?   @db.Text
+  description_fr String?   @db.Text
+  description_en String?   @db.Text
+  longDesc_fr    String?   @db.Text
+  longDesc_en    String?   @db.Text
+
   @@index([featured])
   @@index([order])
   @@map("projects")
@@ -68,6 +76,14 @@ model Experience {
   order        Int       @default(0)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  // i18n fields
+  title_fr        String?  @db.Text
+  title_en        String?  @db.Text
+  description_fr  String?  @db.Text
+  description_en  String?  @db.Text
+  achievements_fr String[]
+  achievements_en String[]
 
   @@index([current])
   @@index([order])
@@ -90,6 +106,16 @@ model Education {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  // i18n fields
+  degree_fr      String?  @db.Text
+  degree_en      String?  @db.Text
+  description_fr String?  @db.Text
+  description_en String?  @db.Text
+  field_fr       String?
+  field_en       String?
+  note_fr        String?
+  note_en        String?
+
   @@index([current])
   @@index([order])
   @@map("education")
@@ -109,6 +135,12 @@ model Certification {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // i18n fields
+  title_fr       String?  @db.Text
+  title_en       String?  @db.Text
+  description_fr String?  @db.Text
+  description_en String?  @db.Text
+
   @@index([order])
   @@map("certifications")
 }
@@ -125,6 +157,12 @@ model Volunteer {
   order        Int       @default(0)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  // i18n fields
+  title_fr       String?  @db.Text
+  title_en       String?  @db.Text
+  description_fr String?  @db.Text
+  description_en String?  @db.Text
 
   @@index([current])
   @@index([order])

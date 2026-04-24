@@ -26,7 +26,7 @@ export default async function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            &copy; {new Date().getFullYear()} John Portfolio. <T k="footer.rights" />
+            &copy; {new Date().getFullYear()} John Marvin NDEKEBITIK HELIANG. <T k="footer.rights" />
           </p>
           {(github || linkedin || twitter) && (
             <div className="mt-4 flex justify-center space-x-6">

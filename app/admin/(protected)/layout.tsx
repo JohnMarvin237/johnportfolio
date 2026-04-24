@@ -1,9 +1,10 @@
+import type React from 'react'
 import { auth } from '@/lib/auth/config'
 import { redirect } from 'next/navigation'
 import AdminSidebar from '@/components/admin/Sidebar'
 import AdminHeader from '@/components/admin/Header'
 
-export default async function ProtectedAdminLayout({ children }) {
+export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
 
   if (!session) {

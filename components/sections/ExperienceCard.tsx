@@ -1,21 +1,18 @@
-import T from '../ui/T'
-import { formatDate } from '@/lib/utils'
+'use client'
 
-export default function ExperienceCard({ experience }) {
+import T from '../ui/T'
+import { formatDate, getLocalized, getLocalizedArray } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n/LanguageContext'
+import type { Experience } from '@prisma/client'
+
+export default function ExperienceCard({ experience }: { experience: Experience }) {
+  const { locale } = useTranslation()
   if (!experience) return null
 
-  const {
-    title,
-    company,
-    companyUrl,
-    location,
-    startDate,
-    endDate,
-    current,
-    description,
-    achievements = [],
-    technologies = []
-  } = experience
+  const title = getLocalized(experience, 'title', locale)
+  const description = getLocalized(experience, 'description', locale)
+  const achievements = getLocalizedArray(experience, 'achievements', locale)
+  const { company, companyUrl, location, startDate, endDate, current, technologies = [] } = experience
 
   return (
     <div className="relative pl-8 pb-8">
@@ -49,7 +46,8 @@ export default function ExperienceCard({ experience }) {
             <span>{location}</span>
             <span className="text-gray-400">•</span>
             <span>
-              {formatDate(startDate, 'fr-CA', 'short')} - {current ? <T k="experience.present" /> : formatDate(endDate, 'fr-CA', 'short')}
+              {formatDate(startDate, 'fr-CA', 'short')} -{' '}
+              {current ? <T k="experience.present" /> : formatDate(endDate, 'fr-CA', 'short')}
             </span>
           </div>
         </div>
@@ -68,8 +66,8 @@ export default function ExperienceCard({ experience }) {
               <T k="experience.achievements" />
             </h4>
             <ul className="space-y-1">
-              {achievements.map((achievement, index) => (
-                <li key={index} className="flex items-start">
+              {achievements.map((achievement, i) => (
+                <li key={i} className="flex items-start">
                   <span className="text-primary-500 mr-2">•</span>
                   <span className="text-sm text-gray-600 dark:text-gray-400">{achievement}</span>
                 </li>
@@ -81,9 +79,9 @@ export default function ExperienceCard({ experience }) {
         {/* Technologies */}
         {technologies.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {technologies.map((tech, index) => (
+            {technologies.map((tech) => (
               <span
-                key={index}
+                key={tech}
                 className="px-2 py-1 text-xs bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded"
               >
                 {tech}

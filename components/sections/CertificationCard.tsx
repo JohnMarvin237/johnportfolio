@@ -1,21 +1,22 @@
+'use client'
+
 import Card from '../ui/Card'
 import T from '../ui/T'
-import { formatDate } from '@/lib/utils'
+import { formatDate, getLocalized } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n/LanguageContext'
+import type { Certification } from '@prisma/client'
 
-export default function CertificationCard({ certification }) {
+interface CertificationCardProps {
+  certification: Certification
+}
+
+export default function CertificationCard({ certification }: CertificationCardProps) {
+  const { locale } = useTranslation()
   if (!certification) return null
 
-  const {
-    title,
-    issuer,
-    issueDate,
-    expiryDate,
-    credentialId,
-    credentialUrl,
-    description,
-    skills = []
-  } = certification
-
+  const { issuer, issueDate, expiryDate, credentialId, credentialUrl, skills = [] } = certification
+  const title = getLocalized(certification, 'title', locale)
+  const description = getLocalized(certification, 'description', locale)
   const isExpired = expiryDate && new Date(expiryDate) < new Date()
 
   return (
@@ -53,7 +54,8 @@ export default function CertificationCard({ certification }) {
         <p><T k="experience.issuedOn" /> {formatDate(issueDate, 'fr-CA', 'short')}</p>
         {expiryDate && (
           <p>
-            {isExpired ? <T k="experience.expiredOn" /> : <T k="experience.expiresOn" />} {formatDate(expiryDate, 'fr-CA', 'short')}
+            {isExpired ? <T k="experience.expiredOn" /> : <T k="experience.expiresOn" />}{' '}
+            {formatDate(expiryDate, 'fr-CA', 'short')}
           </p>
         )}
       </div>
@@ -68,11 +70,13 @@ export default function CertificationCard({ certification }) {
       {/* Skills */}
       {skills.length > 0 && (
         <div className="mb-4">
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"><T k="experience.validatedSkills" /></p>
+          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <T k="experience.validatedSkills" />
+          </p>
           <div className="flex flex-wrap gap-1">
-            {skills.map((skill, index) => (
+            {skills.map((skill) => (
               <span
-                key={index}
+                key={skill}
                 className="px-2 py-1 text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded"
               >
                 {skill}

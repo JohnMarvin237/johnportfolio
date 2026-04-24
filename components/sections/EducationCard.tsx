@@ -1,21 +1,20 @@
+'use client'
+
 import Card from '../ui/Card'
 import T from '../ui/T'
-import { formatDate } from '@/lib/utils'
+import { formatDate, getLocalized } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n/LanguageContext'
+import type { Education } from '@prisma/client'
 
-export default function EducationCard({ education }) {
+export default function EducationCard({ education }: { education: Education }) {
+  const { locale } = useTranslation()
   if (!education) return null
 
-  const {
-    degree,
-    institution,
-    location,
-    startDate,
-    endDate,
-    current,
-    description,
-    field,
-    note
-  } = education
+  const { institution, location, startDate, endDate, current, gpa } = education
+  const degree = getLocalized(education, 'degree', locale)
+  const description = getLocalized(education, 'description', locale)
+  const field = getLocalized(education, 'field', locale)
+  const note = getLocalized(education, 'note', locale)
 
   return (
     <Card className="h-full">
@@ -40,7 +39,8 @@ export default function EducationCard({ education }) {
           <span>{location}</span>
           <span className="text-gray-400">•</span>
           <span>
-            {formatDate(startDate, 'fr-CA', 'year')} - {current ? <T k="experience.current" /> : formatDate(endDate, 'fr-CA', 'year')}
+            {formatDate(startDate, 'fr-CA', 'year')} -{' '}
+            {current ? <T k="experience.current" /> : formatDate(endDate, 'fr-CA', 'year')}
           </span>
         </div>
       </div>
@@ -49,6 +49,13 @@ export default function EducationCard({ education }) {
       {description && (
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
           {description}
+        </p>
+      )}
+
+      {/* GPA */}
+      {gpa && (
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          GPA : {gpa}
         </p>
       )}
 

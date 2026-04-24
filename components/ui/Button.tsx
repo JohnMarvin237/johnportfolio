@@ -1,14 +1,15 @@
-/**
- * Composant Button réutilisable
- * @param {Object} props
- * @param {React.ReactNode} props.children - Contenu du bouton
- * @param {'primary' | 'secondary' | 'outline'} props.variant - Style du bouton
- * @param {'sm' | 'md' | 'lg'} props.size - Taille du bouton
- * @param {Function} props.onClick - Handler du clic
- * @param {boolean} props.disabled - État désactivé
- * @param {'button' | 'submit' | 'reset'} props.type - Type du bouton
- * @param {string} props.className - Classes CSS additionnelles
- */
+import type { ReactNode } from 'react'
+
+interface ButtonProps {
+  children: ReactNode
+  variant?: 'primary' | 'secondary' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
+  onClick?: () => void
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+  className?: string
+}
+
 export default function Button({
   children,
   variant = 'primary',
@@ -17,7 +18,7 @@ export default function Button({
   disabled = false,
   type = 'button',
   className = ''
-}) {
+}: ButtonProps) {
   const baseStyles = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
 
   const variants = {

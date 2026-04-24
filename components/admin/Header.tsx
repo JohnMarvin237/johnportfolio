@@ -3,7 +3,14 @@
 import { signOut } from 'next-auth/react'
 import Button from '@/components/ui/Button'
 
-export default function AdminHeader({ user }) {
+interface AdminHeaderProps {
+  user?: {
+    name?: string | null
+    email?: string | null
+  } | null
+}
+
+export default function AdminHeader({ user }: AdminHeaderProps) {
   const handleLogout = async () => {
     await signOut({ callbackUrl: '/' })
   }
@@ -15,7 +22,7 @@ export default function AdminHeader({ user }) {
           {/* Welcome message */}
           <div className="flex items-center">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Bienvenue, {user.name || user.email}
+              Bienvenue, {user?.name || user?.email || 'Admin'}
             </h2>
           </div>
 
@@ -23,7 +30,7 @@ export default function AdminHeader({ user }) {
           <div className="flex items-center space-x-4">
             {/* Profile info */}
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              {user.email}
+              {user?.email}
             </div>
 
             {/* Logout button */}

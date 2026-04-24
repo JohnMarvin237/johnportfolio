@@ -1,10 +1,19 @@
 'use client'
 
+import type React from 'react'
 import { Suspense, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Input from '@/components/ui/Input'
+// Input.js uses forwardRef without TypeScript generics; cast to typed component to avoid inference as RefAttributes<any>
+import InputJs from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string
+  error?: string
+  rows?: number
+}
+const Input = InputJs as React.ComponentType<InputProps>
 
 function LoginForm() {
   const router = useRouter()
@@ -18,7 +27,7 @@ function LoginForm() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -27,7 +36,7 @@ function LoginForm() {
     if (error) setError('')
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     setError('')

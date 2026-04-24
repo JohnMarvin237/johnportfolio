@@ -1,18 +1,17 @@
-import T from '../ui/T'
-import { formatDate } from '@/lib/utils'
+'use client'
 
-export default function VolunteerCard({ volunteer }) {
+import T from '../ui/T'
+import { formatDate, getLocalized } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n/LanguageContext'
+import type { Volunteer } from '@prisma/client'
+
+export default function VolunteerCard({ volunteer }: { volunteer: Volunteer }) {
+  const { locale } = useTranslation()
   if (!volunteer) return null
 
-  const {
-    title,
-    organization,
-    startDate,
-    endDate,
-    current,
-    description,
-    location
-  } = volunteer
+  const { organization, startDate, endDate, current, location } = volunteer
+  const title = getLocalized(volunteer, 'title', locale)
+  const description = getLocalized(volunteer, 'description', locale)
 
   return (
     <div className="bg-gradient-to-r from-accent-50 to-white dark:from-accent-900/20 dark:to-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -41,7 +40,8 @@ export default function VolunteerCard({ volunteer }) {
               </>
             )}
             <span>
-              {formatDate(startDate, 'fr-CA', 'short')} - {current ? <T k="experience.present" /> : formatDate(endDate, 'fr-CA', 'short')}
+              {formatDate(startDate, 'fr-CA', 'short')} -{' '}
+              {current ? <T k="experience.present" /> : formatDate(endDate, 'fr-CA', 'short')}
             </span>
             {current && (
               <>

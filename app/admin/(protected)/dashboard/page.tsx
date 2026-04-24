@@ -1,3 +1,5 @@
+import { auth } from '@/lib/auth/config'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/db/prisma'
 import Card from '@/components/ui/Card'
 import Link from 'next/link'
@@ -46,6 +48,9 @@ async function getDashboardStats() {
 }
 
 export default async function DashboardPage() {
+  const session = await auth()
+  if (!session || session.user?.role !== 'admin') redirect('/admin/login')
+
   const stats = await getDashboardStats()
 
   const statCards = [
@@ -98,10 +103,10 @@ export default async function DashboardPage() {
     <>
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Tableau de bord
         </h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Vue d'ensemble de votre portfolio
         </p>
       </div>
@@ -118,15 +123,15 @@ export default async function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                         {stat.name}
                       </dt>
                       <dd className="flex items-baseline">
-                        <div className="text-2xl font-semibold text-gray-900">
+                        <div className="text-2xl font-semibold text-gray-900 dark:text-white">
                           {stat.value}
                         </div>
                         {stat.label && (
-                          <div className="ml-2 text-sm text-gray-500">
+                          <div className="ml-2 text-sm text-gray-500 dark:text-gray-400">
                             {stat.label}
                           </div>
                         )}
@@ -142,20 +147,20 @@ export default async function DashboardPage() {
 
       {/* Quick actions */}
       <div className="mt-8">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">
+        <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
           Actions rapides
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/admin/projects/new"
-            className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+            className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 dark:hover:border-gray-500 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
           >
             <div className="flex-shrink-0">
               <span className="text-2xl">➕</span>
             </div>
             <div className="flex-1 min-w-0">
               <span className="absolute inset-0" aria-hidden="true" />
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
                 Nouveau projet
               </p>
             </div>
@@ -163,14 +168,14 @@ export default async function DashboardPage() {
 
           <Link
             href="/admin/experiences/new"
-            className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+            className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 dark:hover:border-gray-500 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
           >
             <div className="flex-shrink-0">
               <span className="text-2xl">➕</span>
             </div>
             <div className="flex-1 min-w-0">
               <span className="absolute inset-0" aria-hidden="true" />
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
                 Nouvelle expérience
               </p>
             </div>
@@ -178,14 +183,14 @@ export default async function DashboardPage() {
 
           <Link
             href="/admin/certifications/new"
-            className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+            className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 dark:hover:border-gray-500 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
           >
             <div className="flex-shrink-0">
               <span className="text-2xl">➕</span>
             </div>
             <div className="flex-1 min-w-0">
               <span className="absolute inset-0" aria-hidden="true" />
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
                 Nouvelle certification
               </p>
             </div>
@@ -193,18 +198,18 @@ export default async function DashboardPage() {
 
           <Link
             href="/admin/messages"
-            className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+            className="relative rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 dark:hover:border-gray-500 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
           >
             <div className="flex-shrink-0">
               <span className="text-2xl">📨</span>
             </div>
             <div className="flex-1 min-w-0">
               <span className="absolute inset-0" aria-hidden="true" />
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
                 Voir les messages
               </p>
               {stats.unreadMessagesCount > 0 && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {stats.unreadMessagesCount} non lus
                 </p>
               )}

@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const education = await prisma.education.findMany({
       where,

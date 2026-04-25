@@ -2,8 +2,7 @@
 'use client';
 
 import React from 'react';
-import Card, { CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
-import Button from '../ui/Button';
+import Card from '../ui/Card';
 
 export interface Certification {
   id: string;
@@ -26,84 +25,85 @@ function formatDate(date: Date | string | null | undefined): string {
 }
 
 export default function CertificationCard({ certification }: { certification: Certification }) {
-  const { title, issuer, issueDate, expiryDate, credentialId, credentialUrl, description, skills } =
+  if (!certification) return null;
+
+  const { title, issuer, issueDate, expiryDate, credentialId, credentialUrl, description, skills = [] } =
     certification;
 
-  const expired = expiryDate ? new Date(expiryDate) < new Date() : false;
+  const isExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
 
   return (
-    <Card hover className={`h-full flex flex-col relative ${expired ? 'opacity-75' : ''}`}>
-      {expired && (
+    <Card className={`h-full ${isExpired ? 'opacity-75' : ''}`}>
+      {/* Badge d'expiration */}
+      {isExpired && (
         <div className="absolute top-4 right-4">
-          <span className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 rounded">
+          <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded">
             Expirée
           </span>
         </div>
       )}
 
-      {/* Icône */}
+      {/* Icône de certification */}
       <div className="mb-4">
-        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-          <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+          <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
       </div>
 
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{issuer}</p>
+      {/* Titre et émetteur */}
+      <div className="mb-3">
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="text-gray-600 mt-1">{issuer}</p>
+      </div>
 
-        <div className="mt-2 text-sm text-gray-500 dark:text-gray-400 space-y-0.5">
-          {issueDate && <p>Délivrée le {formatDate(issueDate)}</p>}
-          {expiryDate && (
-            <p className={expired ? 'text-red-600 dark:text-red-400' : ''}>
-              {expired ? 'Expirée le' : 'Expire le'} {formatDate(expiryDate)}
-            </p>
-          )}
-        </div>
-
-        {credentialId && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">ID : {credentialId}</p>
+      {/* Dates */}
+      <div className="text-sm text-gray-500 mb-3">
+        <p>Délivrée le {formatDate(issueDate)}</p>
+        {expiryDate && (
+          <p>
+            {isExpired ? 'Expirée le' : 'Expire le'} {formatDate(expiryDate)}
+          </p>
         )}
-      </CardHeader>
+      </div>
 
-      <CardContent className="flex-grow">
-        {description && (
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">{description}</p>
-        )}
+      {/* Description */}
+      {description && <p className="text-sm text-gray-600 mb-3">{description}</p>}
 
-        {skills.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Compétences validées :
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
+      {/* Compétences */}
+      {skills.length > 0 && (
+        <div className="mb-4">
+          <p className="text-xs font-medium text-gray-700 mb-2">Compétences validées :</p>
+          <div className="flex flex-wrap gap-1">
+            {skills.map((skill, index) => (
+              <span key={index} className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
+                {skill}
+              </span>
+            ))}
           </div>
-        )}
-      </CardContent>
+        </div>
+      )}
 
-      {credentialUrl && (
-        <CardFooter>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.open(credentialUrl!, '_blank')}
-            className="w-full"
+      {/* Lien */}
+      <div className="mt-auto pt-4">
+        {credentialUrl && (
+          <a
+            href={credentialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium"
           >
             Voir la certification
-          </Button>
-        </CardFooter>
-      )}
+            <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        )}
+        {credentialId && !credentialUrl && (
+          <p className="text-xs text-gray-500">ID: {credentialId}</p>
+        )}
+      </div>
     </Card>
   );
 }

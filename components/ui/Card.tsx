@@ -16,12 +16,9 @@ export default function Card({
   padding = 'md',
   onClick,
 }: CardProps) {
-  const baseStyles =
-    'bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm';
+  const baseStyles = 'bg-white rounded-lg shadow-md transition-all duration-200';
 
-  const hoverStyles = hover
-    ? 'transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:-translate-y-1 cursor-pointer'
-    : '';
+  const hoverStyles = hover ? 'hover:shadow-lg hover:scale-[1.02] cursor-pointer' : '';
 
   const paddings = {
     none: 'p-0',
@@ -45,12 +42,7 @@ export default function Card({
             }
           : undefined
       }
-      className={`
-        ${baseStyles}
-        ${hoverStyles}
-        ${paddings[padding]}
-        ${className}
-      `.trim()}
+      className={`${baseStyles} ${hoverStyles} ${paddings[padding]} ${className}`.trim()}
     >
       {children}
     </div>
@@ -75,9 +67,7 @@ export function CardTitle({
   className?: string;
 }) {
   return (
-    <h3
-      className={`text-xl font-semibold text-gray-900 dark:text-white transition-colors ${className}`}
-    >
+    <h3 className={`text-xl font-semibold text-gray-900 ${className}`}>
       {children}
     </h3>
   );
@@ -91,7 +81,7 @@ export function CardContent({
   className?: string;
 }) {
   return (
-    <div className={`text-gray-700 dark:text-gray-300 ${className}`}>
+    <div className={`text-gray-700 ${className}`}>
       {children}
     </div>
   );

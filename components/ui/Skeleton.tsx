@@ -7,17 +7,13 @@ interface SkeletonProps {
 
 export default function Skeleton({ className = '' }: SkeletonProps) {
   return (
-    <div
-      className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`}
-    />
+    <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
   );
 }
 
 export function SkeletonCard({ className = '' }: SkeletonProps) {
   return (
-    <div
-      className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 ${className}`}
-    >
+    <div className={`bg-white rounded-lg shadow-md p-6 ${className}`}>
       <Skeleton className="h-6 w-3/4 mb-3" />
       <Skeleton className="h-4 w-1/2 mb-4" />
       <Skeleton className="h-4 w-full mb-2" />
@@ -31,10 +27,7 @@ export function SkeletonText({ lines = 3, className = '' }: { lines?: number; cl
   return (
     <div className={`space-y-2 ${className}`}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className={`h-4 ${i === lines - 1 ? 'w-3/4' : 'w-full'}`}
-        />
+        <Skeleton key={i} className={`h-4 ${i === lines - 1 ? 'w-3/4' : 'w-full'}`} />
       ))}
     </div>
   );

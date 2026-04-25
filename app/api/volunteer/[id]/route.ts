@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { volunteerApiUpdateSchema, normalizeVolunteerData } from '@/lib/schemas/volunteer-api.schema';
 import { requireAdmin } from '@/lib/auth/api-auth';
-import { ZodError } from \'zod\';
-import { Prisma } from \'@prisma/client\';
-import { withAutoBackup } from \'@/lib/utils/auto-backup\';
+import { ZodError } from 'zod';
+import { Prisma } from '@prisma/client';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/volunteer/[id]
@@ -33,7 +33,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la récupération de l'expérience de bénévolat" },
       { status: 500 }
     );
   }
@@ -96,7 +96,7 @@ export async function PUT(
 
     console.error('Error updating volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la mise à jour de l'expérience de bénévolat" },
       { status: 500 }
     );
   }
@@ -143,7 +143,7 @@ export async function DELETE(
 
     console.error('Error deleting volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la suppression de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la suppression de l'expérience de bénévolat" },
       { status: 500 }
     );
   }

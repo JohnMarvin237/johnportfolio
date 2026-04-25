@@ -1,0 +1,297 @@
+// app/admin/projects/[id]/edit/page.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { projectSchema } from '@/lib/schemas/project.schema';
+import { useAuthHeaders } from '@/lib/hooks/useAuth';
+import { getApiUrl } from '@/lib/utils';
+import PageHeader from '@/components/admin/PageHeader';
+import FormField from '@/components/admin/FormField';
+import Button from '@/components/ui/Button';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorDisplay from '@/components/ui/ErrorDisplay';
+import { z } from 'zod';
+
+// Input schema for form (what the form fields expect)
+const formInputSchema = z.object({
+  title: z.string().min(1, "Le titre est requis"),
+  description: z.string().min(1, "La description est requise"),
+  longDesc: z.string().optional(),
+  technologies: z.string().min(1, "Au moins une technologie est requise"),
+  imageUrl: z.string().url().optional().or(z.literal('')),
+  demoUrl: z.string().url().optional().or(z.literal('')),
+  githubUrl: z.string().url().optional().or(z.literal('')),
+  featured: z.boolean().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  organization: z.string().optional(),
+  order: z.union([z.string(), z.number()]).optional(),
+});
+
+type FormData = z.infer<typeof formInputSchema>;
+
+export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const getAuthHeaders = useAuthHeaders();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formInputSchema),
+  });
+
+  const [projectId, setProjectId] = useState<string | null>(null);
+
+  useEffect(() => {
+    params.then(p => setProjectId(p.id));
+  }, [params]);
+
+  useEffect(() => {
+    if (projectId) {
+      fetchProject();
+    }
+  }, [projectId]);
+
+  const fetchProject = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(getApiUrl(`/projects/${projectId}`), {
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Projet non trouvé');
+      }
+
+      const project = await response.json();
+
+      // Transform data for form
+      reset({
+        ...project,
+        technologies: project.technologies.join(', '),
+        startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
+        endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsSubmitting(true);
+      setError('');
+
+      const response = await fetch(getApiUrl(`/projects/${projectId}`), {
+        method: 'PUT',
+        headers: {
+          ...getAuthHeaders(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          technologies: data.technologies.split(',').map(t => t.trim()).filter(Boolean),
+          order: data.order ? Number(data.order) : 0,
+        }),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || 'Erreur lors de la mise à jour');
+      }
+
+      router.push('/admin/projects');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error && isLoading === false && !isSubmitting) {
+    return (
+      <div>
+        <PageHeader
+          title="Modifier le projet"
+          description="Mettre à jour les informations du projet"
+        />
+        <ErrorDisplay error={error} onRetry={fetchProject} />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <PageHeader
+        title="Modifier le projet"
+        description="Mettre à jour les informations du projet"
+      />
+
+      <div className="max-w-3xl bg-white rounded-lg shadow p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {error && (
+            <div className="rounded-md bg-red-50 p-4">
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 gap-6">
+            <FormField
+              label="Titre"
+              name="title"
+              required
+              register={register}
+              error={errors.title?.message}
+              placeholder="Nom du projet"
+            />
+
+            <FormField
+              label="Description courte"
+              name="description"
+              type="textarea"
+              required
+              register={register}
+              error={errors.description?.message}
+              placeholder="Description concise du projet"
+              rows={3}
+            />
+
+            <FormField
+              label="Description détaillée"
+              name="longDesc"
+              type="textarea"
+              register={register}
+              error={errors.longDesc?.message}
+              placeholder="Description complète du projet (optionnel)"
+              rows={5}
+            />
+
+            <FormField
+              label="Technologies"
+              name="technologies"
+              required
+              register={register}
+              error={errors.technologies?.message}
+              placeholder="React, Next.js, TypeScript (séparées par des virgules)"
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Date de début"
+                name="startDate"
+                type="date"
+                register={register}
+                error={errors.startDate?.message}
+              />
+
+              <FormField
+                label="Date de fin"
+                name="endDate"
+                type="date"
+                register={register}
+                error={errors.endDate?.message}
+              />
+            </div>
+
+            <FormField
+              label="Organisation"
+              name="organization"
+              register={register}
+              error={errors.organization?.message}
+              placeholder="Nom de l'entreprise ou personnel"
+            />
+
+            <FormField
+              label="URL de l'image"
+              name="imageUrl"
+              type="url"
+              register={register}
+              error={errors.imageUrl?.message}
+              placeholder="https://example.com/image.jpg"
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="URL de démo"
+                name="demoUrl"
+                type="url"
+                register={register}
+                error={errors.demoUrl?.message}
+                placeholder="https://demo.example.com"
+              />
+
+              <FormField
+                label="URL GitHub"
+                name="githubUrl"
+                type="url"
+                register={register}
+                error={errors.githubUrl?.message}
+                placeholder="https://github.com/username/repo"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Ordre d'affichage"
+                name="order"
+                type="number"
+                register={register}
+                error={errors.order?.message}
+                placeholder="0"
+              />
+
+              <div className="flex items-end">
+                <FormField
+                  label="Projet featured"
+                  name="featured"
+                  type="checkbox"
+                  register={register}
+                  error={errors.featured?.message}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4 pt-4">
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              className="flex-1 md:flex-initial"
+            >
+              {isSubmitting ? 'Enregistrement...' : 'Enregistrer les modifications'}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              Annuler
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -1,112 +1,129 @@
-'use client'
+// components/sections/CertificationCard.tsx
+'use client';
 
-import Card from '../ui/Card'
-import T from '../ui/T'
-import { formatDate, getLocalized } from '@/lib/utils'
-import { useTranslation } from '@/lib/i18n/LanguageContext'
-import type { Certification } from '@prisma/client'
+import React from 'react';
+import Card, { CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
+import Button from '../ui/Button';
 
-interface CertificationCardProps {
-  certification: Certification
+export interface Certification {
+  id: string;
+  title: string;
+  issuer: string;
+  issueDate?: Date | string | null;
+  expiryDate?: Date | string | null;
+  credentialId?: string | null;
+  credentialUrl?: string | null;
+  description?: string | null;
+  skills: string[];
+  order: number;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
-export default function CertificationCard({ certification }: CertificationCardProps) {
-  const { locale } = useTranslation()
-  if (!certification) return null
+export interface CertificationCardProps {
+  certification: Certification;
+}
 
-  const { issuer, issueDate, expiryDate, credentialId, credentialUrl, skills = [] } = certification
-  const title = getLocalized(certification, 'title', locale)
-  const description = getLocalized(certification, 'description', locale)
-  const isExpired = expiryDate && new Date(expiryDate) < new Date()
+/**
+ * Formate une date
+ */
+function formatDate(date: Date | string | null | undefined): string | null {
+  if (!date) return null;
+
+  const d = new Date(date);
+  return d.toLocaleDateString('fr-FR', {
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+/**
+ * Vérifie si une certification est expirée
+ */
+function isExpired(expiryDate: Date | string | null | undefined): boolean {
+  if (!expiryDate) return false;
+  return new Date(expiryDate) < new Date();
+}
+
+/**
+ * Carte d'affichage d'une certification
+ */
+export default function CertificationCard({ certification }: CertificationCardProps) {
+  const {
+    title,
+    issuer,
+    issueDate,
+    expiryDate,
+    credentialId,
+    credentialUrl,
+    description,
+    skills,
+  } = certification;
+
+  const expired = isExpired(expiryDate);
 
   return (
-    <Card className={`h-full relative ${isExpired ? 'opacity-75' : ''}`}>
-      {/* Expiry badge */}
-      {isExpired && (
-        <div className="absolute top-4 right-4">
-          <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 rounded">
-            <T k="experience.expired" />
-          </span>
+    <Card hover className="h-full flex flex-col">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <p className="text-gray-600 dark:text-gray-300 font-medium mt-1">{issuer}</p>
+
+        <div className="flex items-center gap-3 mt-2 text-sm text-gray-500 dark:text-gray-400">
+          {issueDate && (
+            <span>Délivrée: {formatDate(issueDate)}</span>
+          )}
+          {expiryDate && (
+            <span className={expired ? 'text-red-600 dark:text-red-400' : ''}>
+              {expired ? 'Expirée' : 'Expire'}: {formatDate(expiryDate)}
+            </span>
+          )}
         </div>
-      )}
 
-      {/* Certification icon */}
-      <div className="mb-4">
-        <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
-          <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Title and issuer */}
-      <div className="mb-3">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {title}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
-          {issuer}
-        </p>
-      </div>
-
-      {/* Dates */}
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-        <p><T k="experience.issuedOn" /> {formatDate(issueDate, 'fr-CA', 'short')}</p>
-        {expiryDate && (
-          <p>
-            {isExpired ? <T k="experience.expiredOn" /> : <T k="experience.expiresOn" />}{' '}
-            {formatDate(expiryDate, 'fr-CA', 'short')}
-          </p>
-        )}
-      </div>
-
-      {/* Description */}
-      {description && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          {description}
-        </p>
-      )}
-
-      {/* Skills */}
-      {skills.length > 0 && (
-        <div className="mb-4">
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-            <T k="experience.validatedSkills" />
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {skills.map((skill) => (
-              <span
-                key={skill}
-                className="px-2 py-1 text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Links */}
-      <div className="mt-auto pt-4">
-        {credentialUrl && (
-          <a
-            href={credentialUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
-          >
-            <T k="experience.viewCert" />
-            <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        )}
-        {credentialId && !credentialUrl && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+        {credentialId && (
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             ID: {credentialId}
           </p>
         )}
-      </div>
+      </CardHeader>
+
+      <CardContent className="flex-grow">
+        {description && (
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{description}</p>
+        )}
+
+        {/* Compétences */}
+        {skills.length > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              Compétences acquises:
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </CardContent>
+
+      {/* Action - Voir le certificat */}
+      {credentialUrl && (
+        <CardFooter>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.open(credentialUrl!, '_blank')}
+            className="w-full"
+          >
+            Voir le certificat
+          </Button>
+        </CardFooter>
+      )}
     </Card>
-  )
+  );
 }

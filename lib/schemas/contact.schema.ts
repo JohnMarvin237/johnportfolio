@@ -13,8 +13,7 @@ export const contactMessageSchema = z.object({
   subject: z.string()
     .min(3, 'Le sujet doit contenir au moins 3 caractères')
     .max(200, 'Le sujet ne peut pas dépasser 200 caractères')
-    .optional()
-    .nullable(),
+    .optional(),
 
   message: z.string()
     .min(10, 'Le message doit contenir au moins 10 caractères')

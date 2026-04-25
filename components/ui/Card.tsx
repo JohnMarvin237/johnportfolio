@@ -1,36 +1,123 @@
-import type { ReactNode, KeyboardEvent } from 'react'
+// components/ui/Card.tsx
+import React from 'react';
 
-interface CardProps {
-  children: ReactNode
-  className?: string
-  hover?: boolean
-  onClick?: () => void
+export interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+  hover?: boolean;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  onClick?: () => void;
 }
 
+/**
+ * Composant Card réutilisable
+ * @param children - Contenu de la carte
+ * @param className - Classes CSS additionnelles
+ * @param hover - Activer l'effet hover
+ * @param padding - Taille du padding interne
+ * @param onClick - Handler click optionnel
+ */
 export default function Card({
   children,
   className = '',
   hover = false,
-  onClick
+  padding = 'md',
+  onClick,
 }: CardProps) {
-  const baseStyles = 'bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 p-6 transition-all duration-200'
+  const baseStyles = 'bg-white dark:bg-[#161b22] rounded-xl border border-gray-200 dark:border-[#30363d] shadow-lg';
 
-  const hoverStyles = hover ? 'hover:shadow-lg hover:scale-[1.02] cursor-pointer' : ''
+  const hoverStyles = hover
+    ? 'transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:-translate-y-1'
+    : '';
+
+  const paddings = {
+    none: 'p-0',
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
+  };
 
   return (
     <div
       onClick={onClick}
-      className={`${baseStyles} ${hoverStyles} ${className}`}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
-      onKeyDown={onClick ? (e: KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onClick()
-        }
-      } : undefined}
+      className={`
+        ${baseStyles}
+        ${hoverStyles}
+        ${paddings[padding]}
+        ${className}
+      `.trim()}
     >
       {children}
     </div>
-  )
+  );
+}
+
+/**
+ * Card Header - Section d'en-tête de la carte
+ */
+export function CardHeader({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mb-4 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Card Title - Titre de la carte
+ */
+export function CardTitle({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <h3 className={`text-xl font-semibold text-gray-900 dark:text-white transition-colors ${className}`}>
+      {children}
+    </h3>
+  );
+}
+
+/**
+ * Card Content - Contenu principal de la carte
+ */
+export function CardContent({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`text-gray-700 dark:text-gray-300 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Card Footer - Section de pied de page de la carte
+ */
+export function CardFooter({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mt-4 flex items-center gap-2 ${className}`}>
+      {children}
+    </div>
+  );
 }

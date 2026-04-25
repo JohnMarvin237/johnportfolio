@@ -17,12 +17,13 @@ export interface SendEmailParams {
   subject: string;
   text?: string;
   html?: string;
+  replyTo?: string;
 }
 
 /**
  * Send email
  */
-export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
+export async function sendEmail({ to, subject, text, html, replyTo }: SendEmailParams) {
   try {
     const info = await transporter.sendMail({
       from: process.env.EMAIL_FROM || 'noreply@portfolio.com',
@@ -30,6 +31,7 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
       subject,
       text,
       html,
+      replyTo,
     });
 
     console.log('Email sent:', info.messageId);
@@ -38,6 +40,15 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
     console.error('Error sending email:', error);
     throw new Error('Failed to send email');
   }
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /**
@@ -49,24 +60,27 @@ export async function sendContactNotification(data: {
   subject?: string;
   message: string;
 }) {
-  const adminEmail = process.env.EMAIL_TO || 'admin@example.com';
+  const adminEmail = process.env.EMAIL_TO || 'johnmanueldev@gmail.com';
+  const subjectText = data.subject || 'Nouveau message de contact';
+  const subjectLine = `[Portfolio] ${subjectText} - ${data.email}`;
 
   const html = `
     <h2>Nouveau message de contact</h2>
-    <p><strong>De:</strong> ${data.name} (${data.email})</p>
-    ${data.subject ? `<p><strong>Sujet:</strong> ${data.subject}</p>` : ''}
+    <p><strong>De:</strong> ${escapeHtml(data.name)} (${escapeHtml(data.email)})</p>
+    ${data.subject ? `<p><strong>Sujet:</strong> ${escapeHtml(data.subject)}</p>` : ''}
     <p><strong>Message:</strong></p>
-    <p>${data.message.replace(/\n/g, '<br>')}</p>
+    <p>${escapeHtml(data.message).replace(/\n/g, '<br>')}</p>
     <hr>
     <p><small>Envoyé depuis votre portfolio</small></p>
   `;
 
   return sendEmail({
     to: adminEmail,
-    subject: `[Portfolio] ${data.subject || 'Nouveau message de contact'}`,
+    subject: subjectLine,
+    replyTo: data.email,
     text: `
 De: ${data.name} (${data.email})
-${data.subject ? `Sujet: ${data.subject}` : ''}
+Sujet: ${subjectText}
 
 Message:
 ${data.message}

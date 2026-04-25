@@ -7,7 +7,7 @@ export const experienceSchema = z.object({
     .max(100),
 
   company: z.string()
-    .min(2, 'Le nom de l\'entreprise doit contenir au moins 2 caractères')
+    .min(2, "Le nom de l'entreprise doit contenir au moins 2 caractères")
     .max(100),
 
   companyUrl: z.string()
@@ -43,6 +43,14 @@ export const experienceSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // i18n fields
+  title_fr: z.string().max(200).optional().nullable(),
+  title_en: z.string().max(200).optional().nullable(),
+  description_fr: z.string().max(2000).optional().nullable(),
+  description_en: z.string().max(2000).optional().nullable(),
+  achievements_fr: z.array(z.string()).max(15).default([]),
+  achievements_en: z.array(z.string()).max(15).default([]),
 });
 
 export type ExperienceInput = z.infer<typeof experienceSchema>;

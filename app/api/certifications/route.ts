@@ -1,9 +1,10 @@
 // app/api/certifications/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { certificationSchema } from '@/lib/schemas/certification.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { certificationApiSchema, normalizeCertificationData } from '@/lib/schemas/certification-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/certifications
@@ -16,8 +17,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limitParam = searchParams.get('limit');
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const certifications = await prisma.certification.findMany({
       take,
@@ -40,28 +41,34 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/certifications
  * Créer une nouvelle certification (admin seulement)
- * Body: CertificationSchema (validé par Zod)
+ * Body: CertificationApiSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = certificationSchema.parse(body);
+    const validatedData = certificationApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const certification = await prisma.certification.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeCertificationData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const certification = await withAutoBackup(
+      async () => await prisma.certification.create({
+        data: normalizedData,
+      }),
+      'create certification'
+    );
 
     return NextResponse.json(certification, { status: 201 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

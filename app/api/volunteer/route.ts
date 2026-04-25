@@ -1,9 +1,10 @@
 // app/api/volunteer/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { volunteerSchema } from '@/lib/schemas/volunteer.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { volunteerApiSchema, normalizeVolunteerData } from '@/lib/schemas/volunteer-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/volunteer
@@ -24,8 +25,8 @@ export async function GET(request: NextRequest) {
       where.current = currentParam === 'true';
     }
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const volunteer = await prisma.volunteer.findMany({
       where,
@@ -49,28 +50,34 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/volunteer
  * Créer une nouvelle expérience de bénévolat (admin seulement)
- * Body: VolunteerSchema (validé par Zod)
+ * Body: VolunteerApiSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = volunteerSchema.parse(body);
+    const validatedData = volunteerApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const volunteer = await prisma.volunteer.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeVolunteerData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const volunteer = await withAutoBackup(
+      async () => await prisma.volunteer.create({
+        data: normalizedData,
+      }),
+      'create volunteer'
+    );
 
     return NextResponse.json(volunteer, { status: 201 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

@@ -1,9 +1,10 @@
 // app/api/projects/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { projectSchema } from '@/lib/schemas/project.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { projectApiSchema, normalizeProjectData } from '@/lib/schemas/project-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/projects
@@ -24,8 +25,8 @@ export async function GET(request: NextRequest) {
       where.featured = featuredParam === 'true';
     }
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const projects = await prisma.project.findMany({
       where,
@@ -54,19 +55,25 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult; // Return error response
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = projectSchema.parse(body);
+    const validatedData = projectApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const project = await prisma.project.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeProjectData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const project = await withAutoBackup(
+      async () => await prisma.project.create({
+        data: normalizedData,
+      }),
+      'create project'
+    );
 
     return NextResponse.json(project, { status: 201 });
   } catch (error) {

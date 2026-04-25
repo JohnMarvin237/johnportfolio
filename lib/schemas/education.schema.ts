@@ -7,7 +7,7 @@ export const educationSchema = z.object({
     .max(150),
 
   institution: z.string()
-    .min(2, 'L\'institution doit contenir au moins 2 caractères')
+    .min(2, "L'institution doit contenir au moins 2 caractères")
     .max(150),
 
   location: z.string()
@@ -46,6 +46,16 @@ export const educationSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // i18n fields
+  degree_fr: z.string().max(150).optional().nullable(),
+  degree_en: z.string().max(150).optional().nullable(),
+  description_fr: z.string().max(1000).optional().nullable(),
+  description_en: z.string().max(1000).optional().nullable(),
+  field_fr: z.string().max(100).optional().nullable(),
+  field_en: z.string().max(100).optional().nullable(),
+  note_fr: z.string().max(200).optional().nullable(),
+  note_en: z.string().max(200).optional().nullable(),
 });
 
 export type EducationInput = z.infer<typeof educationSchema>;

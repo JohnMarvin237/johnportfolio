@@ -1,46 +1,43 @@
 import Button from '../ui/Button'
+import T from '../ui/T'
 import Link from 'next/link'
 
-/**
- * Section Hero pour la page d'accueil
- * @param {Object} props
- * @param {string} props.name - Nom à afficher
- * @param {string} props.title - Titre professionnel
- * @param {string} props.description - Description courte
- * @param {string} props.imageUrl - URL de l'image de profil
- */
 export default function Hero({
   name = 'John Doe',
-  title = 'Développeur Full-Stack',
-  description = 'Passionné par la création d\'applications web modernes et performantes',
+  title,
+  description,
   imageUrl
 }) {
   return (
-    <section className="relative bg-gradient-to-b from-primary-50 to-white py-20 sm:py-32">
+    <section className="relative bg-gradient-to-b from-primary-50 to-white dark:from-gray-800 dark:to-gray-900 py-20 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
           {/* Contenu texte */}
           <div className="text-center lg:text-left">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Bonjour, je suis{' '}
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
+              <T k="hero.greeting" />{' '}
               <span className="text-primary-600">{name}</span>
             </h1>
-            <p className="mt-4 text-2xl text-gray-600">
-              {title}
-            </p>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              {description}
-            </p>
+            {title && (
+              <p className="mt-4 text-2xl text-gray-600 dark:text-gray-300">
+                {title}
+              </p>
+            )}
+            {description && (
+              <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
+                {description}
+              </p>
+            )}
 
             <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
               <Link href="/projects">
                 <Button size="lg">
-                  Voir mes projets
+                  <T k="hero.viewProjects" />
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button variant="outline" size="lg">
-                  Me contacter
+                  <T k="hero.contactMe" />
                 </Button>
               </Link>
             </div>
@@ -51,7 +48,7 @@ export default function Hero({
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-900 transition-colors"
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                 aria-label="GitHub"
               >
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -62,7 +59,7 @@ export default function Hero({
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-900 transition-colors"
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">

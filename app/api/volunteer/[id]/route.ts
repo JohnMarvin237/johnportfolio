@@ -1,10 +1,11 @@
 // app/api/volunteer/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { volunteerUpdateSchema } from '@/lib/schemas/volunteer.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { volunteerApiUpdateSchema, normalizeVolunteerData } from '@/lib/schemas/volunteer-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/volunteer/[id]
@@ -32,7 +33,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la récupération de l'expérience de bénévolat" },
       { status: 500 }
     );
   }
@@ -48,26 +49,32 @@ export async function PUT(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = volunteerUpdateSchema.parse(body);
+    const validatedData = volunteerApiUpdateSchema.parse(body);
 
-    // 3. Mettre à jour en base de données
-    const volunteer = await prisma.volunteer.update({
-      where: { id },
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeVolunteerData(validatedData as any);
+
+    // 4. Mettre à jour en base de données avec auto-backup
+    const volunteer = await withAutoBackup(
+      async () => await prisma.volunteer.update({
+        where: { id },
+        data: normalizedData,
+      }),
+      `update volunteer ${id}`
+    );
 
     return NextResponse.json(volunteer, { status: 200 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
@@ -89,7 +96,7 @@ export async function PUT(
 
     console.error('Error updating volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la mise à jour de l'expérience de bénévolat" },
       { status: 500 }
     );
   }
@@ -105,17 +112,20 @@ export async function DELETE(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;
 
-    // 2. Supprimer de la base de données
-    await prisma.volunteer.delete({
-      where: { id },
-    });
+    // 2. Supprimer de la base de données avec auto-backup
+    await withAutoBackup(
+      async () => await prisma.volunteer.delete({
+        where: { id },
+      }),
+      `delete volunteer ${id}`
+    );
 
     return NextResponse.json(
       { message: 'Expérience de bénévolat supprimée avec succès' },
@@ -133,7 +143,7 @@ export async function DELETE(
 
     console.error('Error deleting volunteer experience:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la suppression de l\'expérience de bénévolat' },
+      { error: "Erreur lors de la suppression de l'expérience de bénévolat" },
       { status: 500 }
     );
   }

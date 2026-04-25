@@ -1,10 +1,11 @@
 // app/api/certifications/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { certificationUpdateSchema } from '@/lib/schemas/certification.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { certificationApiUpdateSchema, normalizeCertificationData } from '@/lib/schemas/certification-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/certifications/[id]
@@ -48,26 +49,32 @@ export async function PUT(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = certificationUpdateSchema.parse(body);
+    const validatedData = certificationApiUpdateSchema.parse(body);
 
-    // 3. Mettre à jour en base de données
-    const certification = await prisma.certification.update({
-      where: { id },
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeCertificationData(validatedData as any);
+
+    // 4. Mettre à jour en base de données avec auto-backup
+    const certification = await withAutoBackup(
+      async () => await prisma.certification.update({
+        where: { id },
+        data: normalizedData,
+      }),
+      `update certification ${id}`
+    );
 
     return NextResponse.json(certification, { status: 200 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
@@ -105,17 +112,20 @@ export async function DELETE(
 ) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { id } = await params;
 
-    // 2. Supprimer de la base de données
-    await prisma.certification.delete({
-      where: { id },
-    });
+    // 2. Supprimer de la base de données avec auto-backup
+    await withAutoBackup(
+      async () => await prisma.certification.delete({
+        where: { id },
+      }),
+      `delete certification ${id}`
+    );
 
     return NextResponse.json(
       { message: 'Certification supprimée avec succès' },

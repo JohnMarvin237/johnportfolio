@@ -1,6 +1,7 @@
 // app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateUser } from '@/lib/auth/jwt';
+import { setAuthToken } from '@/lib/auth/auth-helpers';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -36,10 +37,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    // Create response with user data
+    const response = NextResponse.json({
       user: result.user,
       token: result.token,
     });
+
+    // Set the auth cookie
+    response.cookies.set({
+      name: 'portfolio_auth_token',
+      value: result.token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(

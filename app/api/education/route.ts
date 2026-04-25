@@ -1,9 +1,10 @@
 // app/api/education/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { educationSchema } from '@/lib/schemas/education.schema';
-import { requireAdmin } from '@/lib/auth/middleware';
+import { educationApiSchema, normalizeEducationData } from '@/lib/schemas/education-api.schema';
+import { requireAdmin } from '@/lib/auth/api-auth';
 import { ZodError } from 'zod';
+import { withAutoBackup } from '@/lib/utils/auto-backup';
 
 /**
  * GET /api/education
@@ -24,8 +25,8 @@ export async function GET(request: NextRequest) {
       where.current = currentParam === 'true';
     }
 
-    // Parse limit
-    const take = limitParam ? parseInt(limitParam, 10) : undefined;
+    // Parse limit (clamped between 1 and 100)
+    const take = limitParam ? Math.min(Math.max(parseInt(limitParam, 10) || 1, 1), 100) : undefined;
 
     const education = await prisma.education.findMany({
       where,
@@ -49,28 +50,34 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/education
  * Créer une nouvelle formation (admin seulement)
- * Body: EducationSchema (validé par Zod)
+ * Body: EducationApiSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
   try {
     // 1. Vérifier authentification admin
-    const authResult = await requireAdmin(request);
-    if (authResult instanceof NextResponse) {
-      return authResult;
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // 2. Parser et valider le body
     const body = await request.json();
-    const validatedData = educationSchema.parse(body);
+    const validatedData = educationApiSchema.parse(body);
 
-    // 3. Créer en base de données
-    const education = await prisma.education.create({
-      data: validatedData,
-    });
+    // 3. Normalize data for consistency
+    const normalizedData = normalizeEducationData(validatedData);
+
+    // 4. Créer en base de données avec auto-backup
+    const education = await withAutoBackup(
+      async () => await prisma.education.create({
+        data: normalizedData,
+      }),
+      'create education'
+    );
 
     return NextResponse.json(education, { status: 201 });
   } catch (error) {
-    // 4. Gérer les erreurs
+    // 5. Gérer les erreurs
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

@@ -12,15 +12,24 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Format date for display
+ * @param format - 'long' (janvier 2024), 'short' (janv. 2024), 'year' (2024)
  */
-export function formatDate(date: Date | string | null | undefined, locale = 'fr-CA'): string {
+export function formatDate(
+  date: Date | string | null | undefined,
+  locale = 'fr-CA',
+  format: 'long' | 'short' | 'year' = 'long'
+): string {
   if (!date) return 'Présent';
 
   const d = typeof date === 'string' ? new Date(date) : date;
 
+  if (format === 'year') {
+    return String(d.getFullYear());
+  }
+
   return d.toLocaleDateString(locale, {
     year: 'numeric',
-    month: 'long',
+    month: format,
   });
 }
 
@@ -104,6 +113,40 @@ export function delay(ms: number): Promise<void> {
 }
 
 /**
+ * Pick the localized value of a field from a DB record.
+ * Falls back to the main field value if the localized variant is empty.
+ * e.g. getLocalized(project, 'title', 'en') → project.title_en || project.title
+ */
+export function getLocalized(
+  item: Record<string, unknown>,
+  field: string,
+  locale: 'fr' | 'en',
+  fallback = ''
+): string {
+  const langKey = `${field}_${locale}`;
+  const localizedValue = item[langKey] as string | null | undefined;
+  if (localizedValue && localizedValue.trim()) return localizedValue;
+  const mainValue = item[field] as string | null | undefined;
+  return mainValue || fallback;
+}
+
+/**
+ * Pick the localized array of a field from a DB record.
+ * Falls back to the main field array if the localized variant is empty.
+ * e.g. getLocalizedArray(experience, 'achievements', 'en') → experience.achievements_en || experience.achievements
+ */
+export function getLocalizedArray(
+  item: Record<string, unknown>,
+  field: string,
+  locale: 'fr' | 'en'
+): string[] {
+  const langKey = `${field}_${locale}`;
+  const localized = item[langKey] as string[] | null | undefined;
+  if (localized && localized.length > 0) return localized;
+  return (item[field] as string[]) || [];
+}
+
+/**
  * Check if email is valid
  */
 export function isValidEmail(email: string): boolean {
@@ -121,4 +164,43 @@ export function getInitials(name: string): string {
     .join('')
     .toUpperCase()
     .slice(0, 2);
+}
+
+/**
+ * Get the base URL for API calls
+ * In server components, returns the full URL
+ * In client components, returns relative URL
+ */
+export function getApiUrl(path: string): string {
+  // Remove leading slash if present
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+
+  // In server components, we need the full URL
+  if (typeof window === 'undefined') {
+    let baseUrl = 'http://localhost:3000'; // Default fallback
+
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+    } else if (process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    }
+
+    return `${baseUrl}/api${cleanPath}`;
+  }
+
+  // In client components, use relative URL
+  return `/api${cleanPath}`;
+}
+
+/**
+ * Get the public app URL
+ */
+export function getAppUrl(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  return process.env.NEXT_PUBLIC_APP_URL ||
+         process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+         'http://localhost:3000';
 }

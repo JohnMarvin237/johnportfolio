@@ -1,10 +1,11 @@
 // lib/auth/jwt.ts
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db/prisma';
+import { getEnv } from '@/lib/config/env';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-CHANGE-ME';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '30d';
+const JWT_SECRET = getEnv('JWT_SECRET');
+const JWT_EXPIRES_IN = getEnv('JWT_EXPIRES_IN');
 
 export interface JWTPayload {
   userId: string;
@@ -16,7 +17,10 @@ export interface JWTPayload {
  * Generate JWT token
  */
 export function generateToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
+  // JWT_EXPIRES_IN is a string like '30d' which is valid for jsonwebtoken
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN as any // Type assertion needed due to strict typing
+  });
 }
 
 /**

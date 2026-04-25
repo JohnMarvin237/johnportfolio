@@ -7,7 +7,7 @@ export const certificationSchema = z.object({
     .max(150),
 
   issuer: z.string()
-    .min(2, 'L\'émetteur doit contenir au moins 2 caractères')
+    .min(2, "L'émetteur doit contenir au moins 2 caractères")
     .max(150),
 
   issueDate: z.coerce.date()
@@ -40,6 +40,12 @@ export const certificationSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // i18n fields
+  title_fr: z.string().max(150).optional().nullable(),
+  title_en: z.string().max(150).optional().nullable(),
+  description_fr: z.string().max(1000).optional().nullable(),
+  description_en: z.string().max(1000).optional().nullable(),
 });
 
 export type CertificationInput = z.infer<typeof certificationSchema>;

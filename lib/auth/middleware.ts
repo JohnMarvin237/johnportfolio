@@ -3,12 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from './jwt';
 import type { JWTPayload } from './jwt';
 
+const AUTH_COOKIE_NAME = 'portfolio_auth_token';
+
 /**
  * Require authentication middleware
- * Verifies JWT token from Authorization header
+ * Verifies JWT token from Authorization header or cookie
  */
 export async function requireAuth(request: NextRequest): Promise<JWTPayload | NextResponse> {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '');
+  // Try Authorization header first
+  let token = request.headers.get('authorization')?.replace('Bearer ', '');
+
+  // Fallback to cookie if no header
+  if (!token) {
+    token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  }
 
   if (!token) {
     return NextResponse.json(

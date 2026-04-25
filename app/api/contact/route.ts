@@ -3,7 +3,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { contactMessageSchema } from '@/lib/schemas/contact.schema';
 import { sendContactNotification } from '@/lib/email/mailer';
+import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
+
+/**
+ * GET /api/contact
+ * Liste des messages de contact (admin seulement)
+ */
+export async function GET(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
+  try {
+    const messages = await prisma.contactMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return NextResponse.json(messages, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching contact messages:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la recuperation des messages' },
+      { status: 500 }
+    );
+  }
+}
 
 /**
  * POST /api/contact

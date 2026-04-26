@@ -28,10 +28,6 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: [
-    // Protéger toutes les routes admin
-    '/admin/:path*',
-    // Exclure les fichiers statiques et API routes
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  // Only run on admin routes — public routes need no auth middleware
+  matcher: ['/admin/:path*'],
 }

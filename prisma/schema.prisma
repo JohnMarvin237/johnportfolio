@@ -33,21 +33,27 @@ model User {
 // ============================================
 
 model Project {
-  id           String    @id @default(cuid())
-  title        String
-  description  String    @db.Text
-  longDesc     String?   @db.Text
-  technologies String[]
-  imageUrl     String?
-  demoUrl      String?
-  githubUrl    String?
-  featured     Boolean   @default(false)
-  order        Int       @default(0)
-  startDate    DateTime?
-  endDate      DateTime?
-  organization String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  title         String
+  titleFr       String?   @map("title_fr")
+  titleEn       String?   @map("title_en")
+  description   String    @db.Text
+  descriptionFr String?   @db.Text @map("description_fr")
+  descriptionEn String?   @db.Text @map("description_en")
+  longDesc      String?   @db.Text
+  longDescFr    String?   @db.Text @map("longDesc_fr")
+  longDescEn    String?   @db.Text @map("longDesc_en")
+  technologies  String[]
+  imageUrl      String?
+  demoUrl       String?
+  githubUrl     String?
+  featured      Boolean   @default(false)
+  order         Int       @default(0)
+  startDate     DateTime?
+  endDate       DateTime?
+  organization  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([featured])
   @@index([order])
@@ -55,20 +61,26 @@ model Project {
 }
 
 model Experience {
-  id           String    @id @default(cuid())
-  title        String
-  company      String
-  companyUrl   String?
-  location     String
-  startDate    DateTime
-  endDate      DateTime?
-  current      Boolean   @default(false)
-  description  String    @db.Text
-  achievements String[]
-  technologies String[]
-  order        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  title           String
+  titleFr         String?   @map("title_fr")
+  titleEn         String?   @map("title_en")
+  company         String
+  companyUrl      String?
+  location        String
+  startDate       DateTime
+  endDate         DateTime?
+  current         Boolean   @default(false)
+  description     String    @db.Text
+  descriptionFr   String?   @db.Text @map("description_fr")
+  descriptionEn   String?   @db.Text @map("description_en")
+  achievements    String[]
+  achievementsFr  String[]  @map("achievements_fr")
+  achievementsEn  String[]  @map("achievements_en")
+  technologies    String[]
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([current])
   @@index([order])
@@ -76,20 +88,28 @@ model Experience {
 }
 
 model Education {
-  id          String    @id @default(cuid())
-  degree      String
-  institution String
-  location    String
-  field       String?
-  startDate   DateTime
-  endDate     DateTime?
-  current     Boolean   @default(false)
-  description String?   @db.Text
-  gpa         String?
-  note        String?
-  order       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  degree        String
+  degreeFr      String?   @map("degree_fr")
+  degreeEn      String?   @map("degree_en")
+  institution   String
+  location      String
+  field         String?
+  fieldFr       String?   @map("field_fr")
+  fieldEn       String?   @map("field_en")
+  startDate     DateTime
+  endDate       DateTime?
+  current       Boolean   @default(false)
+  description   String?   @db.Text
+  descriptionFr String?   @db.Text @map("description_fr")
+  descriptionEn String?   @db.Text @map("description_en")
+  gpa           String?
+  note          String?
+  noteFr        String?   @map("note_fr")
+  noteEn        String?   @map("note_en")
+  order         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([current])
   @@index([order])
@@ -99,12 +119,16 @@ model Education {
 model Certification {
   id            String    @id @default(cuid())
   title         String
+  titleFr       String?   @map("title_fr")
+  titleEn       String?   @map("title_en")
   issuer        String
   issueDate     DateTime?
   expiryDate    DateTime?
   credentialId  String?
   credentialUrl String?
   description   String?   @db.Text
+  descriptionFr String?   @db.Text @map("description_fr")
+  descriptionEn String?   @db.Text @map("description_en")
   skills        String[]
   order         Int       @default(0)
   createdAt     DateTime  @default(now())
@@ -115,17 +139,21 @@ model Certification {
 }
 
 model Volunteer {
-  id           String    @id @default(cuid())
-  title        String
-  organization String
-  location     String?
-  startDate    DateTime
-  endDate      DateTime?
-  current      Boolean   @default(false)
-  description  String    @db.Text
-  order        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  title         String
+  titleFr       String?   @map("title_fr")
+  titleEn       String?   @map("title_en")
+  organization  String
+  location      String?
+  startDate     DateTime
+  endDate       DateTime?
+  current       Boolean   @default(false)
+  description   String    @db.Text
+  descriptionFr String?   @db.Text @map("description_fr")
+  descriptionEn String?   @db.Text @map("description_en")
+  order         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([current])
   @@index([order])

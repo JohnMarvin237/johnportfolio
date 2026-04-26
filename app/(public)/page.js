@@ -3,7 +3,11 @@ import ProjectCard from '@/components/sections/ProjectCard'
 import ExperienceCard from '@/components/sections/ExperienceCard'
 import Button from '@/components/ui/Button'
 import Link from 'next/link'
+import T from '@/components/ui/T'
 import { prisma } from '@/lib/db/prisma'
+import { cookies } from 'next/headers'
+import { resolveProject, resolveExperience } from '@/lib/i18n/resolveLocale'
+import { getSettings } from '@/lib/db/settings'
 
 async function getFeaturedProjects() {
   try {
@@ -33,41 +37,45 @@ async function getRecentExperiences() {
 }
 
 export default async function HomePage() {
-  const [featuredProjects, recentExperiences] = await Promise.all([
+  const [featuredProjects, recentExperiences, settings] = await Promise.all([
     getFeaturedProjects(),
     getRecentExperiences(),
+    getSettings(),
   ])
+  const locale = (await cookies()).get('NEXT_LOCALE')?.value === 'en' ? 'en' : 'fr'
+  const resolvedProjects = featuredProjects.map(p => resolveProject(p, locale))
+  const resolvedExperiences = recentExperiences.map(e => resolveExperience(e, locale))
 
   return (
     <>
       {/* Section Hero */}
       <Hero
         name="John"
-        title="Développeur Full-Stack & Expert IA"
-        description="Passionné par la création d'applications web modernes et l'intégration de solutions d'intelligence artificielle pour résoudre des problèmes complexes."
         imageUrl="/images/profile/john.jpg"
+        githubUrl={settings.github_url}
+        linkedinUrl={settings.linkedin_url}
       />
 
       {/* Section Projets Featured */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Projets en vedette
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <T k="home.featuredTitle" />
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Découvrez quelques-uns de mes projets les plus récents et innovants
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+              <T k="home.featuredDesc" />
             </p>
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.length > 0 ? (
-              featuredProjects.map((project) => (
+            {resolvedProjects.length > 0 ? (
+              resolvedProjects.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-gray-500">Aucun projet en vedette pour le moment.</p>
+                <p className="text-gray-500 dark:text-gray-400"><T k="home.noFeatured" /></p>
               </div>
             )}
           </div>
@@ -75,7 +83,7 @@ export default async function HomePage() {
           <div className="mt-12 text-center">
             <Link href="/projects">
               <Button size="lg" variant="outline">
-                Voir tous les projets
+                <T k="home.viewAllProjects" />
               </Button>
             </Link>
           </div>
@@ -83,25 +91,25 @@ export default async function HomePage() {
       </section>
 
       {/* Section Expériences récentes */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Expérience professionnelle
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <T k="home.experienceTitle" />
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Mon parcours professionnel et mes réalisations récentes
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+              <T k="home.experienceDesc" />
             </p>
           </div>
 
           <div className="mt-12 max-w-3xl mx-auto">
-            {recentExperiences.length > 0 ? (
-              recentExperiences.map((experience) => (
+            {resolvedExperiences.length > 0 ? (
+              resolvedExperiences.map((experience) => (
                 <ExperienceCard key={experience.id} experience={experience} />
               ))
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Aucune expérience disponible pour le moment.</p>
+                <p className="text-gray-500 dark:text-gray-400"><T k="home.noExperience" /></p>
               </div>
             )}
           </div>
@@ -109,7 +117,7 @@ export default async function HomePage() {
           <div className="mt-12 text-center">
             <Link href="/experience">
               <Button size="lg" variant="outline">
-                Voir toute l'expérience
+                <T k="home.viewAllExperience" />
               </Button>
             </Link>
           </div>
@@ -117,19 +125,19 @@ export default async function HomePage() {
       </section>
 
       {/* Section CTA Contact */}
-      <section className="py-20 bg-primary-600">
+      <section className="py-20 bg-primary-600 dark:bg-primary-700">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white">
-              Prêt à travailler ensemble ?
+              <T k="home.ctaTitle" />
             </h2>
             <p className="mt-4 text-xl text-primary-100">
-              Je suis toujours ouvert aux nouvelles opportunités et collaborations
+              <T k="home.ctaDesc" />
             </p>
             <div className="mt-8">
               <Link href="/contact">
                 <Button size="lg" variant="secondary">
-                  Me contacter
+                  <T k="home.ctaButton" />
                 </Button>
               </Link>
             </div>

@@ -3,11 +3,16 @@
 import { useState } from 'react'
 import Input from '../ui/Input'
 import Button from '../ui/Button'
+import { useTranslation } from '@/lib/i18n/LanguageContext'
 
 /**
  * Formulaire de contact
+ * @param {object} props
+ * @param {string} [props.contactEmail]
  */
-export default function ContactForm() {
+export default function ContactForm({ contactEmail = '' }) {
+  const { t } = useTranslation()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,17 +43,17 @@ export default function ContactForm() {
     const newErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Le nom est requis'
+      newErrors.name = t('contactForm.nameRequired')
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'L\'email est requis'
+      newErrors.email = t('contactForm.emailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email invalide'
+      newErrors.email = t('contactForm.emailInvalid')
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = 'Le message est requis'
+      newErrors.message = t('contactForm.messageRequired')
     }
 
     setErrors(newErrors)
@@ -79,7 +84,7 @@ export default function ContactForm() {
       if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          message: 'Votre message a été envoyé avec succès !'
+          message: t('contactForm.success')
         })
         // Réinitialiser le formulaire
         setFormData({
@@ -91,13 +96,13 @@ export default function ContactForm() {
       } else {
         setSubmitStatus({
           type: 'error',
-          message: data.error || 'Une erreur est survenue. Veuillez réessayer.'
+          message: data.error || t('contactForm.error')
         })
       }
     } catch (error) {
       setSubmitStatus({
         type: 'error',
-        message: 'Impossible d\'envoyer le message. Veuillez réessayer plus tard.'
+        message: t('contactForm.networkError')
       })
     } finally {
       setIsSubmitting(false)
@@ -109,45 +114,45 @@ export default function ContactForm() {
       <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
         <div className="sm:col-span-2">
           <Input
-            label="Nom complet"
+            label={t('contactForm.name')}
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             error={errors.name}
             required
-            placeholder="John Doe"
+            placeholder={t('contactForm.namePlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-2">
           <Input
-            label="Email"
+            label={t('contactForm.email')}
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             error={errors.email}
             required
-            placeholder="john.doe@example.com"
+            placeholder={t('contactForm.emailPlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-2">
           <Input
-            label="Sujet"
+            label={t('contactForm.subject')}
             type="text"
             name="subject"
             value={formData.subject}
             onChange={handleChange}
             error={errors.subject}
-            placeholder="Opportunité de collaboration"
+            placeholder={t('contactForm.subjectPlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-2">
           <Input
-            label="Message"
+            label={t('contactForm.message')}
             type="textarea"
             name="message"
             value={formData.message}
@@ -155,7 +160,7 @@ export default function ContactForm() {
             error={errors.message}
             required
             rows={6}
-            placeholder="Bonjour, j'aimerais discuter d'une opportunité..."
+            placeholder={t('contactForm.messagePlaceholder')}
           />
         </div>
       </div>
@@ -163,10 +168,10 @@ export default function ContactForm() {
       {/* Message de statut */}
       {submitStatus && (
         <div
-          className={`mt-4 p-4 rounded-lg ${
+          className={`mt-4 p-4 rounded-lg border ${
             submitStatus.type === 'success'
-              ? 'bg-green-50 text-green-800 border border-green-200'
-              : 'bg-red-50 text-red-800 border border-red-200'
+              ? 'bg-green-50 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700'
+              : 'bg-red-50 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700'
           }`}
         >
           <p className="text-sm font-medium">{submitStatus.message}</p>
@@ -182,16 +187,19 @@ export default function ContactForm() {
           disabled={isSubmitting}
           className="w-full sm:w-auto"
         >
-          {isSubmitting ? 'Envoi en cours...' : 'Envoyer le message'}
+          {isSubmitting ? t('contactForm.submitting') : t('contactForm.submit')}
         </Button>
       </div>
 
       {/* Informations de contact alternatives */}
-      <div className="mt-8 pt-8 border-t border-gray-200">
-        <p className="text-sm text-gray-600 text-center">
-          Vous pouvez également me contacter directement par email à{' '}
-          <a href="mailto:contact@example.com" className="text-primary-600 hover:text-primary-700">
-            contact@example.com
+      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+          {t('contactForm.altContact')}{' '}
+          <a
+            href={`mailto:${contactEmail}`}
+            className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+          >
+            {contactEmail}
           </a>
         </p>
       </div>

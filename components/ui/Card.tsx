@@ -16,7 +16,7 @@ export default function Card({
   padding = 'md',
   onClick,
 }: CardProps) {
-  const baseStyles = 'bg-white rounded-lg shadow-md transition-all duration-200';
+  const baseStyles = 'bg-white dark:bg-gray-800 rounded-lg shadow-md transition-all duration-200';
 
   const hoverStyles = hover ? 'hover:shadow-lg hover:scale-[1.02] cursor-pointer' : '';
 

@@ -5,6 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 export interface Project {
   id: string;
@@ -25,6 +26,8 @@ export interface Project {
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const { t } = useTranslation();
+
   if (!project) return null;
 
   const {
@@ -51,7 +54,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           />
           {featured && (
             <div className="absolute top-2 right-2 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-              Featured
+              {t('projects.featuredBadge')}
             </div>
           )}
         </div>
@@ -59,8 +62,8 @@ export default function ProjectCard({ project }: { project: Project }) {
 
       {/* Contenu */}
       <div className="flex-grow">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">{description}</p>
 
         {/* Technologies */}
         {technologies.length > 0 && (
@@ -82,21 +85,21 @@ export default function ProjectCard({ project }: { project: Project }) {
         {demoUrl && (
           <a href={demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
-              Voir la démo
+              {t('projects.viewDemo')}
             </Button>
           </a>
         )}
         {githubUrl && (
           <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
-              Code source
+              {t('projects.sourceCode')}
             </Button>
           </a>
         )}
         {!demoUrl && !githubUrl && (
           <a href={`/projects/${id}`} className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
-              En savoir plus
+              {t('projects.learnMore')}
             </Button>
           </a>
         )}

@@ -1,5 +1,6 @@
 import Button from '@/components/ui/Button'
 import Link from 'next/link'
+import T from '@/components/ui/T'
 
 export const metadata = {
   title: 'À propos - John Portfolio',
@@ -8,15 +9,15 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="py-12 bg-white min-h-screen">
+    <div className="py-12 bg-white dark:bg-gray-900 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">
-            À propos de moi
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            <T k="about.title" />
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Développeur passionné, toujours à la recherche de nouveaux défis techniques
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <T k="about.subtitle" />
           </p>
         </div>
 
@@ -24,87 +25,67 @@ export default function AboutPage() {
         <div className="mt-12 max-w-4xl mx-auto">
           {/* Introduction */}
           <section className="prose prose-lg max-w-none">
-            <div className="bg-gradient-to-r from-primary-50 to-white rounded-lg p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Bonjour, je suis John !
+            <div className="bg-gradient-to-r from-primary-50 to-white dark:from-primary-900/20 dark:to-gray-800 rounded-lg p-8 mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                <T k="about.hello" />
               </h2>
-              <p className="text-gray-700 leading-relaxed">
-                Développeur Full-Stack avec plus de 3 ans d'expérience, je suis passionné par la création
-                de solutions technologiques innovantes. Mon expertise s'étend du développement web moderne
-                avec React et Next.js à l'intégration de solutions d'intelligence artificielle.
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                <T k="about.intro1" />
               </p>
-              <p className="text-gray-700 leading-relaxed mt-4">
-                Actuellement basé à Ottawa-Gatineau, je travaille sur des projets qui combinent
-                développement web et IA pour créer des expériences utilisateur exceptionnelles
-                et résoudre des problèmes complexes.
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
+                <T k="about.intro2" />
               </p>
             </div>
           </section>
 
           {/* Mon parcours */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Mon parcours
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <T k="about.journeyTitle" />
             </h2>
-            <div className="space-y-4 text-gray-700">
-              <p>
-                Mon parcours dans le développement a commencé il y a plusieurs années avec une
-                passion pour résoudre des problèmes et créer des choses utiles. Depuis, j'ai eu
-                l'opportunité de travailler sur divers projets, des applications web aux systèmes
-                d'intelligence artificielle.
-              </p>
-              <p>
-                J'ai étudié à La Cité Collégiale où j'ai obtenu mon diplôme en programmation
-                informatique. Cette formation m'a donné des bases solides en développement logiciel
-                et m'a permis d'explorer différentes technologies.
-              </p>
-              <p>
-                Aujourd'hui, je continue d'apprendre et de me perfectionner, toujours curieux
-                des nouvelles technologies et des meilleures pratiques du secteur.
-              </p>
+            <div className="space-y-4 text-gray-700 dark:text-gray-300">
+              <p><T k="about.journey1" /></p>
+              <p><T k="about.journey2" /></p>
+              <p><T k="about.journey3" /></p>
             </div>
           </section>
 
           {/* Ce que j'aime faire */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Ce que j'aime faire
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <T k="about.whatIDoTitle" />
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Développement Web
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  <T k="about.webDev" />
                 </h3>
-                <p className="text-gray-700">
-                  Créer des applications web performantes et intuitives avec les dernières
-                  technologies comme React, Next.js et Node.js.
+                <p className="text-gray-700 dark:text-gray-300">
+                  <T k="about.webDevDesc" />
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Intelligence Artificielle
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  <T k="about.ai" />
                 </h3>
-                <p className="text-gray-700">
-                  Explorer et implémenter des solutions d'IA pour résoudre des problèmes
-                  complexes, notamment en vision par ordinateur et traitement du langage naturel.
+                <p className="text-gray-700 dark:text-gray-300">
+                  <T k="about.aiDesc" />
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Architecture Cloud
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  <T k="about.cloud" />
                 </h3>
-                <p className="text-gray-700">
-                  Concevoir et déployer des infrastructures scalables sur AWS, Azure et GCP
-                  avec une approche DevOps.
+                <p className="text-gray-700 dark:text-gray-300">
+                  <T k="about.cloudDesc" />
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Mentorat
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  <T k="about.mentoring" />
                 </h3>
-                <p className="text-gray-700">
-                  Partager mes connaissances et aider d'autres développeurs à progresser
-                  dans leur carrière.
+                <p className="text-gray-700 dark:text-gray-300">
+                  <T k="about.mentoringDesc" />
                 </p>
               </div>
             </div>
@@ -112,48 +93,48 @@ export default function AboutPage() {
 
           {/* Valeurs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Mes valeurs
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <T k="about.valuesTitle" />
             </h2>
             <div className="space-y-6">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-600 font-bold">1</span>
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                    <span className="text-primary-600 dark:text-primary-400 font-bold">1</span>
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Qualité</h3>
-                  <p className="text-gray-700 mt-1">
-                    Je m'engage à livrer du code propre, maintenable et performant.
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><T k="about.quality" /></h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    <T k="about.qualityDesc" />
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-600 font-bold">2</span>
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                    <span className="text-primary-600 dark:text-primary-400 font-bold">2</span>
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Innovation</h3>
-                  <p className="text-gray-700 mt-1">
-                    Toujours à la recherche de solutions créatives et efficaces.
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><T k="about.innovation" /></h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    <T k="about.innovationDesc" />
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-600 font-bold">3</span>
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                    <span className="text-primary-600 dark:text-primary-400 font-bold">3</span>
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Collaboration</h3>
-                  <p className="text-gray-700 mt-1">
-                    Travailler en équipe pour atteindre des objectifs communs.
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><T k="about.collaboration" /></h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    <T k="about.collaborationDesc" />
                   </p>
                 </div>
               </div>
@@ -161,22 +142,22 @@ export default function AboutPage() {
           </section>
 
           {/* Call to Action */}
-          <section className="text-center bg-primary-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Travaillons ensemble !
+          <section className="text-center bg-primary-50 dark:bg-primary-900/20 rounded-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <T k="about.ctaTitle" />
             </h2>
-            <p className="text-gray-700 mb-6">
-              Je suis toujours ouvert à discuter de nouveaux projets et opportunités.
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
+              <T k="about.ctaDesc" />
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/contact">
                 <Button size="lg">
-                  Me contacter
+                  <T k="about.ctaContact" />
                 </Button>
               </Link>
               <Link href="/projects">
                 <Button variant="outline" size="lg">
-                  Voir mes projets
+                  <T k="about.ctaProjects" />
                 </Button>
               </Link>
             </div>

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { contactMessageSchema } from '@/lib/schemas/contact.schema';
 import { sendContactNotification } from '@/lib/email/mailer';
+import { rateLimit } from '@/lib/server/rate-limit';
 import { ZodError } from 'zod';
 
 /**
@@ -11,6 +12,22 @@ import { ZodError } from 'zod';
  * Body: ContactMessageSchema (validé par Zod)
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting: 5 messages per IP per 10 minutes
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    request.headers.get('x-real-ip') ??
+    'unknown';
+  const limit = rateLimit(ip, { limit: 5, windowSec: 600 });
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: 'Trop de tentatives. Réessayez dans quelques minutes.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil((limit.resetAt - Date.now()) / 1000)) },
+      }
+    );
+  }
+
   try {
     // 1. Parser et valider le body
     const body = await request.json();

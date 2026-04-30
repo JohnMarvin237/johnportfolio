@@ -31,6 +31,12 @@ export const volunteerSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // Bilingual fields
+  titleFr: z.string().optional().nullable(),
+  titleEn: z.string().optional().nullable(),
+  descriptionFr: z.string().optional().nullable(),
+  descriptionEn: z.string().optional().nullable(),
 });
 
 export type VolunteerInput = z.infer<typeof volunteerSchema>;

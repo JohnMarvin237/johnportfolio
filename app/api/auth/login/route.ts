@@ -1,32 +1,23 @@
 // app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateUser } from '@/lib/auth/jwt';
-import { z } from 'zod';
-
-const loginSchema = z.object({
-  email: z.string().email('Email invalide'),
-  password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
-});
+import { loginSchema } from '@/lib/schemas/login.schema';
+import { SESSION_COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/auth/session';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const validation = loginSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(
-        {
-          error: 'Données invalides',
-          details: validation.error.issues,
-        },
+        { error: 'Données invalides', details: validation.error.issues },
         { status: 400 }
       );
     }
 
     const { email, password } = validation.data;
 
-    // Authenticate user
     const result = await authenticateUser(email, password);
 
     if (!result) {
@@ -36,14 +27,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      user: result.user,
-      token: result.token,
+    const response = NextResponse.json({ user: result.user });
+    response.cookies.set(SESSION_COOKIE_NAME, result.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: SESSION_MAX_AGE,
     });
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de l\'authentification' },
+      { error: "Erreur lors de l'authentification" },
       { status: 500 }
     );
   }

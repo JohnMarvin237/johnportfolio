@@ -119,4 +119,7 @@ Thumbs.db
 
 # Documentation
 CLAUDE.md
+CLAUDE1.md
 claude.*
+.claude/
+claude-agents-config/

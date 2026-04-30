@@ -46,6 +46,16 @@ export const educationSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // Bilingual fields
+  degreeFr: z.string().optional().nullable(),
+  degreeEn: z.string().optional().nullable(),
+  fieldFr: z.string().optional().nullable(),
+  fieldEn: z.string().optional().nullable(),
+  descriptionFr: z.string().optional().nullable(),
+  descriptionEn: z.string().optional().nullable(),
+  noteFr: z.string().optional().nullable(),
+  noteEn: z.string().optional().nullable(),
 });
 
 export type EducationInput = z.infer<typeof educationSchema>;

@@ -53,6 +53,14 @@ export const projectSchema = z.object({
     .max(100)
     .optional()
     .nullable(),
+
+  // Bilingual fields
+  titleFr: z.string().optional().nullable(),
+  titleEn: z.string().optional().nullable(),
+  descriptionFr: z.string().optional().nullable(),
+  descriptionEn: z.string().optional().nullable(),
+  longDescFr: z.string().optional().nullable(),
+  longDescEn: z.string().optional().nullable(),
 });
 
 export type ProjectInput = z.infer<typeof projectSchema>;

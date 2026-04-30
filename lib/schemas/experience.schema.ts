@@ -43,6 +43,14 @@ export const experienceSchema = z.object({
   order: z.number()
     .int()
     .default(0),
+
+  // Bilingual fields
+  titleFr: z.string().optional().nullable(),
+  titleEn: z.string().optional().nullable(),
+  descriptionFr: z.string().optional().nullable(),
+  descriptionEn: z.string().optional().nullable(),
+  achievementsFr: z.array(z.string()).optional(),
+  achievementsEn: z.array(z.string()).optional(),
 });
 
 export type ExperienceInput = z.infer<typeof experienceSchema>;

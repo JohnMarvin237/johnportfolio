@@ -1,33 +1,70 @@
-import { auth } from '@/lib/auth/config'
+import { NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export default auth((req) => {
-  const isAdminRoute = req.nextUrl.pathname.startsWith('/admin')
-  const isLoginPage = req.nextUrl.pathname === '/admin/login'
-  const isAuthenticated = !!req.auth
-  const isAdmin = req.auth?.user?.role === 'admin'
+// Fail closed: if JWT_SECRET is missing, no token will ever verify → all admin
+// requests redirect to login. Never falls back to a known string.
+function getSecret() {
+  const s = process.env.JWT_SECRET;
+  if (!s) return new Uint8Array(0);
+  return new TextEncoder().encode(s);
+}
 
-  // Si c'est une route admin (mais pas la page de login)
-  if (isAdminRoute && !isLoginPage) {
-    // Rediriger vers login si pas authentifié
-    if (!isAuthenticated) {
-      const newUrl = new URL('/admin/login', req.nextUrl.origin)
-      newUrl.searchParams.set('callbackUrl', req.nextUrl.pathname)
-      return Response.redirect(newUrl)
-    }
+const SESSION_COOKIE = 'auth_token';
 
-    // Rediriger vers home si authentifié mais pas admin
-    if (!isAdmin) {
-      return Response.redirect(new URL('/', req.nextUrl.origin))
-    }
+/** @param {import('next/server').NextRequest} request */
+export async function proxy(request) {
+  const { pathname } = request.nextUrl;
+
+  // Login page is public — let it through unconditionally.
+  if (pathname === '/admin/login' || pathname.startsWith('/admin/login/')) {
+    return NextResponse.next();
   }
 
-  // Si c'est la page de login et qu'on est déjà authentifié admin
-  if (isLoginPage && isAuthenticated && isAdmin) {
-    return Response.redirect(new URL('/admin/dashboard', req.nextUrl.origin))
+  const token = request.cookies.get(SESSION_COOKIE)?.value;
+
+  if (!token) {
+    return redirectToLogin(request, pathname);
   }
-})
+
+  try {
+    const { payload } = await jwtVerify(token, getSecret(), {
+      algorithms: ['HS256'],
+    });
+
+    if (payload.role !== 'admin') {
+      // Authenticated but not admin — redirect to home, not login.
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+
+    return NextResponse.next();
+  } catch {
+    // Token expired or tampered — clear the stale cookie and redirect to login.
+    const response = redirectToLogin(request, pathname);
+    response.cookies.set(SESSION_COOKIE, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 0,
+    });
+    return response;
+  }
+}
+
+/**
+ * @param {import('next/server').NextRequest} request
+ * @param {string} pathname
+ */
+function redirectToLogin(request, pathname) {
+  const loginUrl = new URL('/admin/login', request.url);
+  // Preserve the intended destination so the login page can redirect back.
+  if (pathname !== '/admin') {
+    loginUrl.searchParams.set('callbackUrl', pathname);
+  }
+  return NextResponse.redirect(loginUrl);
+}
 
 export const config = {
-  // Only run on admin routes — public routes need no auth middleware
-  matcher: ['/admin/:path*'],
-}
+  // Matches /admin, /admin/login, /admin/projects, /admin/projects/new, etc.
+  matcher: ['/admin(.*)'],
+};

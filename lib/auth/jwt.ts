@@ -2,9 +2,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db/prisma';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-CHANGE-ME';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '30d';
+import { env } from '@/lib/env';
 
 export interface JWTPayload {
   userId: string;
@@ -12,34 +10,27 @@ export interface JWTPayload {
   role: string;
 }
 
-/**
- * Generate JWT token
- */
 export function generateToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign(payload, env.JWT_SECRET, {
+    algorithm: 'HS256',
+    expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'],
+  });
 }
 
-/**
- * Verify JWT token
- */
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, env.JWT_SECRET, {
+      algorithms: ['HS256'],
+    }) as JWTPayload;
   } catch {
     return null;
   }
 }
 
-/**
- * Hash password with bcrypt
- */
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }
 
-/**
- * Compare password with hash
- */
 export async function comparePassword(
   password: string,
   hash: string
@@ -47,14 +38,12 @@ export async function comparePassword(
   return bcrypt.compare(password, hash);
 }
 
-/**
- * Authenticate user with email and password
- * Returns user and token if successful
- */
+type PublicUser = { id: string; email: string; name: string; role: string };
+
 export async function authenticateUser(
   email: string,
   password: string
-): Promise<{ user: any; token: string } | null> {
+): Promise<{ user: PublicUser; token: string } | null> {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user || !user.password) return null;
@@ -69,12 +58,7 @@ export async function authenticateUser(
   });
 
   return {
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    },
+    user: { id: user.id, email: user.email, name: user.name ?? '', role: user.role },
     token,
   };
 }

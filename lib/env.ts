@@ -5,10 +5,8 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
-  NEXTAUTH_SECRET: z.string().min(32).optional(),
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('30d'),
-  NEXTAUTH_URL: z.string().url().optional(),
   SMTP_HOST: z.string().min(1).optional(),
   SMTP_PORT: z.coerce.number().int().positive().optional(),
   SMTP_USER: z.string().optional(),

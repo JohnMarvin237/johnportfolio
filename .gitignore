@@ -123,3 +123,4 @@ CLAUDE1.md
 claude.*
 .claude/
 claude-agents-config/
+.env*.local

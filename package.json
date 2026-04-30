@@ -9,12 +9,14 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test __tests__/**/*.mjs",
     "db:seed": "npx dotenv -e .env -- npx prisma db seed",
     "db:reset": "npx dotenv -e .env -- npx prisma migrate reset",
     "db:studio": "npx dotenv -e .env -- npx prisma studio"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.0",
     "axios": "^1.13.2",
@@ -24,7 +26,6 @@
     "jose": "^6.2.3",
     "jsonwebtoken": "^9.0.3",
     "next": "^16.0.8",
-    "next-auth": "^5.0.0-beta.30",
     "nodemailer": "^7.0.11",
     "prisma": "^6.19.0",
     "react": "19.2.0",

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { messageUpdateSchema } from '@/lib/schemas/message.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@/app/generated/prisma';
 
 /**
  * PATCH /api/messages/[id]

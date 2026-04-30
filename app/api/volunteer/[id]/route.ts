@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { volunteerUpdateSchema } from '@/lib/schemas/volunteer.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
 import { ZodError } from 'zod';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@/app/generated/prisma';
 
 /**
  * GET /api/volunteer/[id]

@@ -6,7 +6,11 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: 'John Portfolio - Développeur Full-Stack',
   description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
   keywords: ['développeur', 'full-stack', 'react', 'next.js', 'portfolio', 'john'],
@@ -16,6 +20,7 @@ export const metadata: Metadata = {
     description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
     type: 'website',
     locale: 'fr_CA',
+    url: BASE_URL,
   },
 };
 

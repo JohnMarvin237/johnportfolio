@@ -10,6 +10,7 @@ import BilingualField from './BilingualField';
 import ArrayField from './ArrayField';
 import DateField from './DateField';
 import SwitchField from './SwitchField';
+import ImageUploadField from './ImageUploadField';
 
 function toDateString(val: unknown): string {
   if (!val) return '';
@@ -99,12 +100,26 @@ export default function ProjectForm({ defaultValues, onSubmit, loading = false, 
         )}
       />
 
-      <FormField
-        label="URL de l'image"
-        type="url"
-        error={errors.imageUrl?.message}
-        {...register('imageUrl')}
-      />
+      {/* Hidden field so react-hook-form tracks imagePublicId in the form state */}
+      <input type="hidden" {...register('imagePublicId')} />
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Image du projet
+        </label>
+        <ImageUploadField
+          currentUrl={watch('imageUrl')}
+          onUpload={(url, publicId) => {
+            setValue('imageUrl', url, { shouldDirty: true });
+            setValue('imagePublicId', publicId, { shouldDirty: true });
+          }}
+          onClear={() => {
+            setValue('imageUrl', '', { shouldDirty: true });
+            setValue('imagePublicId', '', { shouldDirty: true });
+          }}
+          error={errors.imageUrl?.message}
+        />
+      </div>
 
       <FormField
         label="URL de la démo"

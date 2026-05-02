@@ -3,6 +3,7 @@ import ExperienceCard from '@/components/sections/ExperienceCard';
 import EducationCard from '@/components/sections/EducationCard';
 import CertificationCard from '@/components/sections/CertificationCard';
 import VolunteerCard from '@/components/sections/VolunteerCard';
+import AnimateIn from '@/components/ui/AnimateIn';
 import T from '@/components/ui/T';
 import { prisma } from '@/lib/db/prisma';
 import { cookies } from 'next/headers';
@@ -65,9 +66,14 @@ export default async function ExperiencePage() {
           {resolvedExp.length > 0 ? (
             <div className="max-w-3xl">
               {resolvedExp.map((experience, index) => (
-                <div key={experience.id} className={index === resolvedExp.length - 1 ? '' : 'mb-8'}>
+                <AnimateIn
+                  key={experience.id}
+                  variant="slide-left"
+                  delay={Math.min(index * 0.05, 0.3)}
+                  className={index === resolvedExp.length - 1 ? '' : 'mb-8'}
+                >
                   <ExperienceCard experience={experience} />
-                </div>
+                </AnimateIn>
               ))}
             </div>
           ) : (
@@ -81,7 +87,11 @@ export default async function ExperiencePage() {
           </h2>
           {resolvedEdu.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {resolvedEdu.map((edu) => <EducationCard key={edu.id} education={edu} />)}
+              {resolvedEdu.map((edu) => (
+                <AnimateIn key={edu.id} variant="fade-up">
+                  <EducationCard education={edu} />
+                </AnimateIn>
+              ))}
             </div>
           ) : (
             <p className="text-gray-500 dark:text-gray-400"><T k="experience.noEducation" /></p>
@@ -94,7 +104,11 @@ export default async function ExperiencePage() {
               <T k="experience.certTitle" />
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {resolvedCert.map((cert) => <CertificationCard key={cert.id} certification={cert} />)}
+              {resolvedCert.map((cert) => (
+                <AnimateIn key={cert.id} variant="fade-up">
+                  <CertificationCard certification={cert} />
+                </AnimateIn>
+              ))}
             </div>
           </section>
         )}
@@ -105,7 +119,11 @@ export default async function ExperiencePage() {
               <T k="experience.volunteerTitle" />
             </h2>
             <div className="space-y-6 max-w-3xl">
-              {resolvedVol.map((vol) => <VolunteerCard key={vol.id} volunteer={vol} />)}
+              {resolvedVol.map((vol) => (
+                <AnimateIn key={vol.id} variant="fade-up">
+                  <VolunteerCard volunteer={vol} />
+                </AnimateIn>
+              ))}
             </div>
           </section>
         )}

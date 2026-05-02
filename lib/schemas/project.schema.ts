@@ -24,6 +24,8 @@ export const projectSchema = z.object({
     .optional()
     .nullable(),
 
+  imagePublicId: z.string().optional().nullable(),
+
   demoUrl: z.string()
     .url('URL de démo invalide')
     .optional()

@@ -45,6 +45,7 @@ model Project {
   longDescEn    String?   @db.Text @map("longDesc_en")
   technologies  String[]
   imageUrl      String?
+  imagePublicId String?   @map("image_public_id")
   demoUrl       String?
   githubUrl     String?
   featured      Boolean   @default(false)

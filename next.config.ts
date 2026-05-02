@@ -18,13 +18,16 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://api.cloudinary.com",
       "frame-ancestors 'none'",
     ].join('; '),
   },
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [{ protocol: 'https', hostname: 'res.cloudinary.com' }],
+  },
   async headers() {
     return [
       {

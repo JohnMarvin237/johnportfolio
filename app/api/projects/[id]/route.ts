@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { projectUpdateSchema } from '@/lib/schemas/project.schema';
 import { requireAdmin } from '@/lib/auth/middleware';
+import { cloudinary } from '@/lib/server/cloudinary';
 import { ZodError } from 'zod';
 import { Prisma } from '@/app/generated/prisma';
 
@@ -112,10 +113,23 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // 2. Supprimer de la base de données
+    // 2. Fetch imagePublicId before deletion to clean up Cloudinary asset
+    const project = await prisma.project.findUnique({
+      where: { id },
+      select: { imagePublicId: true },
+    });
+
+    // 3. Supprimer de la base de données (priorité sur le nettoyage CDN)
     await prisma.project.delete({
       where: { id },
     });
+
+    // 4. Nettoyer l'asset Cloudinary — best-effort, ne bloque pas la réponse
+    if (project?.imagePublicId) {
+      cloudinary.uploader.destroy(project.imagePublicId).catch((err) => {
+        console.error('Cloudinary cleanup failed (nettoyage manuel requis):', project.imagePublicId, err);
+      });
+    }
 
     return NextResponse.json(
       { message: 'Projet supprimé avec succès' },

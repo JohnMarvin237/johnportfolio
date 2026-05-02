@@ -32,11 +32,8 @@ export default function ImageUploadField({
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await apiClient.post<{ url: string; publicId: string }>(
-        '/upload',
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+      // Do NOT set Content-Type manually — axios auto-generates multipart/form-data with the boundary
+      const response = await apiClient.post<{ url: string; publicId: string }>('/upload', formData);
       onUpload(response.data.url, response.data.publicId);
     } catch (err: unknown) {
       const message =

@@ -6,8 +6,10 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app';
+const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+const BASE_URL = rawUrl.startsWith('http')
+  ? rawUrl
+  : 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

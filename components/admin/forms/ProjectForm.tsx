@@ -100,7 +100,8 @@ export default function ProjectForm({ defaultValues, onSubmit, loading = false, 
         )}
       />
 
-      {/* Hidden field so react-hook-form tracks imagePublicId in the form state */}
+      {/* Hidden fields — ensures imageUrl and imagePublicId are registered and included in handleSubmit data */}
+      <input type="hidden" {...register('imageUrl')} />
       <input type="hidden" {...register('imagePublicId')} />
 
       <div className="mb-4">
@@ -110,12 +111,13 @@ export default function ProjectForm({ defaultValues, onSubmit, loading = false, 
         <ImageUploadField
           currentUrl={watch('imageUrl')}
           onUpload={(url, publicId) => {
-            setValue('imageUrl', url, { shouldDirty: true });
+            setValue('imageUrl', url, { shouldDirty: true, shouldValidate: true });
             setValue('imagePublicId', publicId, { shouldDirty: true });
           }}
           onClear={() => {
-            setValue('imageUrl', '', { shouldDirty: true });
-            setValue('imagePublicId', '', { shouldDirty: true });
+            // Use null (not '') — z.string().url() fails on empty string
+            setValue('imageUrl', null, { shouldDirty: true, shouldValidate: true });
+            setValue('imagePublicId', null, { shouldDirty: true });
           }}
           error={errors.imageUrl?.message}
         />

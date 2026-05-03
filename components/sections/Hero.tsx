@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Button from '../ui/Button';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
+import SplitText from '../ui/SplitText';
 
 interface HeroProps {
   name?: string;
@@ -45,12 +46,10 @@ export default function Hero({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
           <div className="text-center lg:text-left">
-            <motion.div {...fadeUp(0)}>
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-                {t('hero.greeting')}{' '}
-                <span className="text-primary-600">{name}</span>
-              </h1>
-            </motion.div>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
+              <SplitText text={t('hero.greeting') + ' '} delay={0} />
+              <SplitText text={name} className="text-primary-600" delay={0.3} />
+            </h1>
 
             <motion.div {...fadeUp(0.1)}>
               <p className="mt-4 text-2xl text-gray-600 dark:text-gray-400">

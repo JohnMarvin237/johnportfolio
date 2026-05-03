@@ -1,11 +1,12 @@
 // components/sections/ProjectCard.tsx
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
+import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 export interface Project {
   id: string;
@@ -27,6 +28,24 @@ export interface Project {
 
 export default function ProjectCard({ project }: { project: Project }) {
   const { t } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rawRotateX = useMotionValue(0);
+  const rawRotateY = useMotionValue(0);
+  const rotateX = useSpring(rawRotateX, { stiffness: 200, damping: 25 });
+  const rotateY = useSpring(rawRotateY, { stiffness: 200, damping: 25 });
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (shouldReduceMotion || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    rawRotateX.set(-(((e.clientY - rect.top) / rect.height) - 0.5) * 14);
+    rawRotateY.set((((e.clientX - rect.left) / rect.width) - 0.5) * 14);
+  }
+
+  function handleMouseLeave() {
+    rawRotateX.set(0);
+    rawRotateY.set(0);
+  }
 
   if (!project) return null;
 
@@ -42,6 +61,17 @@ export default function ProjectCard({ project }: { project: Project }) {
   } = project;
 
   return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: shouldReduceMotion ? 0 : rotateX,
+        rotateY: shouldReduceMotion ? 0 : rotateY,
+        transformStyle: 'preserve-3d',
+      }}
+      className="h-full"
+    >
     <Card hover className="h-full flex flex-col">
       {/* Image du projet */}
       {imageUrl && (
@@ -106,5 +136,6 @@ export default function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
     </Card>
+    </motion.div>
   );
 }

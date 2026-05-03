@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ProjectCard from '@/components/sections/ProjectCard';
+import AnimateIn from '@/components/ui/AnimateIn';
 import T from '@/components/ui/T';
 import { prisma } from '@/lib/db/prisma';
 import { cookies } from 'next/headers';
@@ -51,8 +52,10 @@ export default async function ProjectsPage() {
                   <T k="projects.featured" />
                 </h2>
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {resolvedProjects.filter((p) => p.featured).map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                  {resolvedProjects.filter((p) => p.featured).map((project, index) => (
+                    <AnimateIn key={project.id} variant="fade-up" delay={Math.min(index * 0.1, 0.4)}>
+                      <ProjectCard project={project} />
+                    </AnimateIn>
                   ))}
                 </div>
               </div>
@@ -63,8 +66,10 @@ export default async function ProjectsPage() {
                   <T k="projects.others" />
                 </h2>
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {resolvedProjects.filter((p) => !p.featured).map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                  {resolvedProjects.filter((p) => !p.featured).map((project, index) => (
+                    <AnimateIn key={project.id} variant="fade-up" delay={Math.min(index * 0.1, 0.4)}>
+                      <ProjectCard project={project} />
+                    </AnimateIn>
                   ))}
                 </div>
               </div>

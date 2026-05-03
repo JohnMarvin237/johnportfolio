@@ -10,6 +10,7 @@ import BilingualField from './BilingualField';
 import ArrayField from './ArrayField';
 import DateField from './DateField';
 import SwitchField from './SwitchField';
+import ImageUploadField from './ImageUploadField';
 
 function toDateString(val: unknown): string {
   if (!val) return '';
@@ -99,12 +100,28 @@ export default function ProjectForm({ defaultValues, onSubmit, loading = false, 
         )}
       />
 
-      <FormField
-        label="URL de l'image"
-        type="url"
-        error={errors.imageUrl?.message}
-        {...register('imageUrl')}
-      />
+      {/* Hidden fields — ensures imageUrl and imagePublicId are registered and included in handleSubmit data */}
+      <input type="hidden" {...register('imageUrl')} />
+      <input type="hidden" {...register('imagePublicId')} />
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Image du projet
+        </label>
+        <ImageUploadField
+          currentUrl={watch('imageUrl')}
+          onUpload={(url, publicId) => {
+            setValue('imageUrl', url, { shouldDirty: true, shouldValidate: true });
+            setValue('imagePublicId', publicId, { shouldDirty: true });
+          }}
+          onClear={() => {
+            // Use null (not '') — z.string().url() fails on empty string
+            setValue('imageUrl', null, { shouldDirty: true, shouldValidate: true });
+            setValue('imagePublicId', null, { shouldDirty: true });
+          }}
+          error={errors.imageUrl?.message}
+        />
+      </div>
 
       <FormField
         label="URL de la démo"

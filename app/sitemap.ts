@@ -1,7 +1,9 @@
 import { MetadataRoute } from 'next'
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app'
+const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
+const BASE_URL = rawUrl.startsWith('http')
+  ? rawUrl
+  : 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app'
 
 const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '',           priority: 1.0, changeFrequency: 'monthly' },

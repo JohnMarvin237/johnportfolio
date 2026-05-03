@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/lib/theme/ThemeContext';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import ScrollProgress from '@/components/ui/ScrollProgress';
+import PageTransition from '@/components/ui/PageTransition';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -46,9 +48,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
       </head>
       <body className={`${inter.className} antialiased`}>
+        <ScrollProgress />
         <ThemeProvider>
           <LanguageProvider>
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </LanguageProvider>
         </ThemeProvider>
       </body>

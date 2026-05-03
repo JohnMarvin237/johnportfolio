@@ -36,9 +36,12 @@ export default function ImageUploadField({
       const response = await apiClient.post<{ url: string; publicId: string }>('/upload', formData);
       onUpload(response.data.url, response.data.publicId);
     } catch (err: unknown) {
+      // Extract server error message if available (axios wraps it in err.response.data.error)
+      const axiosErr = err as { response?: { data?: { error?: string }; status?: number } };
       const message =
-        err instanceof Error ? err.message : "Erreur lors de l'upload. Veuillez réessayer.";
-      setUploadError(message);
+        axiosErr?.response?.data?.error
+          ?? (err instanceof Error ? err.message : "Erreur lors de l'upload. Veuillez réessayer.");
+      setUploadError(`Erreur ${axiosErr?.response?.status ?? ''}: ${message}`);
     } finally {
       setUploading(false);
     }

@@ -108,7 +108,18 @@ export default function AdminShell({ children, user }: AdminShellProps) {
             </svg>
           </button>
 
-          <div className="hidden lg:block" />
+          {/* Back to site */}
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Voir le site
+          </Link>
 
           {/* User + logout */}
           <div className="flex items-center gap-4">

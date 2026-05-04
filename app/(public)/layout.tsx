@@ -1,9 +1,18 @@
 import Navbar from '@/components/ui/Navbar';
 import T from '@/components/ui/T';
+import AdminBar from '@/components/ui/AdminBar';
 import { getSettings } from '@/lib/db/settings';
+import { cookies } from 'next/headers';
+import { SESSION_COOKIE_NAME } from '@/lib/auth/session';
+import { verifyToken } from '@/lib/auth/jwt';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings();
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  const payload = token ? verifyToken(token) : null;
+  const adminName = payload?.role === 'admin' ? (payload.name || payload.email) : null;
 
   return (
     <>
@@ -39,6 +48,7 @@ export default async function PublicLayout({ children }: { children: React.React
           </div>
         </div>
       </footer>
+      {adminName && <AdminBar name={adminName} />}
     </>
   );
 }

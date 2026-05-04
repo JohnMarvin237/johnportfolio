@@ -7,6 +7,7 @@ import { env } from '@/lib/env';
 export interface JWTPayload {
   userId: string;
   email: string;
+  name: string;
   role: string;
 }
 
@@ -54,6 +55,7 @@ export async function authenticateUser(
   const token = generateToken({
     userId: user.id,
     email: user.email,
+    name: user.name ?? '',
     role: user.role,
   });
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import ContactForm from '@/components/sections/ContactForm';
 import T from '@/components/ui/T';
 import { getSettings } from '@/lib/db/settings';
+import TrackPageView from '@/components/analytics/TrackPageView';
 
 export const metadata: Metadata = {
   title: 'Contact - John Portfolio',
@@ -15,6 +16,7 @@ export default async function ContactPage() {
 
   return (
     <div className="py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <TrackPageView path="/contact" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">

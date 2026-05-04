@@ -5,6 +5,7 @@ import T from '@/components/ui/T';
 import { prisma } from '@/lib/db/prisma';
 import { cookies } from 'next/headers';
 import { resolveProject } from '@/lib/i18n/resolveLocale';
+import TrackPageView from '@/components/analytics/TrackPageView';
 
 async function getProjects() {
   try {
@@ -34,6 +35,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <TrackPageView path="/projects" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">

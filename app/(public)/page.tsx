@@ -8,6 +8,7 @@ import { prisma } from '@/lib/db/prisma';
 import { cookies } from 'next/headers';
 import { resolveProject, resolveExperience } from '@/lib/i18n/resolveLocale';
 import { getSettings } from '@/lib/db/settings';
+import TrackPageView from '@/components/analytics/TrackPageView';
 
 async function getFeaturedProjects() {
   try {
@@ -48,6 +49,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <TrackPageView path="/" />
       <Hero
         name="John"
         imageUrl="/images/profile/john.jpg"

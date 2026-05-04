@@ -18,7 +18,7 @@ export async function getDailyCounts(
       date_trunc('day', "visited_at" AT TIME ZONE 'UTC') AS bucket,
       COUNT(*)::bigint AS count
     FROM page_views
-    WHERE "visited_at" >= NOW() - (${days} || ' days')::INTERVAL
+    WHERE "visited_at" >= NOW() - (${days} * INTERVAL '1 day')
     GROUP BY 1
     ORDER BY 1 ASC
   `);
@@ -33,7 +33,7 @@ export async function getWeeklyCounts(
       date_trunc('week', "visited_at" AT TIME ZONE 'UTC') AS bucket,
       COUNT(*)::bigint AS count
     FROM page_views
-    WHERE "visited_at" >= NOW() - (${weeks} || ' weeks')::INTERVAL
+    WHERE "visited_at" >= NOW() - (${weeks} * INTERVAL '1 week')
     GROUP BY 1
     ORDER BY 1 ASC
   `);
@@ -48,7 +48,7 @@ export async function getMonthlyCounts(
       date_trunc('month', "visited_at" AT TIME ZONE 'UTC') AS bucket,
       COUNT(*)::bigint AS count
     FROM page_views
-    WHERE "visited_at" >= NOW() - (${months} || ' months')::INTERVAL
+    WHERE "visited_at" >= NOW() - (${months} * INTERVAL '1 month')
     GROUP BY 1
     ORDER BY 1 ASC
   `);

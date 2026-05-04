@@ -38,6 +38,13 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          JWT_SECRET: ci-build-only-secret-key-32-chars-min
+          JWT_EXPIRES_IN: 30d
+
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest

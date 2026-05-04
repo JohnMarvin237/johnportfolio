@@ -20,6 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/certifications', label: 'Certifications' },
   { href: '/admin/volunteer', label: 'Bénévolat' },
   { href: '/admin/messages', label: 'Messages' },
+  { href: '/admin/analytics', label: 'Analytics' },
 ];
 
 interface AdminShellProps {

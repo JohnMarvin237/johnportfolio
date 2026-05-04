@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import T from '@/components/ui/T';
+import TrackPageView from '@/components/analytics/TrackPageView';
 
 export const metadata: Metadata = {
   title: 'À propos - John Portfolio',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="py-12 bg-white dark:bg-gray-900 min-h-screen">
+      <TrackPageView path="/about" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">

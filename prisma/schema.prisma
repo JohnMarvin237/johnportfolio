@@ -184,3 +184,21 @@ model SiteSettings {
   @@index([key])
   @@map("site_settings")
 }
+
+// ============================================
+// ANALYTICS MODELS
+// ============================================
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  visitedAt DateTime @default(now()) @map("visited_at")
+  userAgent String?  @map("userAgent")
+  country   String?
+  referer   String?
+  ip        String?  // existing column from DB-side migration; retained to avoid destructive DROP
+
+  @@index([visitedAt])
+  @@index([path, visitedAt])
+  @@map("page_views")
+}

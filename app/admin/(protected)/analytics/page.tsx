@@ -1,9 +1,6 @@
-import dynamic from 'next/dynamic';
 import { getDailyCounts, getWeeklyCounts, getMonthlyCounts } from '@/lib/db/analytics';
 import type { AnalyticsResponse } from '@/lib/schemas/analytics.schema';
-
-// Defer Recharts bundle — it's large and uses browser APIs; not needed during SSR
-const AnalyticsCharts = dynamic(() => import('./AnalyticsCharts'), { ssr: false });
+import AnalyticsCharts from './AnalyticsCharts';
 
 export default async function AnalyticsPage() {
   const [daily, weekly, monthly] = await Promise.all([

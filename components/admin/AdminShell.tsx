@@ -39,6 +39,18 @@ export default function AdminShell({ children, user }: AdminShellProps) {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
+      {/* Mobile block — dashboard is desktop-only */}
+      <div className="lg:hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-gray-900 px-6 text-center">
+        <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          Dashboard non disponible sur mobile
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+          Veuillez utiliser un ordinateur pour accéder au dashboard d&apos;administration.
+        </p>
+      </div>
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div

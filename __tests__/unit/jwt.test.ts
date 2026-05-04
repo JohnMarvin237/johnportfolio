@@ -14,6 +14,7 @@ import {
 const samplePayload: JWTPayload = {
   userId: 'user-abc-123',
   email: 'john@example.com',
+  name: 'John',
   role: 'admin',
 }
 

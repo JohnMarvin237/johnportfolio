@@ -9,7 +9,7 @@ import { requireAdmin } from '@/lib/auth/middleware'
 import { GET } from '@/app/api/messages/route'
 
 const mockRequireAdmin = vi.mocked(requireAdmin)
-const adminPayload = { userId: 'user-1', email: 'admin@example.com', role: 'admin' }
+const adminPayload = { userId: 'user-1', email: 'admin@example.com', name: 'Admin', role: 'admin' }
 
 function buildRequest(url = 'http://localhost/api/messages'): NextRequest {
   return new NextRequest(url, { method: 'GET' })

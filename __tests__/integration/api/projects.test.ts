@@ -10,7 +10,7 @@ import { GET, POST } from '@/app/api/projects/route'
 
 const mockRequireAdmin = vi.mocked(requireAdmin)
 
-const adminPayload = { userId: 'user-1', email: 'admin@example.com', role: 'admin' }
+const adminPayload = { userId: 'user-1', email: 'admin@example.com', name: 'Admin', role: 'admin' }
 
 const validProjectBody = {
   title: 'Mon Portfolio',

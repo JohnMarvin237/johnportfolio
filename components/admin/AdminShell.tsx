@@ -39,6 +39,18 @@ export default function AdminShell({ children, user }: AdminShellProps) {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
+      {/* Mobile block — dashboard is desktop-only */}
+      <div className="lg:hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-gray-900 px-6 text-center">
+        <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          Dashboard non disponible sur mobile
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+          Veuillez utiliser un ordinateur pour accéder au dashboard d&apos;administration.
+        </p>
+      </div>
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div
@@ -89,6 +101,22 @@ export default function AdminShell({ children, user }: AdminShellProps) {
               ))}
             </ul>
           </nav>
+
+          {/* Back to site — sidebar bottom */}
+          <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-4">
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Voir le site
+            </Link>
+          </div>
         </div>
       </aside>
 
@@ -108,7 +136,18 @@ export default function AdminShell({ children, user }: AdminShellProps) {
             </svg>
           </button>
 
-          <div className="hidden lg:block" />
+          {/* Back to site — topbar (desktop) */}
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Voir le site
+          </Link>
 
           {/* User + logout */}
           <div className="flex items-center gap-4">

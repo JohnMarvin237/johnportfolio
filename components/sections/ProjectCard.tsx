@@ -3,6 +3,7 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
@@ -28,6 +29,7 @@ export interface Project {
 
 export default function ProjectCard({ project }: { project: Project }) {
   const { t } = useTranslation();
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
   const rawRotateX = useMotionValue(0);
@@ -72,7 +74,11 @@ export default function ProjectCard({ project }: { project: Project }) {
       }}
       className="h-full"
     >
-    <Card hover className="h-full flex flex-col">
+    <Card
+      hover
+      className="h-full flex flex-col"
+      onClick={() => router.push(`/projects/${id}`)}
+    >
       {/* Image du projet */}
       {imageUrl && (
         <div className="relative -m-6 mb-4 h-48 overflow-hidden rounded-t-lg">
@@ -111,8 +117,8 @@ export default function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
 
-      {/* Actions */}
-      <div className="flex gap-3 mt-4">
+      {/* Actions — stopPropagation so clicks don't also trigger the card navigation */}
+      <div className="flex gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
         {demoUrl && (
           <a href={demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
@@ -128,11 +134,11 @@ export default function ProjectCard({ project }: { project: Project }) {
           </a>
         )}
         {!demoUrl && !githubUrl && (
-          <a href={`/projects/${id}`} className="flex-1">
-            <Button variant="primary" size="sm" className="w-full">
+          <span className="flex-1" onClick={(e) => e.stopPropagation()}>
+            <Button variant="primary" size="sm" className="w-full" onClick={() => router.push(`/projects/${id}`)}>
               {t('projects.learnMore')}
             </Button>
-          </a>
+          </span>
         )}
       </div>
     </Card>

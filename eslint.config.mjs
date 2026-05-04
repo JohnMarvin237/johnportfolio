@@ -1,6 +1,6 @@
 import nextConfig from 'eslint-config-next';
 
-export default [
+const config = [
   // Ignore Claude Code internal worktrees and other non-project dirs
   {
     ignores: ['.claude/', 'claude-agents-config/', 'node_modules/', '.next/'],
@@ -16,3 +16,5 @@ export default [
     },
   },
 ];
+
+export default config;

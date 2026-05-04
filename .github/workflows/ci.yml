@@ -8,11 +8,29 @@ on:
 
 env:
   NODE_VERSION: '20.x'
+  DATABASE_URL: postgresql://testuser@localhost:5432/testdb
+  JWT_SECRET: ci-build-only-secret-key-32-chars-min
+  JWT_EXPIRES_IN: 30d
 
 jobs:
   test:
     name: Lint · Typecheck · Test
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4.2.2
@@ -29,6 +47,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      - name: Push schema to test DB
+        run: npx prisma db push --skip-generate --accept-data-loss
+
       - name: Lint
         run: npm run lint
 
@@ -37,6 +58,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Build
+        run: npm run build
 
   deploy:
     name: Deploy to Vercel

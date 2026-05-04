@@ -76,7 +76,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     >
     <Card
       hover
-      className="h-full flex flex-col cursor-pointer"
+      className="h-full flex flex-col"
       onClick={() => router.push(`/projects/${id}`)}
     >
       {/* Image du projet */}
@@ -132,6 +132,13 @@ export default function ProjectCard({ project }: { project: Project }) {
               {t('projects.sourceCode')}
             </Button>
           </a>
+        )}
+        {!demoUrl && !githubUrl && (
+          <span className="flex-1" onClick={(e) => e.stopPropagation()}>
+            <Button variant="primary" size="sm" className="w-full" onClick={() => router.push(`/projects/${id}`)}>
+              {t('projects.learnMore')}
+            </Button>
+          </span>
         )}
       </div>
     </Card>

@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   keywords: ['développeur', 'full-stack', 'react', 'next.js', 'portfolio', 'john'],
   authors: [{ name: 'John' }],
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48 64x64' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     title: 'John Portfolio - Développeur Full-Stack',
     description: DESCRIPTION,

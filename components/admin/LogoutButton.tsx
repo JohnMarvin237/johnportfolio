@@ -9,7 +9,7 @@ export default function LogoutButton() {
     await axios.post('/api/auth/logout', null, { withCredentials: true }).catch(() => {
       // Even if the request fails, proceed to login — the user wants out.
     });
-    window.location.href = '/admin/login';
+    window.location.href = '/';
   }
 
   return (

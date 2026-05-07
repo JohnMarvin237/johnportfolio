@@ -10,45 +10,76 @@ function getSecret() {
 }
 
 const SESSION_COOKIE = 'auth_token';
+const PREVIEW_COOKIE = 'admin_preview';
 
 /** @param {import('next/server').NextRequest} request */
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
-  // Login page is public — let it through unconditionally.
-  if (pathname === '/admin/login' || pathname.startsWith('/admin/login/')) {
-    return NextResponse.next();
-  }
-
-  const token = request.cookies.get(SESSION_COOKIE)?.value;
-
-  if (!token) {
-    return redirectToLogin(request, pathname);
-  }
-
-  try {
-    const { payload } = await jwtVerify(token, getSecret(), {
-      algorithms: ['HS256'],
-    });
-
-    if (payload.role !== 'admin') {
-      // Authenticated but not admin — redirect to home, not login.
-      return NextResponse.redirect(new URL('/', request.url));
+  // ── Admin routes ────────────────────────────────────────────────────────
+  if (pathname.startsWith('/admin')) {
+    // Login page is public — let it through unconditionally.
+    if (pathname === '/admin/login' || pathname.startsWith('/admin/login/')) {
+      return NextResponse.next();
     }
 
-    return NextResponse.next();
-  } catch {
-    // Token expired or tampered — clear the stale cookie and redirect to login.
-    const response = redirectToLogin(request, pathname);
-    response.cookies.set(SESSION_COOKIE, '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 0,
-    });
+    const token = request.cookies.get(SESSION_COOKIE)?.value;
+
+    if (!token) {
+      return redirectToLogin(request, pathname);
+    }
+
+    try {
+      const { payload } = await jwtVerify(token, getSecret(), {
+        algorithms: ['HS256'],
+      });
+
+      if (payload.role !== 'admin') {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+
+      return NextResponse.next();
+    } catch {
+      // Token expired or tampered — clear stale cookie and redirect to login.
+      const response = redirectToLogin(request, pathname);
+      response.cookies.set(SESSION_COOKIE, '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 0,
+      });
+      return response;
+    }
+  }
+
+  // ── Public routes ────────────────────────────────────────────────────────
+  // If the admin came via "Voir le site" the admin_preview cookie is set
+  // → keep both cookies (AdminBar stays visible).
+  // A fresh visit (bookmark, direct URL) has no preview flag
+  // → strip the auth_token so no admin state leaks onto the public site.
+  const token = request.cookies.get(SESSION_COOKIE);
+  const preview = request.cookies.get(PREVIEW_COOKIE);
+
+  if (token && !preview) {
+    const requestHeaders = new Headers(request.headers);
+    const cookieHeader = requestHeaders.get('cookie') ?? '';
+    const stripped = cookieHeader
+      .split(';')
+      .map(c => c.trim())
+      .filter(c => !c.startsWith(`${SESSION_COOKIE}=`))
+      .join('; ');
+    if (stripped) {
+      requestHeaders.set('cookie', stripped);
+    } else {
+      requestHeaders.delete('cookie');
+    }
+    const response = NextResponse.next({ request: { headers: requestHeaders } });
+    response.cookies.delete(SESSION_COOKIE);
     return response;
   }
+
+  return NextResponse.next();
 }
 
 /**
@@ -57,7 +88,6 @@ export async function proxy(request) {
  */
 function redirectToLogin(request, pathname) {
   const loginUrl = new URL('/admin/login', request.url);
-  // Preserve the intended destination so the login page can redirect back.
   if (pathname !== '/admin') {
     loginUrl.searchParams.set('callbackUrl', pathname);
   }
@@ -65,6 +95,8 @@ function redirectToLogin(request, pathname) {
 }
 
 export const config = {
-  // Matches /admin, /admin/login, /admin/projects, /admin/projects/new, etc.
-  matcher: ['/admin(.*)'],
+  matcher: [
+    '/admin(.*)',
+    '/((?!api|_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt).*)',
+  ],
 };

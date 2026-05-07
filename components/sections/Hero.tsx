@@ -6,6 +6,7 @@ import Button from '../ui/Button';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
 import SplitText from '../ui/SplitText';
+import CvDownloadButton from '../ui/CvDownloadButton';
 
 interface HeroProps {
   name?: string;
@@ -64,13 +65,14 @@ export default function Hero({
             </motion.div>
 
             <motion.div {...fadeUp(0.3)}>
-              <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
+              <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start flex-wrap gap-y-3">
                 <Link href="/projects">
                   <Button size="lg">{t('hero.viewProjects')}</Button>
                 </Link>
                 <Link href="/contact">
                   <Button variant="outline" size="lg">{t('hero.contactMe')}</Button>
                 </Link>
+                <CvDownloadButton />
               </div>
             </motion.div>
 

@@ -9,22 +9,29 @@ import PageTransition from '@/components/ui/PageTransition';
 const inter = Inter({ subsets: ['latin'] });
 
 const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
-const BASE_URL = rawUrl.startsWith('http')
-  ? rawUrl
-  : 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app';
+const BASE_URL = rawUrl.startsWith('http') ? rawUrl : 'http://localhost:3000';
+
+const DESCRIPTION = 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: 'John Portfolio - Développeur Full-Stack',
-  description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
+  description: DESCRIPTION,
   keywords: ['développeur', 'full-stack', 'react', 'next.js', 'portfolio', 'john'],
   authors: [{ name: 'John' }],
   openGraph: {
     title: 'John Portfolio - Développeur Full-Stack',
-    description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
+    description: DESCRIPTION,
     type: 'website',
     locale: 'fr_CA',
     url: BASE_URL,
+    images: [{ url: '/opengraph-image.png', width: 752, height: 1408, alt: 'John Portfolio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'John Portfolio - Développeur Full-Stack',
+    description: DESCRIPTION,
+    images: ['/opengraph-image.png'],
   },
 };
 

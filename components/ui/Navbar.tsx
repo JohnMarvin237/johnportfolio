@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import LanguageToggle from './LanguageToggle';
@@ -33,8 +34,19 @@ export default function Navbar({ logo = 'John Portfolio' }: NavbarProps) {
         <div className="flex h-16 justify-between">
           <div className="flex">
             <div className="flex flex-shrink-0 items-center">
-              <Link href="/" className="text-xl font-bold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
-                {logo}
+              <Link href="/" className="flex items-center gap-2.5 hover:opacity-85 transition-opacity">
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover"
+                  style={{ objectPosition: 'center 30%' }}
+                  priority
+                />
+                <span className="text-xl font-bold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
+                  {logo}
+                </span>
               </Link>
             </div>
 

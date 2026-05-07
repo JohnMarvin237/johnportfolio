@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/db/prisma';
 import { resolveProject } from '@/lib/i18n/resolveLocale';
 import TrackPageView from '@/components/analytics/TrackPageView';
 import T from '@/components/ui/T';
+import BackButton from '@/components/ui/BackButton';
 import type { Project } from '@/components/sections/ProjectCard';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }
 
 async function getProject(id: string) {
@@ -39,8 +40,9 @@ function formatDate(date: Date | string | null | undefined, locale: string): str
   });
 }
 
-export default async function ProjectDetailPage({ params }: PageProps) {
+export default async function ProjectDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { from } = await searchParams;
   const raw = await getProject(id);
   if (!raw) notFound();
 
@@ -68,15 +70,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 
         {/* Back */}
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-8"
-        >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <T k="projects.backToProjects" />
-        </Link>
+        <BackButton from={from ?? null} />
 
         {/* Image */}
         {imageUrl && (

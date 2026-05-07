@@ -3,7 +3,7 @@
 
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
@@ -30,6 +30,7 @@ export interface Project {
 export default function ProjectCard({ project }: { project: Project }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
   const rawRotateX = useMotionValue(0);
@@ -77,7 +78,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     <Card
       hover
       className="h-full flex flex-col"
-      onClick={() => router.push(`/projects/${id}`)}
+      onClick={() => router.push(`/projects/${id}?from=${pathname}`)}
     >
       {/* Image du projet */}
       {imageUrl && (
@@ -118,7 +119,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       </div>
 
       {/* Actions — stopPropagation so clicks don't also trigger the card navigation */}
-      <div className="flex gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
+      <div className="flex flex-wrap gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
         {demoUrl && (
           <a href={demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
             <Button variant="primary" size="sm" className="w-full">
@@ -133,13 +134,11 @@ export default function ProjectCard({ project }: { project: Project }) {
             </Button>
           </a>
         )}
-        {!demoUrl && !githubUrl && (
-          <span className="flex-1" onClick={(e) => e.stopPropagation()}>
-            <Button variant="primary" size="sm" className="w-full" onClick={() => router.push(`/projects/${id}`)}>
-              {t('projects.learnMore')}
-            </Button>
-          </span>
-        )}
+        <span className="flex-1">
+          <Button variant={demoUrl || githubUrl ? 'outline' : 'primary'} size="sm" className="w-full" onClick={() => router.push(`/projects/${id}?from=${pathname}`)}>
+            {t('projects.learnMore')}
+          </Button>
+        </span>
       </div>
     </Card>
     </motion.div>

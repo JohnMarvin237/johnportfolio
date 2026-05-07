@@ -104,8 +104,8 @@ export default function AdminShell({ children, user }: AdminShellProps) {
 
           {/* Back to site — sidebar bottom */}
           <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-4">
-            <Link
-              href="/"
+            <a
+              href="/api/admin/preview"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setSidebarOpen(false)}
@@ -115,7 +115,7 @@ export default function AdminShell({ children, user }: AdminShellProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
               Voir le site
-            </Link>
+            </a>
           </div>
         </div>
       </aside>
@@ -137,8 +137,8 @@ export default function AdminShell({ children, user }: AdminShellProps) {
           </button>
 
           {/* Back to site — topbar (desktop) */}
-          <Link
-            href="/"
+          <a
+            href="/api/admin/preview"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -147,7 +147,7 @@ export default function AdminShell({ children, user }: AdminShellProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             Voir le site
-          </Link>
+          </a>
 
           {/* User + logout */}
           <div className="flex items-center gap-4">

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SESSION_COOKIE_NAME } from '@/lib/auth/session';
+import { SESSION_COOKIE_NAME, ADMIN_PREVIEW_COOKIE_NAME } from '@/lib/auth/session';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -11,9 +11,15 @@ export function middleware(request: NextRequest) {
 
   if (isPublicRoute) {
     const token = request.cookies.get(SESSION_COOKIE_NAME);
-    if (token) {
-      // Strip the cookie from the forwarded request so Server Components
-      // don't see it (AdminBar won't render, no admin state on public pages).
+    const preview = request.cookies.get(ADMIN_PREVIEW_COOKIE_NAME);
+
+    // Admin came via "Voir le site" → preview flag present → keep both cookies
+    if (token && preview) {
+      return NextResponse.next();
+    }
+
+    // Fresh visit with a leftover admin cookie → clear it
+    if (token && !preview) {
       const requestHeaders = new Headers(request.headers);
       const cookieHeader = requestHeaders.get('cookie') ?? '';
       const stripped = cookieHeader
@@ -30,7 +36,6 @@ export function middleware(request: NextRequest) {
       const response = NextResponse.next({
         request: { headers: requestHeaders },
       });
-      // Tell the browser to delete the cookie too
       response.cookies.delete(SESSION_COOKIE_NAME);
       return response;
     }

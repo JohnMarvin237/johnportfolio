@@ -122,7 +122,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         )}
 
         {/* Description */}
-        <div className="prose prose-gray dark:prose-invert max-w-none mb-10">
+        <div className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4 mb-10">
           {longDesc ? (
             longDesc.split('\n').map((para: string, i: number) =>
               para.trim() ? <p key={i}>{para}</p> : null

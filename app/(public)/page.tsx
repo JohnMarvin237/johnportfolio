@@ -1,3 +1,5 @@
+export const revalidate = 3600; // ISR: rebuild page at most once per hour
+
 import Hero from '@/components/sections/Hero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ExperienceCard from '@/components/sections/ExperienceCard';

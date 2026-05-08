@@ -5,7 +5,7 @@ import { getSettings } from '@/lib/db/settings';
 import TrackPageView from '@/components/analytics/TrackPageView';
 
 export const metadata: Metadata = {
-  title: 'Contact - John Portfolio',
+  title: 'Contact - John NDEKEBITIK Portfolio',
   description: 'Contactez-moi pour discuter de vos projets ou opportunités de collaboration',
 };
 

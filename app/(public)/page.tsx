@@ -53,7 +53,7 @@ export default async function HomePage() {
     <>
       <TrackPageView path="/" />
       <Hero
-        name="John"
+        name="John Ndekebitik"
         imageUrl="/images/profile/john.jpg"
         githubUrl={settings.github_url}
         linkedinUrl={settings.linkedin_url}

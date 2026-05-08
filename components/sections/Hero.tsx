@@ -105,16 +105,52 @@ export default function Hero({
           </div>
 
           {imageUrl && (
-            <motion.div {...fadeOnly(0.3)} className="mt-10 lg:mt-0">
-              <div className="relative mx-auto w-64 h-64 sm:w-80 sm:h-80 lg:w-full lg:h-full max-w-md">
-                <div className="absolute inset-0 bg-primary-200 rounded-full blur-2xl opacity-30 animate-pulse" />
-                <Image
-                  src={imageUrl}
-                  alt={name}
-                  fill
-                  className="relative rounded-full object-cover shadow-2xl"
-                  priority
+            <motion.div {...fadeOnly(0.3)} className="mt-10 lg:mt-0 flex justify-center">
+              <div className="relative">
+
+                {/* Pulsing glow */}
+                <motion.div
+                  className="absolute -inset-4 rounded-3xl blur-2xl bg-gradient-to-br from-primary-400/50 via-accent-500/30 to-purple-500/40"
+                  animate={shouldReduceMotion ? {} : { opacity: [0.4, 0.75, 0.4] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
+
+                {/* Rotating gradient border */}
+                <div className="relative p-[3px] rounded-2xl overflow-hidden w-64 sm:w-72 lg:w-80 aspect-square">
+                  <motion.div
+                    className="absolute -inset-[150%]"
+                    style={{ background: 'conic-gradient(from 0deg, #2563eb, #10b981, #8b5cf6, #2563eb)' }}
+                    animate={shouldReduceMotion ? {} : { rotate: [0, 360] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                  />
+                  <div className="relative w-full h-full rounded-[13px] overflow-hidden">
+                    <Image
+                      src={imageUrl}
+                      alt={name}
+                      fill
+                      className="object-cover object-top"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                {/* Floating dots */}
+                <motion.div
+                  className="absolute -top-3 -right-3 w-5 h-5 rounded-full bg-primary-500 shadow-lg shadow-primary-500/60"
+                  animate={shouldReduceMotion ? {} : { y: [-4, 4, -4] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                  className="absolute -bottom-3 -left-3 w-4 h-4 rounded-full bg-accent-500 shadow-lg shadow-accent-500/60"
+                  animate={shouldReduceMotion ? {} : { y: [4, -4, 4] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                />
+                <motion.div
+                  className="absolute top-1/2 -right-5 w-3 h-3 rounded-full bg-purple-500/80"
+                  animate={shouldReduceMotion ? {} : { x: [-3, 3, -3], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                />
+
               </div>
             </motion.div>
           )}

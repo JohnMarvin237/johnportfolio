@@ -11,7 +11,10 @@
     "title": "Développeur Full-Stack & Expert IA",
     "description": "Passionné par la création d'applications web modernes et l'intégration de solutions d'intelligence artificielle pour résoudre des problèmes complexes.",
     "viewProjects": "Voir mes projets",
-    "contactMe": "Me contacter"
+    "contactMe": "Me contacter",
+    "downloadCv": "Télécharger mon CV",
+    "cvFr": "CV en Français",
+    "cvEn": "CV en Anglais"
   },
   "home": {
     "featuredTitle": "Projets en vedette",

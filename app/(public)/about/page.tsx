@@ -5,8 +5,8 @@ import T from '@/components/ui/T';
 import TrackPageView from '@/components/analytics/TrackPageView';
 
 export const metadata: Metadata = {
-  title: 'À propos - John Portfolio',
-  description: "En savoir plus sur John, développeur Full-Stack passionné par l'innovation",
+  title: 'À propos - John NDEKEBITIK Portfolio',
+  description: "En savoir plus sur John NDEKEBITIK, développeur Full-Stack passionné par l'innovation",
 };
 
 export default function AboutPage() {

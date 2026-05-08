@@ -11,7 +11,10 @@
     "title": "Full-Stack Developer & AI Expert",
     "description": "Passionate about building modern web applications and integrating artificial intelligence solutions to solve complex problems.",
     "viewProjects": "View my projects",
-    "contactMe": "Contact me"
+    "contactMe": "Contact me",
+    "downloadCv": "Download my CV",
+    "cvFr": "CV in French",
+    "cvEn": "CV in English"
   },
   "home": {
     "featuredTitle": "Featured Projects",

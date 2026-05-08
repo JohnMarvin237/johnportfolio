@@ -26,6 +26,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 604800, // 7 days
     remotePatterns: [{ protocol: 'https', hostname: 'res.cloudinary.com' }],
   },
   async headers() {

@@ -36,7 +36,7 @@ export default function Navbar({ logo = 'John Portfolio' }: NavbarProps) {
             <div className="flex flex-shrink-0 items-center">
               <Link href="/" className="flex items-center gap-2.5 hover:opacity-85 transition-opacity">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="Logo"
                   width={36}
                   height={36}

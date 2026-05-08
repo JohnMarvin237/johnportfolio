@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import type { Metadata } from 'next';
 import ProjectCard from '@/components/sections/ProjectCard';
 import AnimateIn from '@/components/ui/AnimateIn';
@@ -23,7 +25,7 @@ async function getProjects() {
 }
 
 export const metadata: Metadata = {
-  title: 'Projets - John Portfolio',
+  title: 'Projets - John NDEKEBITIK Portfolio',
   description: 'Découvrez mes projets de développement web et applications',
 };
 

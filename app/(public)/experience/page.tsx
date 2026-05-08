@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import type { Metadata } from 'next';
 import ExperienceCard from '@/components/sections/ExperienceCard';
 import EducationCard from '@/components/sections/EducationCard';
@@ -31,7 +33,7 @@ async function getExperienceData() {
 }
 
 export const metadata: Metadata = {
-  title: 'Expérience - John Portfolio',
+  title: 'Expérience - John NDEKEBITIK Portfolio',
   description: 'Mon parcours professionnel, formations et certifications',
 };
 

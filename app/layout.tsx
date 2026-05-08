@@ -9,22 +9,36 @@ import PageTransition from '@/components/ui/PageTransition';
 const inter = Inter({ subsets: ['latin'] });
 
 const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
-const BASE_URL = rawUrl.startsWith('http')
-  ? rawUrl
-  : 'https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app';
+const BASE_URL = rawUrl.startsWith('http') ? rawUrl : 'http://localhost:3000';
+
+const DESCRIPTION = 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: 'John Portfolio - Développeur Full-Stack',
-  description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
+  description: DESCRIPTION,
   keywords: ['développeur', 'full-stack', 'react', 'next.js', 'portfolio', 'john'],
   authors: [{ name: 'John' }],
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48 64x64' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     title: 'John Portfolio - Développeur Full-Stack',
-    description: 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js',
+    description: DESCRIPTION,
     type: 'website',
     locale: 'fr_CA',
     url: BASE_URL,
+    images: [{ url: '/opengraph-image.png', width: 752, height: 1408, alt: 'John Portfolio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'John Portfolio - Développeur Full-Stack',
+    description: DESCRIPTION,
+    images: ['/opengraph-image.png'],
   },
 };
 
@@ -44,6 +58,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64" />
+        <link rel="icon" href="/icon.png" type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" sizes="180x180" />
         {/* eslint-disable-next-line react/no-danger */}
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
       </head>

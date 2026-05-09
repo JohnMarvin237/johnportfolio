@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+
+export const revalidate = 3600;
 import ContactForm from '@/components/sections/ContactForm';
 import T from '@/components/ui/T';
 import { getSettings } from '@/lib/db/settings';

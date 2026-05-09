@@ -42,6 +42,7 @@ export default function SplitText({ text, className, delay = 0 }: SplitTextProps
       initial="hidden"
       animate="visible"
       className={className}
+      role="text"
       aria-label={text}
     >
       {text.split('').map((char, index) => (

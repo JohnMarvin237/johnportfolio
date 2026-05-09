@@ -13,7 +13,7 @@ const SESSION_COOKIE = 'auth_token';
 const PREVIEW_COOKIE = 'admin_preview';
 
 /** @param {import('next/server').NextRequest} request */
-export async function proxy(request) {
+export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // ── Admin routes ────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ export default async function ContactPage() {
   const settings = await getSettings();
   const githubUrl = settings.github_url ?? 'https://github.com';
   const linkedinUrl = settings.linkedin_url ?? 'https://linkedin.com';
+  const contactEmail = settings.contact_email ?? process.env.EMAIL_TO ?? '';
 
   return (
     <div className="py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
@@ -43,8 +44,8 @@ export default async function ContactPage() {
                       </svg>
                       <h3 className="text-sm font-medium text-gray-900 dark:text-gray-200"><T k="contact.email" /></h3>
                     </div>
-                    <a href={`mailto:${settings.contact_email}`} className="text-gray-600 dark:text-gray-400 ml-7 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                      {settings.contact_email}
+                    <a href={`mailto:${contactEmail}`} className="text-gray-600 dark:text-gray-400 ml-7 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {contactEmail}
                     </a>
                   </div>
 
@@ -111,7 +112,7 @@ export default async function ContactPage() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
                   <T k="contact.sendMessage" />
                 </h2>
-                <ContactForm contactEmail={settings.contact_email ?? ''} />
+                <ContactForm contactEmail={contactEmail} />
               </div>
             </div>
           </div>

@@ -22,9 +22,17 @@ export default function BackButton({ from }: BackButtonProps) {
   const labelKey = from && PAGE_LABEL_KEYS[from];
   const label = labelKey ? t(labelKey) : t('projects.backToProjects');
 
+  const handleBack = () => {
+    if (from) {
+      router.push(from);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <button
-      onClick={() => router.back()}
+      onClick={handleBack}
       className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-8"
     >
       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

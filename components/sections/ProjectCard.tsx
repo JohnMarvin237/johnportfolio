@@ -91,7 +91,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             className="object-cover"
           />
           {featured && (
-            <div className="absolute top-2 right-2 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+            <div className="absolute top-2 right-2 bg-accent-700 text-white px-3 py-1 rounded-full text-sm font-medium">
               {t('projects.featuredBadge')}
             </div>
           )}

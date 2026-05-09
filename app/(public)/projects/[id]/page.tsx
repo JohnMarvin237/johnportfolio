@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+
+export const revalidate = 3600;
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';

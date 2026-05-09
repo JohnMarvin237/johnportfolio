@@ -51,12 +51,15 @@ export async function sendContactNotification(data: {
 }) {
   const adminEmail = process.env.EMAIL_TO || 'admin@example.com';
 
+  const esc = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
   const html = `
     <h2>Nouveau message de contact</h2>
-    <p><strong>De:</strong> ${data.name} (${data.email})</p>
-    ${data.subject ? `<p><strong>Sujet:</strong> ${data.subject}</p>` : ''}
+    <p><strong>De:</strong> ${esc(data.name)} (${esc(data.email)})</p>
+    ${data.subject ? `<p><strong>Sujet:</strong> ${esc(data.subject)}</p>` : ''}
     <p><strong>Message:</strong></p>
-    <p>${data.message.replace(/\n/g, '<br>')}</p>
+    <p>${esc(data.message).replace(/\n/g, '<br>')}</p>
     <hr>
     <p><small>Envoyé depuis votre portfolio</small></p>
   `;

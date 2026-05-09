@@ -66,7 +66,7 @@ export default function ExperienceCard({ experience }: { experience: Experience 
                 href={companyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors"
               >
                 {company}
               </a>

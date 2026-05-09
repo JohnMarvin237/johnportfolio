@@ -49,7 +49,7 @@ export default function Hero({
           <div className="text-center lg:text-left">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
               <SplitText text={t('hero.greeting') + ' '} delay={0} />
-              <SplitText text={name} className="text-primary-600" delay={0.3} />
+              <SplitText text={name} className="text-primary-600 whitespace-nowrap" delay={0.3} />
             </h1>
 
             <motion.div {...fadeUp(0.1)}>

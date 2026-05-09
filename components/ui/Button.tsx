@@ -22,11 +22,11 @@ export default function Button({
 
   const variants = {
     primary:
-      'bg-primary-500 hover:bg-primary-600 text-white focus:ring-primary-500',
+      'bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-600',
     secondary:
       'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-500',
     outline:
-      'border-2 border-primary-500 text-primary-500 hover:bg-primary-50 focus:ring-primary-500',
+      'border-2 border-primary-500 text-primary-500 hover:bg-primary-50 focus:ring-primary-500 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/30',
     ghost:
       'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
   };

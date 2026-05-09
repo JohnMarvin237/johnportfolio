@@ -7,6 +7,10 @@ export type SiteSettingsMap = Record<string, string>
 // cache() deduplicates calls within the same request tree — layout + page
 // both calling getSettings() only hit the DB once.
 export const getSettings = cache(async (): Promise<SiteSettingsMap> => {
-  const rows = await prisma.siteSettings.findMany()
-  return Object.fromEntries(rows.map(r => [r.key, r.value]))
+  try {
+    const rows = await prisma.siteSettings.findMany()
+    return Object.fromEntries(rows.map(r => [r.key, r.value]))
+  } catch {
+    return {}
+  }
 })

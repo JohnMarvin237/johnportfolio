@@ -5,16 +5,14 @@ import { ThemeProvider } from '@/lib/theme/ThemeContext';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import ScrollProgress from '@/components/ui/ScrollProgress';
 import PageTransition from '@/components/ui/PageTransition';
+import { SITE_URL } from '@/lib/site-url';
 
 const inter = Inter({ subsets: ['latin'] });
-
-const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
-const BASE_URL = rawUrl.startsWith('http') ? rawUrl : 'http://localhost:3000';
 
 const DESCRIPTION = 'Portfolio professionnel de John, développeur Full-Stack spécialisé en React, Next.js et Node.js';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: 'John Portfolio - Développeur Full-Stack',
   description: DESCRIPTION,
   keywords: ['développeur', 'full-stack', 'react', 'next.js', 'portfolio', 'john'],
@@ -31,8 +29,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: 'website',
     locale: 'fr_CA',
-    url: BASE_URL,
-    images: [{ url: '/opengraph-image.png', width: 752, height: 1408, alt: 'John Portfolio' }],
+    url: SITE_URL,
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'John Portfolio' }],
   },
   twitter: {
     card: 'summary_large_image',

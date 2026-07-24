@@ -2,7 +2,7 @@
 
 > Full-stack personal portfolio with a headless CMS, built with Next.js 16 and PostgreSQL.
 
-**Live:** [https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app](https://johnportfolio-git-main-johnmarvin237s-projects.vercel.app)
+**Live:** [https://johnportfolio-phi.vercel.app](https://johnportfolio-phi.vercel.app)
 
 ---
 
